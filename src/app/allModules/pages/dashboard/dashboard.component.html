@@ -1,0 +1,191 @@
+<div id="dashboard" class="page-layout carded" fusePerfectScrollbar>
+  <div class="center" fxLayout="column" fxLayoutGap="10px">
+    <mat-card style="padding: 10px 24px 10px 24px">
+      <mat-card-content>
+        <div fxLayout="row">
+          <div fxFlex="40">
+            <h1 style="float:left;">Invoice Details</h1>
+          </div>
+          <!-- <form *ngIf="isCommonTableFilter" style="padding: 2px 10px 2px 10px" class="" autocomplete="off"
+              fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
+              [formGroup]="commonFilterFormGroup" novalidate>
+              <div class="" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="1 0 auto">
+
+                  <mat-form-field color="accent" class=" px-16 py-4  formField">
+                      <mat-label>From date</mat-label>
+                      <input matInput [matDatepicker]="picker1" formControlName="FROMDATE">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                      <mat-error
+                          *ngIf="commonFilterFormGroup.get('FROMDATE').touched && commonFilterFormGroup.get('FROMDATE').hasError('required')">
+                          From date is required
+                      </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field color="accent" class="px-16 py-4 formField">
+                      <mat-label>To Date</mat-label>
+                      <input matInput [matDatepicker]="picker2" formControlName="TODATE">
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                      <mat-error
+                          *ngIf="commonFilterFormGroup.get('TODATE').touched && commonFilterFormGroup.get('TODATE').hasError('required')">
+                          To date is required
+                      </mat-error>
+                  </mat-form-field>
+
+                      <mat-form-field class=" px-16 py-4  formField">
+                          <mat-select placeholder="Select Vehicle No" formControlName="VEHICLE_NO">
+                              <mat-option *ngFor="let vehicle of AllVehicleNos" [value]="vehicle">
+                                  {{vehicle}}
+                              </mat-option>
+                          </mat-select>
+                          <mat-error
+                              *ngIf="commonFilterFormGroup.get('VEHICLE_NO').touched && commonFilterFormGroup.get('VEHICLE_NO').hasError('required')">
+                              Vehicle No is required
+                          </mat-error>
+                      </mat-form-field>
+
+                  <button mat-raised-button color="accent"
+                      (click)="GetAllTransactionsBasedOnFilter(commonTableShowName)">Get
+                      Details</button>
+              </div>
+          </form> -->
+          <!-- <div fxFlex="20" style="padding-top:10px;">
+                  <button mat-raised-button color="accent" (click)="exportAsXLSX()">
+                      <mat-icon svgIcon="excel" aria-hidden="false" aria-label="Excel SVG icon">
+                      </mat-icon>Export XLSX
+                  </button>
+              </div> -->
+          <div fxFlex="60">
+            <mat-form-field style="width: 80%; float: right;">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+            </mat-form-field>
+          </div>
+        </div>
+        <div fxLayout="column" class="mt-10">
+          <div flex class="mt-10">
+            <div class="tableData" #TABLE>
+              <table class="table" mat-table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}">
+
+                <ng-container matColumnDef="INV_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.INV_NO}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="INV_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.INV_DATE}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="INV_TYPE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Type </th>
+                  <td mat-cell *matCellDef="let element"> {{element.INV_TYPE}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="MATERIAL_CODE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Code </th>
+                  <td mat-cell *matCellDef="let element"> {{element.MATERIAL_CODE}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="MATERIAL_DESCRIPTION">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Description </th>
+                  <td mat-cell *matCellDef="let element"> {{element.MATERIAL_DESCRIPTION}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="QUANTITY">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+                  <td mat-cell *matCellDef="let element"> {{element.QUANTITY}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="QUANTITY_UOM">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity Unit </th>
+                  <td mat-cell *matCellDef="let element"> {{element.QUANTITY_UOM}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="LR_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Lr No </th>
+                  <td mat-cell *matCellDef="let element"> {{element.LR_NO}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="LR_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Lr Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.LR_DATE}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="VEHICLE_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle No </th>
+                  <td mat-cell *matCellDef="let element"> {{element.VEHICLE_NO}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="VEHICLE_CAPACITY">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle Capacity </th>
+                  <td mat-cell *matCellDef="let element"> {{element.VEHICLE_CAPACITY}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="FWD_AGENT">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Forward Agent </th>
+                  <td mat-cell *matCellDef="let element"> {{element.FWD_AGENT}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="CARRIER">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrier </th>
+                  <td mat-cell *matCellDef="let element"> {{element.CARRIER}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="EWAYBILL_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> E-way bill No </th>
+                  <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_NO}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="EWAYBILL_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> E-way bill Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_DATE}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="OUTBOUND_DELIVERY">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Outbound Delivery </th>
+                  <td mat-cell *matCellDef="let element"> {{element.OUTBOUND_DELIVERY}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="OUTBOUND_DELIVERY_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Outbound Delivery Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.OUTBOUND_DELIVERY_DATE}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="FREIGHT_ORDER">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order </th>
+                  <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="FREIGHT_ORDER_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER_DATE}} </td>
+                </ng-container>
+
+                // ACTUAL_DISPATCH_DATE: string;
+                // PROPOSED_DELIVERY_DATE: string;
+                // ACTUAL_UNLOAD_DATE: string;
+                // ACTUAL_DELIVERY_DATE: string;
+                // TRANSIT_LEAD_TIME: string;
+                // CANC_INV_STATUS: string;
+                // STATUS: string;
+                // STATUS_DESCRIPTION: string;
+                // CREATED_ON?: Date;
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" matRipple style=" cursor: pointer;"></tr>
+              </table>
+            </div>
+          </div>
+          <div flex>
+            <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
+            </mat-paginator>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+  </mat-progress-spinner>
+  <div id="overlay" *ngIf="isProgressBarVisibile"></div>
+</div>
