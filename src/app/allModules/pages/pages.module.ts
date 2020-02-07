@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
+import { FuseSidebarModule } from '@fuse/components';
 
 import {
     MatFormFieldModule,
@@ -51,11 +52,29 @@ import {
 import { FuseSharedModule } from "@fuse/shared.module";
 import { FormsModule } from "@angular/forms";
 import { DashboardComponent } from "./dashboard/dashboard.component";
+import { AcademyCoursesService } from 'app/services/courses.service';
+import { AcademyCourseService } from 'app/services/course.service';
+import { AcademyCoursesComponent } from './academy/courses/courses.component';
+import { AcademyCourseComponent } from './academy/course/course.component';
 
 const routes = [
     {
         path: "dashboard",
         component: DashboardComponent
+    },
+    {
+        path     : 'courses',
+        component: AcademyCoursesComponent,
+        resolve  : {
+            academy: AcademyCoursesService
+        }
+    },
+    {
+        path     : 'courses/:courseId/:courseSlug',
+        component: AcademyCourseComponent,
+        resolve  : {
+            academy: AcademyCourseService
+        }
     },
     {
         path: "**",
@@ -108,6 +127,7 @@ const routes = [
         NgxChartsModule,
 
         FuseSharedModule,
+        FuseSidebarModule,
 
         FuseCountdownModule,
         FuseHighlightModule,
@@ -116,8 +136,11 @@ const routes = [
 
         FormsModule
     ],
-    declarations: [DashboardComponent],
-    providers: [],
+    declarations: [DashboardComponent,AcademyCourseComponent,AcademyCoursesComponent],
+    providers   : [
+        AcademyCoursesService,
+        AcademyCourseService
+    ],
     entryComponents: []
 })
 export class PagesModule {}

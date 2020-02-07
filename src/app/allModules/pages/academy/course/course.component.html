@@ -1,0 +1,210 @@
+<div id="academy-course" class="page-layout simple left-sidebar inner-scroll">
+    <!-- SIDEBAR -->
+    <fuse-sidebar class="sidebar" name="academy-course-left-sidebar-1" position="left" lockedOpen="gt-md">
+        <!-- SIDEBAR CONTENT -->
+        <div class="content" fusePerfectScrollbar>
+            <div class="steps">
+                <div class="step" *ngFor="
+                        let step of course.steps;
+                        let i = index;
+                        let last = last;
+                        let first = first
+                    " (click)="gotoStep(i)" [ngClass]="{
+                        current: currentStep === i,
+                        completed: currentStep > i,
+                        last: last,
+                        first: first
+                    }">
+                    <div class="index">
+                        <span>{{ i + 1 }}</span>
+                    </div>
+                    <div class="title">{{ step.title }}</div>
+                </div>
+            </div>
+        </div>
+        <!-- / SIDEBAR CONTENT -->
+    </fuse-sidebar>
+    <!-- / SIDEBAR -->
+
+    <!-- CENTER -->
+    <div class="center">
+        <!-- HEADER -->
+        <div class="header accent p-24" fxLayout="row" fxLayoutAlign="start center">
+            <button mat-icon-button class="sidebar-toggle mr-16" fxHide.gt-md
+                (click)="toggleSidebar('academy-course-left-sidebar-1')">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+            <button mat-icon-button class="mr-16" [routerLink]="'/pages/courses'">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+
+            <div>
+                <h2>{{ course.INV_NO }}</h2>
+            </div>
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT -->
+        <!-- <div id="course-content" class="content">
+            <ng-container *ngFor="let step of course.steps; let i = index">
+                <div
+                    class="course-step"
+                    fusePerfectScrollbar
+                    *ngIf="currentStep === i"
+                    [@slideIn]="animationDirection"
+                >
+                    <div id="course-step-content" class="course-step-content">
+                        <h1>Step 1 - Introduction</h1>
+                        <br />
+                        This is an example step of the course. You can put
+                        anything in here from example codes to videos.
+                        <br /><br />
+                        To install the CLI you need to have installed
+                        <b>npm</b> which typically comes with <b>NodeJS</b>. To
+                        install or upgrade the CLI run the following
+                        <b>npm</b> command: <br /><br />
+                        <code>npm -g install @angular/cli</code>
+                        <br /><br />
+                        To verify that the CLI has been installed correctly,
+                        open a console and run:
+                        <br /><br />
+                        <code>ng version</code>
+                        <br /><br />
+                        <h2>Install dependencies</h2>
+                        <br />
+                        To moderate the images we\'ll need a few Node.js
+                        packages:
+                        <br /><br />
+                        <ul>
+                            <li>
+                                The Google Cloud Vision Client Library for
+                                Node.js: @google-cloud/vision to run the image
+                                through the Cloud Vision API to detect
+                                inappropriate images.
+                            </li>
+                            <br />
+                            <li>
+                                The Google Cloud Storage Client Library for
+                                Node.js: @google-cloud/storage to download and
+                                upload the images from Cloud Storage.
+                            </li>
+                            <br />
+                            <li>
+                                A Node.js library allowing us to run processes:
+                                child-process-promise to run ImageMagick since
+                                the ImageMagick command-line tool comes
+                                pre-installed on all Functions instances.
+                            </li>
+                        </ul>
+                        <br />
+                        To install these three packages into your Cloud
+                        Functions app, run the following npm install --save
+                        command. Make sure that you do this from the functions
+                        directory.
+                        <br /><br />
+                        <code
+                            >npm install --save @google-cloud/vision
+                            @google-cloud/storage child-process-promise</code
+                        >
+                        <br /><br />
+                        This will install the three packages locally and add
+                        them as declared dependencies in your package.js file.
+                    </div>
+                </div>
+            </ng-container>
+        </div> -->
+
+        <div id="course-content" class="content">
+            <ng-container>
+                <div class="course-step" fusePerfectScrollbar [@slideIn]="animationDirection">
+                    <div id="course-step-content" class="course-step-content">
+                        <h1>Invoice Number {{ course.INV_NO }}</h1>
+                        <br />
+                        <span><b>Invoice Date: </b> {{ course.INV_DATE }}</span>
+                        <span><b>Invoice Type: </b> {{ course.INV_TYPE }} </span>
+                        <br /><br />
+                        <span><b>Forward Agent: </b> {{ course.FWD_AGENT }}</span>
+                        <span> <b>Carrier: </b>{{ course.CARRIER }} </span>
+                        <br /><br />
+                        <h2>LR Details</h2>
+                        <ul>
+                            <li><b>LR No:</b> {{ course.LR_NO }}</li>
+                            <br />
+                            <li><b>LR Date:</b> {{ course.LR_DATE }}</li>
+                            <br />
+                        </ul>
+                        <h2>E-way bill Details</h2>
+                        <ul>
+                            <li>
+                                <b>E-way bill No:</b> {{ course.EWAYBILL_NO }}
+                            </li>
+                            <br />
+                            <li>
+                                <b>E-way bill Date:</b>
+                                {{ course.EWAYBILL_DATE }}
+                            </li>
+                            <br />
+                        </ul>
+                        <h2>Vehicle Details</h2>
+                        <ul>
+                            <li><b>Vehicle No:</b> {{ course.VEHICLE_NO }}</li>
+                            <br />
+                            <li>
+                                <b>Vehicle Capacity:</b>
+                                {{ course.VEHICLE_CAPACITY }}
+                            </li>
+                            <br />
+                        </ul>
+                        <h2>Outbound Delivery Details</h2>
+                        <ul>
+                            <li>
+                                <b>Outbound Delivery:</b>
+                                {{ course.OUTBOUND_DELIVERY }}
+                            </li>
+                            <br />
+                            <li>
+                                <b>Outbound Delivery Date:</b>
+                                {{ course.OUTBOUND_DELIVERY_DATE }}
+                            </li>
+                            <br />
+                        </ul>
+                        <h2>Freight Order Details</h2>
+                        <ul>
+                            <li>
+                                <b>Freight Order:</b> {{ course.FREIGHT_ORDER }}
+                            </li>
+                            <br />
+                            <li>
+                                <b>Freight Order Date:</b>
+                                {{ course.FREIGHT_ORDER_DATE }}
+                            </li>
+                            <br />
+                        </ul>
+                        <br /><br />
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <!-- / CONTENT -->
+
+        <div class="step-navigation">
+            <button mat-fab class="previous mat-accent white-fg" (click)="gotoPreviousStep()"
+                [disabled]="currentStep === 0" [fxHide]="currentStep === 0">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+
+            <button mat-fab class="next mat-accent white-fg" (click)="gotoNextStep()"
+                [disabled]="currentStep === course.totalSteps - 1" [fxHide]="currentStep === course.totalSteps - 1">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+
+            <button mat-fab class="done green-600" routerLink="/apps/academy/courses"
+                [disabled]="currentStep !== course.totalSteps - 1" [fxShow]="currentStep === course.totalSteps - 1">
+                <mat-icon>check</mat-icon>
+            </button>
+        </div>
+    </div>
+    <!-- / CENTER -->
+</div>
