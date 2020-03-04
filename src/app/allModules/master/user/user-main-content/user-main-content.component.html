@@ -50,15 +50,15 @@
     </mat-form-field>
 
   </div>
-
-  <mat-form-field class="pl-8" fxFlex="50">
-    <input matInput placeholder="Plant" formControlName="plant">
-    <mat-error
-      *ngIf="userMainFormGroup.get('plant').touched &&  userMainFormGroup.get('plant').hasError('required')">
- Plant required</mat-error>
-  </mat-form-field>
-
   <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
+    <mat-form-field class="pl-8" fxFlex="50">
+      <input matInput placeholder="Plant" formControlName="plant">
+      <mat-error *ngIf="userMainFormGroup.get('plant').touched &&  userMainFormGroup.get('plant').hasError('required')">
+        Plant required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
 
     <div class="pl-8" fxFlex="50">
         <button type="button" mat-button color="accent" (click)="imgFileInput.click()">Choose Profile
@@ -66,14 +66,8 @@
         </button>
         <span class="selectProfileClass">{{fileToUpload?.name}}</span>
         <input hidden type="file" #imgFileInput id="file" accept=".jpg,.jpeg,.png" (change)="handleFileInput($event)"/>
-      <!-- <input type="file" id="file" accept=".jpg,.jpeg,.png" (change)="handleFileInput($event)"> -->
     </div>
-
-    <!-- <div class="pl-8" fxFlex="50">
-      <input type="file" id="file" ng2FileSelect [uploader]="fileUploader" (change)="handleFileInput($event)">
-    </div> -->
-
-  </div>
+  </div> -->
 
   <div fxLayout="row" fxLayoutAlign="end">
     <button mat-raised-button type="button" (click)="ResetControl()" *ngIf="!user.UserID" style="margin-right:10px">

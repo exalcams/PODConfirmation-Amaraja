@@ -1,5 +1,5 @@
-import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { FuseSidebarModule } from '@fuse/components';
 
 import {
@@ -39,46 +39,52 @@ import {
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule
-} from "@angular/material";
+} from '@angular/material';
 
-import { NgxChartsModule } from "@swimlane/ngx-charts";
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {
     FuseCountdownModule,
     FuseHighlightModule,
     FuseMaterialColorPickerModule,
     FuseWidgetModule
-} from "@fuse/components";
+} from '@fuse/components';
 
-import { FuseSharedModule } from "@fuse/shared.module";
-import { FormsModule } from "@angular/forms";
-import { DashboardComponent } from "./dashboard/dashboard.component";
+import { FuseSharedModule } from '@fuse/shared.module';
+import { FormsModule } from '@angular/forms';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { AcademyCoursesService } from 'app/services/courses.service';
 import { AcademyCourseService } from 'app/services/course.service';
 import { AcademyCoursesComponent } from './academy/courses/courses.component';
 import { AcademyCourseComponent } from './academy/course/course.component';
+import { InvoiceItemComponent } from './invoice-item/invoice-item.component';
+import { DecimalPipe } from '@angular/common';
 
 const routes = [
     {
-        path: "dashboard",
+        path: 'dashboard',
         component: DashboardComponent
     },
     {
-        path     : 'courses',
-        component: AcademyCoursesComponent,
-        resolve  : {
-            academy: AcademyCoursesService
-        }
+        path: 'invItem',
+        component: InvoiceItemComponent
     },
+    // {
+    //     path     : 'courses',
+    //     component: AcademyCoursesComponent,
+    //     resolve  : {
+    //         academy: AcademyCoursesService
+    //     }
+    // },
+    // {
+    //     path     : 'courses/:courseId/:courseSlug',
+    //     component: AcademyCourseComponent,
+    //     resolve  : {
+    //         academy: AcademyCourseService
+    //     }
+    // },
     {
-        path     : 'courses/:courseId/:courseSlug',
-        component: AcademyCourseComponent,
-        resolve  : {
-            academy: AcademyCourseService
-        }
-    },
-    {
-        path: "**",
-        redirectTo: "/auth/login"
+        path: '**',
+        redirectTo: '/auth/login'
     }
 ];
 
@@ -136,10 +142,11 @@ const routes = [
 
         FormsModule
     ],
-    declarations: [DashboardComponent,AcademyCourseComponent,AcademyCoursesComponent],
+    declarations: [DashboardComponent,AcademyCourseComponent,AcademyCoursesComponent, InvoiceItemComponent],
     providers   : [
         AcademyCoursesService,
-        AcademyCourseService
+        AcademyCourseService,
+        DecimalPipe
     ],
     entryComponents: []
 })

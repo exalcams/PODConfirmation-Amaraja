@@ -8,10 +8,6 @@
             <h1 [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
                 Invoice Details
             </h1>
-            <!-- <h3 [@animate]="{value:'*',params:{delay:'100ms', y:'25px'}}">
-                Our courses will step you through the process of building a small application, or adding a new feature
-                to an existing application.
-            </h3> -->
         </div>
 
     </div>
@@ -79,7 +75,7 @@
 
                         <div class="footer" fxLayout="row" fxLayoutAlign="center center">
                             <button mat-button color="accent"
-                                    [routerLink]="'/pages/courses/' + course.ID + '/' + course.INV_NO">
+                                    [routerLink]="'/pages/courses/' + course.HEADER_ID + '/' + course.INV_NO">
                                 Item Details
                             </button>
                         </div>

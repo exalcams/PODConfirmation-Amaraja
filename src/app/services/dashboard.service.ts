@@ -1,18 +1,14 @@
-import { Guid } from "guid-typescript";
-import { Injectable } from "@angular/core";
-import {
-    HttpClient,
-    HttpHeaders,
-    HttpErrorResponse
-} from "@angular/common/http";
-import { Observable, throwError, Subject } from "rxjs";
-import { _MatChipListMixinBase } from "@angular/material";
-import { AuthService } from "./auth.service";
-import { catchError } from "rxjs/operators";
-import { InvoiceDetails } from "app/models/invoice-details";
+import { Guid } from 'guid-typescript';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, Subject } from 'rxjs';
+import { _MatChipListMixinBase } from '@angular/material';
+import { AuthService } from './auth.service';
+import { catchError } from 'rxjs/operators';
+import { InvoiceDetails } from 'app/models/invoice-details';
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class DashboardService {
     baseAddress: string;
@@ -36,7 +32,7 @@ export class DashboardService {
 
     // Error Handler
     errorHandler(error: HttpErrorResponse): Observable<string> {
-        return throwError(error.error || error.message || "Server Error");
+        return throwError(error.error || error.message || 'Server Error');
     }
 
     // Invoice Details
@@ -47,7 +43,7 @@ export class DashboardService {
                 invoice,
                 {
                     headers: new HttpHeaders({
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/json'
                     })
                 }
             )
@@ -69,7 +65,7 @@ export class DashboardService {
                 invoice,
                 {
                     headers: new HttpHeaders({
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/json'
                     })
                 }
             )
@@ -83,7 +79,7 @@ export class DashboardService {
                 invoice,
                 {
                     headers: new HttpHeaders({
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/json'
                     })
                 }
             )

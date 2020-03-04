@@ -16,7 +16,8 @@ fuse-sidebar {
                         justify-content: center;
 
                         .buttons {
-                            display: none;
+                            // display: none;
+                            margin-left: 5px;
                         }
 
                         .logo {
@@ -131,8 +132,7 @@ navbar {
             }
 
             .buttons {
-                display: flex;
-                align-items: center;
+                margin-left: 200px;
             }
         }
 

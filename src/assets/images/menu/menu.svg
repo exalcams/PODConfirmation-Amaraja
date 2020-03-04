@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="78" height="78" viewBox="0 0 78 78">
+    <defs>
+        <style>
+            .cls-1{fill:#acacac;opacity:.4}.cls-2{fill:#fff}.cls-3{filter:url(#Rectangle_37)}
+        </style>
+        <filter id="Rectangle_37" width="78" height="78" x="0" y="0" filterUnits="userSpaceOnUse">
+            <feOffset dy="3"/>
+            <feGaussianBlur result="blur" stdDeviation="3"/>
+            <feFlood flood-opacity=".278"/>
+            <feComposite in2="blur" operator="in"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g id="menu" transform="translate(-21 -24)">
+        <g class="cls-3" transform="translate(21 24)">
+            <rect id="Rectangle_37-2" width="60" height="60" class="cls-1" data-name="Rectangle 37" rx="8" transform="translate(9 6)"/>
+        </g>
+        <g id="menu-2" data-name="menu" transform="translate(35.923 33.93)">
+            <path id="Path_33" d="M29.5 48.911a2.581 2.581 0 0 0 0-5.161H9.081a2.581 2.581 0 0 0 0 5.161z" class="cls-2" data-name="Path 33" transform="translate(0 -20.621)"/>
+            <path id="Path_34" d="M42.423 13.441a2.593 2.593 0 0 0-2.581-2.581H9.081a2.581 2.581 0 1 0 0 5.161h30.762a2.61 2.61 0 0 0 2.581-2.581z" class="cls-2" data-name="Path 34"/>
+            <path id="Path_35" d="M9.081 81.8h13.44a2.581 2.581 0 1 0 0-5.161H9.081a2.581 2.581 0 1 0 0 5.161z" class="cls-2" data-name="Path 35" transform="translate(0 -41.242)"/>
+        </g>
+    </g>
+</svg>

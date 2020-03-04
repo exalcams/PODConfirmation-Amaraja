@@ -1,14 +1,19 @@
 :host {
-
-    .folded:not(.unfolded) & {
-
-        .nav-link {
-
-            > .nav-link-title,
-            > .nav-link-badge {
-                opacity: 0;
-                transition: opacity 200ms ease;
-            }
-        }
+  .folded:not(.unfolded) & {
+    .nav-link {
+      > .nav-link-title,
+      > .nav-link-badge {
+        opacity: 0;
+        transition: opacity 200ms ease;
+      }
     }
+  }
+}
+.accent1 {
+  background-color: rgba($color: #ffffff, $alpha: 0.1);
+  color: #ffffff;
+  border-bottom: 4px solid #efb577;
+  mat-icon {
+    fill: white !important;
+  }
 }

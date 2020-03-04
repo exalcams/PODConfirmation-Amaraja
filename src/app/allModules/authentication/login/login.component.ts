@@ -197,23 +197,25 @@ export class LoginComponent implements OnInit {
           title: 'Dashboard',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
+          // icon: 'dashboardIcon',
+          // isSvgIcon: true,
           icon: 'dashboard',
           url: '/pages/dashboard',
         }
       );
     }
-    if (this.MenuItems.indexOf('Course') >= 0) {
-      this.children.push(
-        {
-          id: 'course',
-          title: 'Course',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'dashboard',
-          url: '/pages/courses',
-        }
-      );
-    }
+    // if (this.MenuItems.indexOf('InvoiceItem') >= 0) {
+    //   this.children.push(
+    //     {
+    //       id: 'invItem',
+    //       title: 'Invoice Item',
+    //       translate: 'NAV.SAMPLE.TITLE',
+    //       type: 'item',
+    //       icon: 'dashboard',
+    //       url: '/pages/courses',
+    //     }
+    //   );
+    // }
     if (this.MenuItems.indexOf('App') >= 0) {
       this.subChildren.push(
         {

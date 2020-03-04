@@ -142,16 +142,16 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
         }
 
         // Getting Notification
-        this.GetAllNotificationByUserID();
+        // this.GetAllNotificationByUserID();
 
-        this.SetIntervalID = setInterval(() => {
-            this.GetAllNotificationByUserID();
-        }, 10000);
-        this._masterService.GetNotification().subscribe(
-            (data) => {
-                this.GetAllNotificationByUserID();
-            }
-        );
+        // this.SetIntervalID = setInterval(() => {
+        //     this.GetAllNotificationByUserID();
+        // }, 10000);
+        // this._masterService.GetNotification().subscribe(
+        //     (data) => {
+        //         this.GetAllNotificationByUserID();
+        //     }
+        // );
     }
 
     /**

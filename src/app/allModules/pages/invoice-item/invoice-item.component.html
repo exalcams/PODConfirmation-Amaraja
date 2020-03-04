@@ -1,0 +1,220 @@
+<div id="invoiceItem" class="page-layout carded" fusePerfectScrollbar>
+  <div class="center" fxLayout="column" fxLayoutGap="10px">
+    <mat-card class="cardHeader p-8 pb-0">
+      <div fxLayout>
+        <div fxFlex fxLayoutAlign="center" class="h2">
+          <b>Invoice Item Details</b>
+        </div>
+      </div>
+    </mat-card>
+      <div class="sidenav-content">
+        <form autocomplete="off" name="form" [formGroup]="InvoiceItemFormGroup" novalidate>
+          <mat-card class="m-0 p-0">
+            <div fxLayout="row" class="borderTop mt-4"></div>
+            <div formArrayName="InvoiceItems"
+              *ngFor="let ite of InvoiceItemFormGroup.get('InvoiceItems')['controls']; let i = index">
+              <div [formGroupName]="i">
+                <mat-card fxLayout class="p-8 m-4">
+                  <div fxFlex="100">
+                    <div fxLayout="column">
+                      <div fxFlex fxLayout class="p-8">
+
+                        <div fxFlex fxLayoutAlign="start center">
+                          <span class="boldClass mx-4">Item :</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('ITEM_ID')?.value}}
+                        </div>
+
+                        <div fxFlex fxLayoutAlign="start center">
+                          <span class="boldClass mx-4">Material :</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('MATERIAL_CODE')?.value}}
+                          <span class="ml-4"></span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('MATERIAL_DESCRIPTION')?.value}}
+                        </div>
+
+                        <div fxFlex fxLayoutAlign="start center">
+                          <span class="boldClass mx-4">LR No. :</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('LR_NO')?.value}}
+                        </div>
+
+                        <div fxFlex fxLayoutAlign="start center">
+                          <span class="boldClass mx-4">LR Date :</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('LR_DATE')?.value}}
+                        </div>
+
+                      </div>
+
+                      <div fxFlex fxLayout class="p-8">
+
+                        <div fxFlex fxLayoutAlign="start center">
+                          <span class="boldClass mx-4">Forward Agent :</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FWD_AGENT')?.value}}
+                        </div>
+
+                        <div fxFlex fxLayoutAlign="start center">
+                          <span class="boldClass mx-4">Carrier :</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('CARRIER')?.value}}
+                        </div>
+
+                        <div fxFlex fxLayoutAlign="start center">
+                          <span class="boldClass mx-4">Freight Order:</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FREIGHT_ORDER')?.value}}
+                        </div>
+
+                        <div fxFlex fxLayoutAlign="start center">
+                          <span class="boldClass mx-4">Freight Order Date:</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FREIGHT_ORDER_DATE')?.value}}
+                        </div>
+
+                      </div>
+
+
+
+                      <div fxFlex fxLayout class="p-8">
+                        <div fxFlex>
+                          <mat-form-field class="pl-8" fxFlex>
+                            <input matInput formControlName="QUANTITY" placeholder="Quantity" pattern="^[1-9]\d*$">
+                            <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').touched &&
+                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').hasError('required')">
+                              *
+                            </mat-error>
+                            <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').touched &&
+                      !InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').hasError('required') &&
+                      InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').hasError('pattern')">
+                              *
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div fxFlex>
+                          <mat-form-field class="pl-8" fxFlex>
+                            <input matInput formControlName="QUANTITY_UOM" placeholder="UOM">
+                            <mat-error class="pl-4 errorClass"
+                              *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY_UOM').touched &&
+                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY_UOM').hasError('required')">
+                              *
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div fxFlex>
+                          <mat-form-field class="pl-8" fxFlex>
+                            <input matInput formControlName="STATUS" placeholder="Status">
+                            <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('STATUS').touched &&
+                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('STATUS').hasError('required')">
+                              *
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div fxFlex>
+                          <mat-form-field class="pl-8" fxFlex>
+                            <input matInput formControlName="STATUS_DESCRIPTION" placeholder="Description">
+                            <mat-error class="pl-4 errorClass"
+                              *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('STATUS_DESCRIPTION').touched &&
+                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('STATUS_DESCRIPTION').hasError('required')">
+                              *
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </mat-card>
+              </div>
+            </div>
+          </mat-card>
+        </form>
+      </div>
+
+      <!-- <mat-card-content>
+        <div fxLayout="row">
+          <div fxFlex="40">
+            <h1 style="float:left;">Invoice Item Details</h1>
+          </div>
+          <div fxFlex="60">
+            <mat-form-field style="width: 80%; float: right;">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+            </mat-form-field>
+          </div>
+        </div>
+        <div fxLayout="column" class="mt-10">
+          <div flex class="mt-10">
+            <div class="tableData" #TABLE>
+              <table class="table" mat-table [dataSource]="InvoiceItemDetailsDataSource" matSort
+                [@animateStagger]="{value:'50'}">
+
+                <ng-container matColumnDef="ITEM_ID">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Item ID </th>
+                  <td mat-cell *matCellDef="let element"> {{element.ITEM_ID}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="HEADER_ID">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Header ID </th>
+                  <td mat-cell *matCellDef="let element"> {{element.HEADER_ID}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="MATERIAL_CODE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Code </th>
+                  <td mat-cell *matCellDef="let element"> {{element.MATERIAL_CODE}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="MATERIAL_DESCRIPTION">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Description </th>
+                  <td mat-cell *matCellDef="let element"> {{element.MATERIAL_DESCRIPTION}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="QUANTITY">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+                  <td mat-cell *matCellDef="let element"> {{element.QUANTITY}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="QUANTITY_UOM">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity Unit </th>
+                  <td mat-cell *matCellDef="let element"> {{element.QUANTITY_UOM}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="LR_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Lr No </th>
+                  <td mat-cell *matCellDef="let element"> {{element.LR_NO}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="LR_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Lr Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.LR_DATE}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="FWD_AGENT">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Forward Agent </th>
+                  <td mat-cell *matCellDef="let element"> {{element.FWD_AGENT}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="CARRIER">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrier </th>
+                  <td mat-cell *matCellDef="let element"> {{element.CARRIER}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="FREIGHT_ORDER">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order </th>
+                  <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="FREIGHT_ORDER_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER_DATE}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="InvoiceItemDetailsDisplayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: InvoiceItemDetailsDisplayedColumns;" matRipple
+                  style=" cursor: pointer;"></tr>
+              </table>
+            </div>
+          </div>
+          <div flex>
+            <mat-paginator [pageSizeOptions]="[5,10, 20, 30, 50, 75, 100]" showFirstLastButtons>
+            </mat-paginator>
+          </div>
+        </div>
+      </mat-card-content> -->
+  </div>
+  <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+  </mat-progress-spinner>
+  <div id="overlay" *ngIf="isProgressBarVisibile"></div>
+</div>

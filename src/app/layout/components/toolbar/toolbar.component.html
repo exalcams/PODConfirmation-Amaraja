@@ -25,25 +25,17 @@
 
         <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
 
-            <button mat-button fxHide fxShow.gt-xs class="language-button" [matMenuTriggerFor]="languageMenu">
+            <!-- <button mat-button fxHide fxShow.gt-xs class="language-button" [matMenuTriggerFor]="languageMenu">
                 <div fxLayout="row" fxLayoutAlign="center center">
                     <mat-icon [matBadge]="NotificationCount" matBadgeColor="accent">notifications_active</mat-icon>
                 </div>
             </button>
 
             <mat-menu #languageMenu="matMenu" [overlapTrigger]="false">
-                <!-- <mat-list role="list">
-                            <mat-list-item role="listitem" style="word-spacing: normal;" *ngFor="let alert of AllAlertsByUserID"
-                                (click)="UpdateAlert(alert)"> <span>{{alert.AlertMessage}}</span></mat-list-item>
-                        </mat-list> -->
-
                 <button mat-menu-item *ngFor="let notif of AllNotificationByUserID" class="notificationMenuItem" style="width:75vw" (click)="UpdateNotification(notif)">
                     <span>{{notif.Message}}</span>
-                    <!-- <span fxLayout="row">
-                               
-                            </span> -->
                 </button>
-            </mat-menu>
+            </mat-menu> -->
 
             <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
                 <div fxLayout="row" fxLayoutAlign="center center">

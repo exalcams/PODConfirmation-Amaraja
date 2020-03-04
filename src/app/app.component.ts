@@ -15,6 +15,8 @@ import { navigation } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
 import { MenuUpdataionService } from './services/menu-update.service';
+import { MatIconRegistry } from '@angular/material';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
     selector: 'app',
@@ -50,6 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
         private _translateService: TranslateService,
         private _platform: Platform,
         private _menuUpdationService: MenuUpdataionService,
+        mdIconRegistry: MatIconRegistry,
+        sanitizer: DomSanitizer
     ) {
         // Get default navigation
         this.navigation = navigation;
@@ -71,6 +75,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
         // Use a language
         this._translateService.use('en');
+        mdIconRegistry.addSvgIcon('menuIcon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/menu/menu.svg'));
+        mdIconRegistry.addSvgIcon('dashboardIcon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/menu/dashboardd.svg'));
 
         /**
          * ------------------------------------------------------------------

@@ -1,4 +1,5 @@
 export class InvoiceDetails {
+    HEADER_ID: number;
     PLANT: string;
     PLANT_NAME: string;
     INV_NO: string;
@@ -26,6 +27,26 @@ export class InvoiceDetails {
     ACTUAL_DELIVERY_DATE: string;
     TRANSIT_LEAD_TIME: string;
     CANC_INV_STATUS: string;
+    STATUS: string;
+    STATUS_DESCRIPTION: string;
+    CREATED_ON?: Date;
+    CREATED_BY: string;
+    IS_ACTIVE: boolean;
+}
+
+export class InvoiceItemDetails {
+    ITEM_ID: number;
+    HEADER_ID: number;
+    MATERIAL_CODE: string;
+    MATERIAL_DESCRIPTION: string;
+    QUANTITY: string;
+    QUANTITY_UOM: string;
+    LR_NO: string;
+    LR_DATE: string;
+    FWD_AGENT: string;
+    CARRIER: string;
+    FREIGHT_ORDER: string;
+    FREIGHT_ORDER_DATE: string;
     STATUS: string;
     STATUS_DESCRIPTION: string;
     CREATED_ON?: Date;

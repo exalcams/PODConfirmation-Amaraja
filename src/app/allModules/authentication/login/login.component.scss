@@ -5,8 +5,9 @@ login {
     #login {
         width: 100%;
         overflow: hidden;
-        background: url('/assets/images/backgrounds/dark-material-bg.jpg') no-repeat;
-        background-size: cover;
+        background: url('/assets/images/backgrounds/CodeOfEthicBanner.jpg') no-repeat;
+        // background-size: cover;
+        background-size: 74% 100%;
 
         #login-intro {
             padding: 128px;
@@ -68,7 +69,47 @@ login {
                 }
 
                 .title {
-                    font-size: 21px;
+                    font-size: 25px;
+                    line-height: 1;
+                    // font-family: Baloo;
+                    line-height: 1.57;
+                    letter-spacing: 2.28px;
+                    text-align: left;
+                    color: #242424;
+                    font-weight: 900;
+                    margin-bottom: 15px;
+                    margin-top: -35px;
+                   
+                }
+            .border{
+                border-bottom: #3a7be3;
+                border-bottom-style: solid;
+                margin-left: 20px;
+                margin-right: 212px;
+                margin-top: -15px !important;
+            }
+                .subTitel{
+                    opacity: 0.8;
+                    // font-family: SegoeUI;
+                    font-size: 12px;
+                    font-weight: 600;
+                    line-height: 1.33;
+                    letter-spacing: 0.72px;
+                    text-align: left;
+                    color: #454545;
+                    margin-top: 20px !important;
+                }
+                .loginButton{
+                    
+                    // font-family: SegoeUI;
+                    // font-size: 34px;
+                    font-weight: 400;
+                    font-stretch: normal;
+                    font-style: normal;
+                    line-height: 1.35;
+                    letter-spacing: 1.02px;
+                    text-align: left;
+                    color: #ffffff;
                 }
 
                 .description {
@@ -102,8 +143,20 @@ login {
                         .forgot-password {
                             font-size: 13px;
                             font-weight: 500;
-                            margin-bottom: 16px
+                            margin-bottom: 16px;
+                            opacity: 0.8;
+                            // font-family: SegoeUI;
+                            font-size: 12px;
+                            font-weight: 600;
+                            line-height: 1.33;
+                            letter-spacing: 0.72px;
+                            text-align: left;
+                            color: #454545;
                         }
+                    }
+
+                    .mat-form-field-appearance-outline .mat-form-field-outline{
+                        color: rgba(67, 132, 255, 0.4) !important
                     }
 
                     .submit-button {

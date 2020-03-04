@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import { fuseAnimations } from "@fuse/animations";
-import { AcademyCoursesService } from "app/services/courses.service";
+import { fuseAnimations } from '@fuse/animations';
+import { AcademyCoursesService } from 'app/services/courses.service';
 
 @Component({
-    selector: "academy-courses",
-    templateUrl: "./courses.component.html",
-    styleUrls: ["./courses.component.scss"],
+    selector: 'academy-courses',
+    templateUrl: './courses.component.html',
+    styleUrls: ['./courses.component.scss'],
     animations: fuseAnimations
 })
 export class AcademyCoursesComponent implements OnInit, OnDestroy {
@@ -29,8 +29,8 @@ export class AcademyCoursesComponent implements OnInit, OnDestroy {
      */
     constructor(private _academyCoursesService: AcademyCoursesService) {
         // Set the defaults
-        this.currentCategory = "all";
-        this.searchTerm = "";
+        this.currentCategory = 'all';
+        this.searchTerm = '';
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -58,7 +58,7 @@ export class AcademyCoursesComponent implements OnInit, OnDestroy {
             .subscribe(courses => {
                 this.filteredCourses = this.coursesFilteredByCategory = this.courses = courses;
                 this.filteredCourses.forEach(element => {
-                    if (element.STATUS == "Success") {
+                    if (element.STATUS == 'Success') {
 
                     }
                 });
@@ -84,7 +84,7 @@ export class AcademyCoursesComponent implements OnInit, OnDestroy {
      */
     filterCoursesByCategory(): void {
         // Filter
-        if (this.currentCategory === "all") {
+        if (this.currentCategory === 'all') {
             this.coursesFilteredByCategory = this.courses;
             this.filteredCourses = this.courses;
         } else {
@@ -106,7 +106,7 @@ export class AcademyCoursesComponent implements OnInit, OnDestroy {
         const searchTerm = this.searchTerm.toLowerCase();
 
         // Search
-        if (searchTerm === "") {
+        if (searchTerm === '') {
             this.filteredCourses = this.coursesFilteredByCategory;
         } else {
             this.filteredCourses = this.coursesFilteredByCategory.filter(
