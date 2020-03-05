@@ -2,7 +2,7 @@
 #invoiceItem {
   .progressBarPostion {
     position: absolute !important;
-    top: 350px;
+    bottom: 50%;
     z-index: 1;
     left: 55%;
   }
@@ -15,35 +15,35 @@
   }
   .boldClass {
     font-weight: bold;
-}
+  }
 
-.boldItalicClass {
+  .boldItalicClass {
     @extend .boldClass;
     font-style: italic;
-}
+  }
 
-.semiBoldClass {
+  .semiBoldClass {
     font-weight: 500;
-}
+  }
 
-.subTitle {
+  .subTitle {
     @extend .semiBoldClass;
     font-size: 14px;
     text-decoration: var(--textDec);
-}
+  }
 
-.fontSize {
+  .fontSize {
     font-size: var(--siz);
-}
+  }
 
-.mt-2 {
+  .mt-2 {
     margin-top: 2px !important;
-}
+  }
 
-.labelClass {
+  .labelClass {
     @extend .boldClass;
     margin-top: 8px;
-}
+  }
   //   .tableData {
   //     overflow: auto;
   //     height: 60vh !important;
@@ -162,5 +162,23 @@
       background: whitesmoke !important;
       cursor: not-allowed !important;
     }
+  }
+  @mixin BorderMixin($t, $r, $b, $l, $color) {
+    border-color: $color;
+    border-style: solid;
+    border-top-width: $t;
+    border-right-width: $r;
+    border-bottom-width: $b;
+    border-left-width: $l;
+  }
+  .cardBorder {
+    @include BorderMixin(0px, 0px, 0px, 5px, #efb577);
+  }
+  .materialColor {
+    color: #efb577;
+  }
+  .btnBg {
+    background-color: #efb577 !important;
+    color: white;
   }
 }

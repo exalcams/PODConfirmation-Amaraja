@@ -40,6 +40,7 @@ export class InvoiceItemDetails {
     MATERIAL_CODE: string;
     MATERIAL_DESCRIPTION: string;
     QUANTITY: string;
+    RECEIVED_QUANTITY: string;
     QUANTITY_UOM: string;
     LR_NO: string;
     LR_DATE: string;
@@ -49,6 +50,8 @@ export class InvoiceItemDetails {
     FREIGHT_ORDER_DATE: string;
     STATUS: string;
     STATUS_DESCRIPTION: string;
+    REASON: string;
+    REMARKS: string;
     CREATED_ON?: Date;
     CREATED_BY: string;
     IS_ACTIVE: boolean;

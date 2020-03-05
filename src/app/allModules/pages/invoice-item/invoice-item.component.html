@@ -1,130 +1,178 @@
 <div id="invoiceItem" class="page-layout carded" fusePerfectScrollbar>
   <div class="center" fxLayout="column" fxLayoutGap="10px">
-    <mat-card class="cardHeader p-8 pb-0">
+    <mat-card class="cardHeader p-8 pb-0 m-0">
       <div fxLayout>
-        <div fxFlex fxLayoutAlign="center" class="h2">
+        <div fxFlex fxLayoutAlign="start" class="h2">
           <b>Invoice Item Details</b>
+        </div>
+        <div fxFlex fxLayoutAlign="end">
+          <button *ngIf="(currentUserRole | lowercase)==='customer'" mat-raised-button class="mr-4 btnBg"
+            (click)="SaveAndUploadInvoiceItem()">Save & Upload</button>
+          <input hidden type="file" #fileInput id="file" (change)="handleFileInput($event,index)" />
+          <button *ngIf="(currentUserRole | lowercase)==='customer'" mat-raised-button class="btnBg"
+            (click)="SaveInvoiceItem()">Save</button>
+          <button *ngIf="(currentUserRole | lowercase)==='cfa'" mat-raised-button class="btnBg"
+            (click)="ApproveInvoiceItem()">Approve</button>
         </div>
       </div>
     </mat-card>
-      <div class="sidenav-content">
-        <form autocomplete="off" name="form" [formGroup]="InvoiceItemFormGroup" novalidate>
-          <mat-card class="m-0 p-0">
-            <div fxLayout="row" class="borderTop mt-4"></div>
-            <div formArrayName="InvoiceItems"
-              *ngFor="let ite of InvoiceItemFormGroup.get('InvoiceItems')['controls']; let i = index">
-              <div [formGroupName]="i">
-                <mat-card fxLayout class="p-8 m-4">
-                  <div fxFlex="100">
-                    <div fxLayout="column">
-                      <div fxFlex fxLayout class="p-8">
+    <div class="sidenav-content">
+      <form autocomplete="off" name="form" [formGroup]="InvoiceItemFormGroup" novalidate>
+        <div class="m-0 p-0">
+          <div fxLayout="row" class="borderTop mt-4"></div>
+          <div formArrayName="InvoiceItems"
+            *ngFor="let ite of InvoiceItemFormGroup.get('InvoiceItems')['controls']; let i = index">
+            <div [formGroupName]="i">
+              <mat-card fxLayout class="p-4 my-4 pt-8 cardBorder">
+                <div fxFlex="100">
+                  <div fxLayout="column">
+                    <div fxFlex fxLayout class="p-4">
 
-                        <div fxFlex fxLayoutAlign="start center">
-                          <span class="boldClass mx-4">Item :</span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('ITEM_ID')?.value}}
-                        </div>
-
-                        <div fxFlex fxLayoutAlign="start center">
-                          <span class="boldClass mx-4">Material :</span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('MATERIAL_CODE')?.value}}
-                          <span class="ml-4"></span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('MATERIAL_DESCRIPTION')?.value}}
-                        </div>
-
-                        <div fxFlex fxLayoutAlign="start center">
-                          <span class="boldClass mx-4">LR No. :</span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('LR_NO')?.value}}
-                        </div>
-
-                        <div fxFlex fxLayoutAlign="start center">
-                          <span class="boldClass mx-4">LR Date :</span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('LR_DATE')?.value}}
-                        </div>
-
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">Invoice :</span>
+                        {{SelectedInvoiceDetail?.INV_NO}}
                       </div>
 
-                      <div fxFlex fxLayout class="p-8">
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">Item :</span>
+                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('ITEM_ID')?.value}}
+                      </div>
 
-                        <div fxFlex fxLayoutAlign="start center">
-                          <span class="boldClass mx-4">Forward Agent :</span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FWD_AGENT')?.value}}
-                        </div>
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">Material :</span>
+                        <span class="materialColor">
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('MATERIAL_CODE')?.value}} -
+                          <span class="ml-4">
+                            {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('MATERIAL_DESCRIPTION')?.value}}
+                          </span>
+                        </span>
+                      </div>
 
-                        <div fxFlex fxLayoutAlign="start center">
-                          <span class="boldClass mx-4">Carrier :</span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('CARRIER')?.value}}
-                        </div>
-
-                        <div fxFlex fxLayoutAlign="start center">
-                          <span class="boldClass mx-4">Freight Order:</span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FREIGHT_ORDER')?.value}}
-                        </div>
-
-                        <div fxFlex fxLayoutAlign="start center">
-                          <span class="boldClass mx-4">Freight Order Date:</span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FREIGHT_ORDER_DATE')?.value}}
-                        </div>
-
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">LR No. :</span>
+                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('LR_NO')?.value}}
                       </div>
 
 
+                    </div>
+                    <div fxFlex fxLayout class="p-4">
 
-                      <div fxFlex fxLayout class="p-8">
-                        <div fxFlex>
-                          <mat-form-field class="pl-8" fxFlex>
-                            <input matInput formControlName="QUANTITY" placeholder="Quantity" pattern="^[1-9]\d*$">
-                            <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').touched &&
-                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').hasError('required')">
-                              *
-                            </mat-error>
-                            <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').touched &&
-                      !InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').hasError('required') &&
-                      InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY').hasError('pattern')">
-                              *
-                            </mat-error>
-                          </mat-form-field>
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">LR Date :</span>
+                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('LR_DATE')?.value}}
+                      </div>
+
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">Forward Agent :</span>
+                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FWD_AGENT')?.value}}
+                      </div>
+
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">Carrier :</span>
+                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('CARRIER')?.value}}
+                      </div>
+
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">Freight Order:</span>
+                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FREIGHT_ORDER')?.value}}
+                      </div>
+
+                    </div>
+                    <div fxFlex fxLayout class="p-4">
+
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">Freight Ord. Dt:</span>
+                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FREIGHT_ORDER_DATE')?.value}}
+                      </div>
+
+                      <div fxFlex fxLayoutAlign="start center">
+                        <span class="boldClass mx-4">Quantity:</span>
+                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('QUANTITY')?.value}}
+                        <span class="ml-4">
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('QUANTITY_UOM')?.value}}
+                        </span>
+                      </div>
+
+                      <div fxFlex fxLayoutAlign="start center">
+                        <mat-form-field *ngIf="(currentUserRole | lowercase)==='customer'" class="pl-8 pr-16" fxFlex>
+                          <input matInput formControlName="RECEIVED_QUANTITY" placeholder="Received Quantity"
+                            pattern="^[0-9]\d*$"
+                            (keyup)="valueChanges(InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('QUANTITY')?.value, 
+                            InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('RECEIVED_QUANTITY')?.value,i)">
+                          <mat-error class="pl-4 errorClass"
+                            *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('RECEIVED_QUANTITY').touched &&
+                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('RECEIVED_QUANTITY').hasError('required')">
+                            Received quantity is required
+                          </mat-error>
+                          <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('RECEIVED_QUANTITY').touched &&
+                    !InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('RECEIVED_QUANTITY').hasError('required') &&
+                    InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('RECEIVED_QUANTITY').hasError('max')">
+                            Value should not greater than ordered quantity
+                          </mat-error>
+                          <mat-error class="pl-4 errorClass"
+                            *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('RECEIVED_QUANTITY').touched &&
+                      !InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('RECEIVED_QUANTITY').hasError('required') &&
+                      InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('RECEIVED_QUANTITY').hasError('pattern')">
+                            Enter valid value for quantity
+                          </mat-error>
+                          <span fxFlex class="ml-4">
+                            {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('QUANTITY_UOM')?.value}}
+                          </span>
+                        </mat-form-field>
+                        <div fxFlex fxLayoutAlign="start center" *ngIf="(currentUserRole | lowercase)==='cfa'">
+                          <span class="boldClass mx-4">Received Quantity:</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('RECEIVED_QUANTITY')?.value}}
+                          <span class="ml-4">
+                            {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('QUANTITY_UOM')?.value}}
+                          </span>
                         </div>
-                        <div fxFlex>
-                          <mat-form-field class="pl-8" fxFlex>
-                            <input matInput formControlName="QUANTITY_UOM" placeholder="UOM">
-                            <mat-error class="pl-4 errorClass"
-                              *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY_UOM').touched &&
-                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('QUANTITY_UOM').hasError('required')">
-                              *
-                            </mat-error>
-                          </mat-form-field>
-                        </div>
-                        <div fxFlex>
-                          <mat-form-field class="pl-8" fxFlex>
-                            <input matInput formControlName="STATUS" placeholder="Status">
-                            <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('STATUS').touched &&
-                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('STATUS').hasError('required')">
-                              *
-                            </mat-error>
-                          </mat-form-field>
-                        </div>
-                        <div fxFlex>
-                          <mat-form-field class="pl-8" fxFlex>
-                            <input matInput formControlName="STATUS_DESCRIPTION" placeholder="Description">
-                            <mat-error class="pl-4 errorClass"
-                              *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('STATUS_DESCRIPTION').touched &&
-                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('STATUS_DESCRIPTION').hasError('required')">
-                              *
-                            </mat-error>
-                          </mat-form-field>
+                      </div>
+                      <div fxFlex fxLayoutAlign="start center">
+                        <mat-form-field *ngIf="(currentUserRole | lowercase)==='customer'" class="pl-8" fxFlex>
+                          <mat-select matInput formControlName="REASON" placeholder="Reason">
+                            <mat-option [value]="rest" *ngFor="let rest of ReasonTemplates">{{rest}}</mat-option>
+                          </mat-select>
+                          <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('REASON').touched &&
+                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('REASON').hasError('required')">
+                            Reason is required
+                          </mat-error>
+                        </mat-form-field>
+                        <div fxFlex fxLayoutAlign="start center" *ngIf="(currentUserRole | lowercase)==='cfa'">
+                          <span class="boldClass mx-4">Reason:</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('REASON')?.value}}
                         </div>
                       </div>
 
                     </div>
+                    <div fxFlex fxLayout class="p-4">
+                      <div fxFlex fxLayoutAlign="start center">
+                        <mat-form-field *ngIf="(currentUserRole | lowercase)==='customer'" class="pl-8" fxFlex>
+                          <textarea cdkTextAreaAutosize cdkAutosizeMinRows="2" matInput formControlName="REMARKS"
+                            placeholder="Remarks"></textarea>
+                          <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('REMARKS').touched &&
+                        InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('REMARKS').hasError('required')">
+                            Remarks is required
+                          </mat-error>
+                        </mat-form-field>
+                        <div fxFlex fxLayoutAlign="start center" *ngIf="(currentUserRole | lowercase)==='cfa'">
+                          <span class="boldClass mx-4">Remarks:</span>
+                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('REMARKS')?.value}}
+                          <span class="ml-4">
+                            {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('REMARKS')?.value}}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </mat-card>
-              </div>
+                </div>
+              </mat-card>
             </div>
-          </mat-card>
-        </form>
-      </div>
+          </div>
+        </div>
+      </form>
+    </div>
 
-      <!-- <mat-card-content>
+    <!-- <mat-card-content>
         <div fxLayout="row">
           <div fxFlex="40">
             <h1 style="float:left;">Invoice Item Details</h1>

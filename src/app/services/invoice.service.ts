@@ -52,24 +52,38 @@ export class InvoiceService {
 
   GetInvoiceItemDetailsByID(UserID: Guid, ID: number): Observable<InvoiceItemDetails[] | string> {
     return this._httpClient.get<InvoiceItemDetails[]>(
-        `${this.baseAddress}api/PODConfirmation/GetInvoiceItemDetailsByID?UserID=${UserID}&ID=${ID}`
+      `${this.baseAddress}api/PODConfirmation/GetInvoiceItemDetailsByID?UserID=${UserID}&ID=${ID}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateInvoiceItems(invoiceItems: InvoiceItemDetails[]): Observable<any> {
+    return this._httpClient
+      .post<any>(
+        `${this.baseAddress}api/PODConfirmation/UpdateInvoiceItems`,
+        invoiceItems,
+        {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json'
+          })
+        }
       )
       .pipe(catchError(this.errorHandler));
   }
 
-  // UpdateInvoiceDetails(invoice: InvoiceDetails): Observable<any> {
-  //     return this._httpClient
-  //         .post<any>(
-  //             `${this.baseAddress}api/PODConfirmation/UpdateInvoiceDetails`,
-  //             invoice,
-  //             {
-  //                 headers: new HttpHeaders({
-  //                     'Content-Type': 'application/json'
-  //                 })
-  //             }
-  //         )
-  //         .pipe(catchError(this.errorHandler));
-  // }
+  AddInvoiceAttachment(headerID: number, CreatedBy: string, selectedFiles: File[]): Observable<any> {
+    const formData: FormData = new FormData();
+    if (selectedFiles && selectedFiles.length) {
+      selectedFiles.forEach(x => {
+        formData.append(x.name, x, x.name);
+      });
+    }
+    formData.append('HeaderID', headerID.toString());
+    formData.append('CreatedBy', CreatedBy);
+    return this._httpClient.post<any>(`${this.baseAddress}api/PODConfirmation/AddInvoiceAttachment`,
+      formData,
+    ).pipe(catchError(this.errorHandler));
+  }
 
   // DeleteInvoiceDetails(invoice: InvoiceDetails): Observable<any> {
   //     return this._httpClient

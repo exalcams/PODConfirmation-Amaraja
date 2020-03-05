@@ -139,6 +139,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
                 this.CurrentLoggedInUserProfile = this.authenticationDetails.profile;
             }
         }
+        this.toggleSidebarFolded();
     }
 
     /**

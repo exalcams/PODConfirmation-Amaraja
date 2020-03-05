@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-                <button mat-mini-fab class="mr-8" matTooltip="Add Role" (click)="clearRole()">
+                <button mat-mini-fab class="mr-8 btnBg" matTooltip="Add Role" (click)="clearRole()">
                     <mat-icon aria-label="Add Role">add</mat-icon>
                 </button>
             </div>
@@ -19,7 +19,7 @@
     <div *ngFor="let rol of AllRoles | filter: searchText">
         <div [attr.aria-label]="rol.RoleName">
             <div fxLayout="row" fxLayoutAlign="start center" class="side-bar-items" matRipple
-                (click)="loadSelectedRole(rol)" [ngClass]="{'active accent':selectID==rol.RoleID}">
+                (click)="loadSelectedRole(rol)" [ngClass]="{'active accent2':selectID==rol.RoleID}">
                 <!-- <div fxFlex="30%" fxLayoutAlign="start center">
                                     {{ap.Doc_Type_ID}}
                                 </div> -->

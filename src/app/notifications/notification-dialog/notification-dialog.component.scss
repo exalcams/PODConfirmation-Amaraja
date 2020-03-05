@@ -1,6 +1,31 @@
+@import "src/@fuse/scss/fuse";
 .confirmation-dialog {
+  @include media-breakpoint("xs") {
+    width: 100%;
+  }
+
+  @include media-breakpoint-up("sm") {
+    width: 440px;
+  }
+  .mat-radio-button {
+    margin: 0 5px;
+  }
   .mat-dialog-container {
-    padding: 0 !important;
-    border-radius: 10px;
+    padding: 0;
+    border-radius: 0px;
+  }
+
+  .dialog-content-wrapper {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .toolBg {
+    background-color: #121214 !important;
+    color: white !important;
+  }
+  .btnBg{
+    background-color: #efb577 !important;
+    color: white !important;
   }
 }

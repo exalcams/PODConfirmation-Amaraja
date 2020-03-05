@@ -9,6 +9,28 @@
   .center {
     padding: 5px !important;
   }
+  .cardHeader {
+    background-color: #fffdf9;
+    height: 60px;
+  }
+  .boldClass {
+    font-weight: bold;
+  }
+
+  .boldItalicClass {
+    @extend .boldClass;
+    font-style: italic;
+  }
+
+  .semiBoldClass {
+    font-weight: 500;
+  }
+
+  .subTitle {
+    @extend .semiBoldClass;
+    font-size: 14px;
+    text-decoration: var(--textDec);
+  }
 
   // .tableData {
   //   overflow: auto;

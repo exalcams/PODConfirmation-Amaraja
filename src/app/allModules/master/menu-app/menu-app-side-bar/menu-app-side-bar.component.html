@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-                <button mat-mini-fab class="mr-8" matTooltip="Add Menu" (click)="clearMenuApp()">
+                <button mat-mini-fab class="mr-8 btnBg" matTooltip="Add Menu" (click)="clearMenuApp()">
                     <mat-icon aria-label="Add Menu">add</mat-icon>
                 </button>
             </div>
@@ -19,7 +19,7 @@
     <div *ngFor="let ap of AllMenuApps | filter: searchText">
         <div [attr.aria-label]="ap.AppName">
             <div fxLayout="row" fxLayoutAlign="start center" class="side-bar-items" matRipple
-                (click)="loadSelectedMenuApp(ap)" [ngClass]="{'active accent':selectID==ap.AppID}">
+                (click)="loadSelectedMenuApp(ap)" [ngClass]="{'active accent2':selectID==ap.AppID}">
                 <!-- <div fxFlex="30%" fxLayoutAlign="start center">
                     {{ap.Doc_Type_ID}}
                 </div> -->

@@ -13,7 +13,7 @@
   }
   .mat-dialog-container {
     padding: 0;
-    border-radius: 10px;
+    border-radius: 0px;
   }
 
   .dialog-content-wrapper {
@@ -21,19 +21,12 @@
     display: flex;
     flex-direction: column;
   }
-
-  .disabledClass {
-    color: rgba(0, 0, 0, 0.38);
+  .toolBg {
+    background-color: #121214 !important;
+    color: white !important;
   }
-
-  .hbgg {
-    background-color: #006666 !important;
-  }
-
-  .hbg {
-    color: #006666 !important;
-  }
-  .hbo {
-    color: #f89406 !important;
+  .btnBg{
+    background-color: #efb577 !important;
+    color: white !important;
   }
 }
