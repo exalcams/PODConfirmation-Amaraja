@@ -15,7 +15,7 @@ export class NotificationDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public dialogData: DialogData,
-    private dialogRef: MatDialogRef<NotificationDialogComponent>,
+    public dialogRef: MatDialogRef<NotificationDialogComponent>,
   ) {
 
   }

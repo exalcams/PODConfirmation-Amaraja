@@ -233,7 +233,7 @@ export class InvoiceItemComponent implements OnInit {
     }
   }
 
-  handleFileInput(evt, index: number): void {
+  handleFileInput(evt): void {
     if (evt.target.files && evt.target.files.length > 0) {
       this.fileToUpload = evt.target.files[0];
       this.fileToUploadList.push(this.fileToUpload);

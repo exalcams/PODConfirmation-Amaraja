@@ -8,7 +8,7 @@
         <div fxFlex fxLayoutAlign="end">
           <button *ngIf="(currentUserRole | lowercase)==='customer'" mat-raised-button class="mr-4 btnBg"
             (click)="SaveAndUploadInvoiceItem()">Save & Upload</button>
-          <input hidden type="file" #fileInput id="file" (change)="handleFileInput($event,index)" />
+          <input hidden type="file" #fileInput id="file" (change)="handleFileInput($event)" />
           <button *ngIf="(currentUserRole | lowercase)==='customer'" mat-raised-button class="btnBg"
             (click)="SaveInvoiceItem()">Save</button>
           <button *ngIf="(currentUserRole | lowercase)==='cfa'" mat-raised-button class="btnBg"
