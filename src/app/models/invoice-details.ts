@@ -23,7 +23,7 @@ export class InvoiceDetails {
     FREIGHT_ORDER_DATE: string;
     ACTUAL_DISPATCH_DATE: string;
     PROPOSED_DELIVERY_DATE: string;
-    ACTUAL_UNLOAD_DATE: string;
+    VEHICLE_REPORTED_DATE: Date;
     ACTUAL_DELIVERY_DATE: string;
     TRANSIT_LEAD_TIME: string;
     CANC_INV_STATUS: string;
@@ -55,4 +55,14 @@ export class InvoiceItemDetails {
     CREATED_ON?: Date;
     CREATED_BY: string;
     IS_ACTIVE: boolean;
+}
+
+export class ApproverDetails {
+    ApprovedBy: string;
+    HEADERIDs: number[];
+}
+
+export class InvoiceUpdation {
+    VEHICLE_REPORTED_DATE: string;
+    InvoiceItems: InvoiceItemDetails[];
 }

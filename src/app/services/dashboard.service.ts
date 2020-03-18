@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { InvoiceDetails } from 'app/models/invoice-details';
+import { InvoiceDetails, ApproverDetails } from 'app/models/invoice-details';
 
 @Injectable({
     providedIn: 'root'
@@ -58,6 +58,14 @@ export class DashboardService {
             .pipe(catchError(this.errorHandler));
     }
 
+    GetConfirmedInvoiceDetails(userID: Guid): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/PODConfirmation/GetConfirmedInvoiceDetails?UserID=${userID}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
     UpdateInvoiceDetails(invoice: InvoiceDetails): Observable<any> {
         return this._httpClient
             .post<any>(
@@ -77,6 +85,20 @@ export class DashboardService {
             .post<any>(
                 `${this.baseAddress}api/PODConfirmation/DeleteInvoiceDetails`,
                 invoice,
+                {
+                    headers: new HttpHeaders({
+                        'Content-Type': 'application/json'
+                    })
+                }
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    ApproveSelectedInvoices(invoices: ApproverDetails): Observable<any> {
+        return this._httpClient
+            .post<any>(
+                `${this.baseAddress}api/PODConfirmation/ApproveSelectedInvoices`,
+                invoices,
                 {
                     headers: new HttpHeaders({
                         'Content-Type': 'application/json'

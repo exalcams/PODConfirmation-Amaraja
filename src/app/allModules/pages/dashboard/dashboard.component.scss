@@ -11,7 +11,7 @@
   }
   .cardHeader {
     background-color: #fffdf9;
-    height: 60px;
+    height: 45px;
   }
   .boldClass {
     font-weight: bold;
@@ -151,4 +151,11 @@
   //    /* row spacing / margin */
   //    border-spacing: 0 8px !important;
   //  }
+  .whiteBg{
+    background-color: white !important;
+  }
+  .btnBg {
+    background-color: #efb577 !important;
+    color: white;
+  }
 }

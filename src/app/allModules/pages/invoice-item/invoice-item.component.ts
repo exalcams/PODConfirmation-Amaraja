@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
 import { MatSnackBar, MatTableDataSource, MatPaginator, MatSort, MatDialogConfig, MatDialog } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { InvoiceDetails, InvoiceItemDetails } from 'app/models/invoice-details';
+import { InvoiceDetails, InvoiceItemDetails, InvoiceUpdation } from 'app/models/invoice-details';
 import { ShareParameterService } from 'app/services/share-parameters.service';
 import { InvoiceService } from 'app/services/invoice.service';
 import { Guid } from 'guid-typescript';
@@ -94,6 +94,7 @@ export class InvoiceItemComponent implements OnInit {
     }
 
     this.InvoiceItemFormGroup = this._formBuilder.group({
+      VehicleReportedDate: ['', Validators.required],
       InvoiceItems: this.InvoiceItemFormArray
     });
 
@@ -127,6 +128,7 @@ export class InvoiceItemComponent implements OnInit {
       (this.currentUserID, this.SelectedInvoiceDetail.HEADER_ID).subscribe(
         data => {
           this.isProgressBarVisibile = false;
+          this.InvoiceItemFormGroup.controls.VehicleReportedDate.patchValue(this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE);
           this.InvoiceItemDetailsList = data as InvoiceItemDetails[];
           // this.InvoiceItemDetailsDataSource = new MatTableDataSource(this.InvoiceItemDetailsList);
           // this.InvoiceItemDetailsDataSource.paginator = this.InvoiceItemDetailsPaginator;
@@ -262,7 +264,7 @@ export class InvoiceItemComponent implements OnInit {
 
   ApproveInvoiceItem(): void {
     if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'approved') {
-      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase().includes('save')) {
+      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() === 'saved and uploaded') {
         if (this.InvoiceItemFormGroup.valid) {
           const Actiontype = 'Approve';
           const Catagory = 'Invoice item';
@@ -272,7 +274,7 @@ export class InvoiceItemComponent implements OnInit {
         }
       } else {
         this.notificationSnackBarComponent.openSnackBar(
-          'Invoice not yet saved by customer', SnackBarStatus.danger
+          'POD Document not yet uploaded by customer', SnackBarStatus.danger
         );
       }
     } else {
@@ -327,7 +329,7 @@ export class InvoiceItemComponent implements OnInit {
       });
   }
 
-  GetInvoiceItemValues(Actiontype: string): void {
+  GetInvoiceItemValues(Actiontype: string): InvoiceItemDetails[] {
     const InvoiceItemsArr = this.InvoiceItemFormGroup.get('InvoiceItems') as FormArray;
     InvoiceItemsArr.controls.forEach((x) => {
       const ItemID = x.get('ITEM_ID').value;
@@ -338,12 +340,19 @@ export class InvoiceItemComponent implements OnInit {
       SelectedRFQItem.STATUS = Actiontype === 'Save' ? 'Saved' : Actiontype === 'Approve' ? 'Approved' :
         Actiontype === 'Save & Upload' ? 'Saved and uploaded' : '';
     });
+    return this.InvoiceItemDetailsList;
   }
 
   UpdateInvoiceItems(Actiontype: string): void {
-    this.GetInvoiceItemValues(Actiontype);
     this.isProgressBarVisibile = true;
-    this._invoiceService.UpdateInvoiceItems(this.InvoiceItemDetailsList).subscribe(
+    const invoiceUpdation = new InvoiceUpdation();
+    let VehReportedDate = this.InvoiceItemFormGroup.controls.VehicleReportedDate.value;
+    if (VehReportedDate) {
+      VehReportedDate = this._datePipe.transform(VehReportedDate, 'yyyy-MM-dd HH:mm:ss');
+    }
+    invoiceUpdation.VEHICLE_REPORTED_DATE = VehReportedDate;
+    invoiceUpdation.InvoiceItems = this.GetInvoiceItemValues(Actiontype);
+    this._invoiceService.UpdateInvoiceItems(invoiceUpdation).subscribe(
       data => {
         const Ststs = Actiontype === 'Save' ? 'Saved' : Actiontype === 'Approve' ? 'Approved' :
           Actiontype === 'Save & Upload' ? 'Saved and uploaded' : '';
@@ -354,6 +363,7 @@ export class InvoiceItemComponent implements OnInit {
                 this.isProgressBarVisibile = false;
                 this.notificationSnackBarComponent.openSnackBar(`Invoice item ${Ststs} successfully`, SnackBarStatus.success);
                 this.ResetControl();
+                this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE = new Date(VehReportedDate);
                 this.SelectedInvoiceDetail.STATUS = Ststs;
                 this.GetInvoiceItemDetailsByID();
               },
@@ -368,6 +378,7 @@ export class InvoiceItemComponent implements OnInit {
           this.notificationSnackBarComponent.openSnackBar
             (`Invoice item ${Ststs} successfully`, SnackBarStatus.success);
           this.ResetControl();
+          this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE = new Date(VehReportedDate);
           this.SelectedInvoiceDetail.STATUS = Ststs;
           this.GetInvoiceItemDetailsByID();
         }
@@ -383,6 +394,15 @@ export class InvoiceItemComponent implements OnInit {
 
   applyFilter(filterValue: string): void {
     this.InvoiceItemDetailsDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  onKeydown(event): boolean {
+    // console.log(event.key);
+    if (event.key === 'Backspace' || event.key === 'Delete') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

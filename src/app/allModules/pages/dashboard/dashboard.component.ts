@@ -12,9 +12,11 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { AuthenticationDetails } from 'app/models/master';
 import { fuseAnimations } from '@fuse/animations';
-import { InvoiceDetails } from 'app/models/invoice-details';
+import { InvoiceDetails, ApproverDetails } from 'app/models/invoice-details';
 import { DashboardService } from 'app/services/dashboard.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Guid } from 'guid-typescript';
 
 @Component({
     selector: 'app-dashboard',
@@ -25,21 +27,19 @@ import { ShareParameterService } from 'app/services/share-parameters.service';
 })
 export class DashboardComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
+    currentUserID: Guid;
+    currentUserRole: string;
     MenuItems: string[];
     isProgressBarVisibile: boolean;
     allInvoicesCount: number;
     notificationSnackBarComponent: NotificationSnackBarComponent;
     allInvoiceDetails: InvoiceDetails[] = [];
     displayedColumns: string[] = [
+        'SELECT',
         'INV_NO',
         'INV_DATE',
         'INV_TYPE',
-        'MATERIAL_CODE',
-        'MATERIAL_DESCRIPTION',
-        'QUANTITY',
-        'QUANTITY_UOM',
-        'LR_NO',
-        'LR_DATE',
+        'PLANT',
         'VEHICLE_NO',
         'VEHICLE_CAPACITY',
         'FWD_AGENT',
@@ -48,10 +48,9 @@ export class DashboardComponent implements OnInit {
         'EWAYBILL_DATE',
         'OUTBOUND_DELIVERY',
         'OUTBOUND_DELIVERY_DATE',
-        'FREIGHT_ORDER',
-        'FREIGHT_ORDER_DATE'
     ];
     dataSource = new MatTableDataSource<InvoiceDetails>();
+    selection = new SelectionModel<InvoiceDetails>(true, []);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -70,6 +69,8 @@ export class DashboardComponent implements OnInit {
         const retrievedObject = localStorage.getItem('authorizationData');
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+            this.currentUserID = this.authenticationDetails.userID;
+            this.currentUserRole = this.authenticationDetails.userRole;
             this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
             if (this.MenuItems.indexOf('Dashboard') < 0) {
                 this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
@@ -79,7 +80,12 @@ export class DashboardComponent implements OnInit {
         } else {
             this._router.navigate(['/auth/login']);
         }
-        this.getAllInvoiceDetails();
+
+        if (this.currentUserRole.toLowerCase() === 'amararaja user') {
+            this.getConfirmedInvoiceDetails();
+        } else {
+            this.getAllInvoiceDetails();
+        }
     }
 
     applyFilter(filterValue: string): void {
@@ -111,9 +117,76 @@ export class DashboardComponent implements OnInit {
             );
     }
 
+    getConfirmedInvoiceDetails(): void {
+        this.isProgressBarVisibile = true;
+        this._dashboardService
+            .GetConfirmedInvoiceDetails(this.authenticationDetails.userID)
+            .subscribe(
+                data => {
+                    this.allInvoiceDetails = data as InvoiceDetails[];
+                    this.allInvoicesCount = this.allInvoiceDetails.length;
+                    this.dataSource = new MatTableDataSource(
+                        this.allInvoiceDetails
+                    );
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                    this.isProgressBarVisibile = false;
+                },
+                err => {
+                    this.isProgressBarVisibile = false;
+                    this.notificationSnackBarComponent.openSnackBar(
+                        err instanceof Object ? 'Something went wrong' : err,
+                        SnackBarStatus.danger
+                    );
+                }
+            );
+    }
+
     invoiceRowClick(row: InvoiceDetails): void {
         // console.log(row);
         this._shareParameterService.SetInvoiceDetail(row);
         this._router.navigate(['/pages/invItem']);
+    }
+
+    isAllSelected(): boolean {
+        if (this.selection && this.dataSource) {
+            const numSelected = this.selection.selected.length;
+            const numRows = this.dataSource.data.length;
+            return numSelected === numRows;
+        }
+        // return true;
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggle(): void {
+        if (this.dataSource) {
+            this.isAllSelected() ?
+                this.selection.clear() :
+                this.dataSource.data.forEach(row => this.selection.select(row));
+        }
+    }
+
+    ApproveSelectedInvoices(): void {
+        const approverDetails = new ApproverDetails();
+        approverDetails.ApprovedBy = this.currentUserID.toString();
+        approverDetails.HEADERIDs = this.selection.selected.map(a => a.HEADER_ID);
+        this.isProgressBarVisibile = true;
+        this._dashboardService
+            .ApproveSelectedInvoices(approverDetails)
+            .subscribe(
+                data => {
+                    this.notificationSnackBarComponent.openSnackBar(`Selected Invoice(s) approved successfully`, SnackBarStatus.success);
+                    this.selection = new SelectionModel<InvoiceDetails>(true, []);
+                    this.getConfirmedInvoiceDetails();
+                    this.isProgressBarVisibile = false;
+                },
+                err => {
+                    this.isProgressBarVisibile = false;
+                    this.notificationSnackBarComponent.openSnackBar(
+                        err instanceof Object ? 'Something went wrong' : err,
+                        SnackBarStatus.danger
+                    );
+                }
+            );
     }
 }
