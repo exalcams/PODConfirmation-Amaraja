@@ -51,23 +51,24 @@ import {
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FormsModule } from '@angular/forms';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { AcademyCoursesService } from 'app/services/courses.service';
-import { AcademyCourseService } from 'app/services/course.service';
-import { AcademyCoursesComponent } from './academy/courses/courses.component';
-import { AcademyCourseComponent } from './academy/course/course.component';
-import { InvoiceItemComponent } from './invoice-item/invoice-item.component';
+// import { DashboardComponent } from './dashboard/dashboard.component';
+// import { AcademyCoursesService } from 'app/services/courses.service';
+// import { AcademyCourseService } from 'app/services/course.service';
+// import { AcademyCoursesComponent } from './academy/courses/courses.component';
+// import { AcademyCourseComponent } from './academy/course/course.component';
+// import { InvoiceItemComponent } from './invoice-item/invoice-item.component';
 import { DecimalPipe } from '@angular/common';
+import { DeliveryComplianceReportComponent } from './delivery-compliance-report/delivery-compliance-report.component';
 
 const routes = [
     {
-        path: 'dashboard',
-        component: DashboardComponent
+        path: 'delivery',
+        component: DeliveryComplianceReportComponent
     },
-    {
-        path: 'invItem',
-        component: InvoiceItemComponent
-    },
+    // {
+    //     path: 'invItem',
+    //     component: InvoiceItemComponent
+    // },
     // {
     //     path     : 'courses',
     //     component: AcademyCoursesComponent,
@@ -142,12 +143,10 @@ const routes = [
 
         FormsModule
     ],
-    declarations: [DashboardComponent, AcademyCourseComponent, AcademyCoursesComponent, InvoiceItemComponent],
+    declarations: [DeliveryComplianceReportComponent],
     providers: [
-        AcademyCoursesService,
-        AcademyCourseService,
         DecimalPipe
     ],
     entryComponents: []
 })
-export class PagesModule { }
+export class ReportsModule { }

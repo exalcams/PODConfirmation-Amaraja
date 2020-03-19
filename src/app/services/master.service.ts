@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification } from 'app/models/master';
+import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason } from 'app/models/master';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +63,45 @@ export class MasterService {
   DeleteMenuApp(menuApp: MenuApp): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteApp`,
       menuApp,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+   // Reason
+   CreateReason(reason: Reason): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateReason`,
+    reason,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllReasons(): Observable<Reason[] | string> {
+    return this._httpClient.get<Reason[]>(`${this.baseAddress}api/Master/GetAllReasons`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateReason(reason: Reason): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateReason`,
+    reason,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteReason(reason: Reason): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteReason`,
+    reason,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

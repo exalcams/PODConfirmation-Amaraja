@@ -33,6 +33,15 @@ export class MenuApp {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
+export class Reason {
+    ReasonID: number;
+    Description: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
 export class AuthenticationDetails {
     isAuth: boolean;
     userID: Guid;

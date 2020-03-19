@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation, ElementRef, Renderer } from '@angular/core';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, Reason } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
@@ -13,6 +13,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { MasterService } from 'app/services/master.service';
 
 @Component({
   selector: 'app-invoice-item',
@@ -53,13 +54,15 @@ export class InvoiceItemComponent implements OnInit {
   fileToUploadList: File[] = [];
   InvoiceItemFormGroup: FormGroup;
   InvoiceItemFormArray: FormArray = this._formBuilder.array([]);
-  ReasonTemplates: string[] = [];
+  AllReasons: Reason[] = [];
+  // ReasonTemplates: string[] = [];
 
   constructor(
     private _router: Router,
     private _dashboardService: DashboardService,
     private _shareParameterService: ShareParameterService,
     private _invoiceService: InvoiceService,
+    private _masterService: MasterService,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder,
@@ -73,7 +76,7 @@ export class InvoiceItemComponent implements OnInit {
     }
     this.isProgressBarVisibile = true;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.ReasonTemplates = ['Completely Received', 'Partially Received', 'Damaged'];
+    // this.ReasonTemplates = ['Completely Received', 'Partially Received', 'Damaged'];
   }
 
   ngOnInit(): void {
@@ -97,7 +100,7 @@ export class InvoiceItemComponent implements OnInit {
       VehicleReportedDate: ['', Validators.required],
       InvoiceItems: this.InvoiceItemFormArray
     });
-
+    this.GetAllReasons();
     this.GetInvoiceItemDetailsByID();
   }
 
@@ -120,6 +123,22 @@ export class InvoiceItemComponent implements OnInit {
     while (formArray.length !== 0) {
       formArray.removeAt(0);
     }
+  }
+
+  GetAllReasons(): void {
+    this.isProgressBarVisibile = true;
+    this._masterService.GetAllReasons().subscribe(
+      (data) => {
+        if (data) {
+          this.AllReasons = data as Reason[];
+          this.isProgressBarVisibile = false;
+        }
+      },
+      (err) => {
+        console.error(err);
+        this.isProgressBarVisibile = false;
+      }
+    );
   }
 
   GetInvoiceItemDetailsByID(): void {

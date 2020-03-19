@@ -153,7 +153,7 @@
                       <div fxFlex fxLayoutAlign="start center">
                         <mat-form-field *ngIf="(currentUserRole | lowercase)==='customer'" class="pl-8" fxFlex>
                           <mat-select matInput formControlName="REASON" placeholder="Reason">
-                            <mat-option [value]="rest" *ngFor="let rest of ReasonTemplates">{{rest}}</mat-option>
+                            <mat-option [value]="rest.Description" *ngFor="let rest of AllReasons">{{rest.Description}}</mat-option>
                           </mat-select>
                           <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('REASON').touched &&
                         InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('REASON').hasError('required')">

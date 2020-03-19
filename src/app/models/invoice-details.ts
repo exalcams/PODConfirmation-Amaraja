@@ -66,3 +66,39 @@ export class InvoiceUpdation {
     VEHICLE_REPORTED_DATE: string;
     InvoiceItems: InvoiceItemDetails[];
 }
+
+export class ReportInvoice {
+    INV_NO: string;
+    INV_DATE: string;
+    INV_TYPE: string;
+    LR_NO: string;
+    LR_DATE: string;
+    VEHICLE_NO: string;
+    CARRIER: string;
+    VEHICLE_CAPACITY: string;
+    EWAYBILL_NO: string;
+    EWAYBILL_DATE: string;
+    FREIGHT_ORDER: string;
+    FREIGHT_ORDER_DATE: string;
+    MATERIAL_CODE: string;
+    MATERIAL_DESCRIPTION: string;
+    QUANTITY: string;
+    RECEIVED_QUANTITY: string;
+    QUANTITY_UOM: string;
+    PLANT: string;
+    PLANT_NAME: string;
+    OUTBOUND_DELIVERY: string;
+    OUTBOUND_DELIVERY_DATE: string;
+    ACTUAL_DISPATCH_DATE: string;
+    PROPOSED_DELIVERY_DATE: string;
+    VEHICLE_REPORTED_DATE?: Date;
+    ACTUAL_DELIVERY_DATE?: Date;
+    POD_UPLOADE_STATUS: string;
+    TRANSIT_LEAD_TIME: string;
+    CANC_INV_STATUS: string;
+}
+
+export class StatusTemplate {
+    key: string;
+    value: string;
+}

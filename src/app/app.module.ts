@@ -36,6 +36,10 @@ const appRoutes: Routes = [
         loadChildren: './allModules/master/master.module#MasterModule'
     },
     {
+        path: 'reports',
+        loadChildren: './allModules/reports/reports.module#ReportsModule'
+    },
+    {
         path: '**',
         redirectTo: 'auth/login'
     }
