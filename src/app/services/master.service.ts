@@ -167,12 +167,12 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
-  CreateUser(user: UserWithRole, selectedFile: File): Observable<any> {
+  CreateUser(user: UserWithRole): Observable<any> {
 
     const formData: FormData = new FormData();
-    if (selectedFile) {
-      formData.append('selectedFile', selectedFile, selectedFile.name);
-    }
+    // if (selectedFile) {
+    //   formData.append('selectedFile', selectedFile, selectedFile.name);
+    // }
     // formData.append('UserID', user.UserID.toString());
     formData.append('UserName', user.UserName);
     formData.append('Plant', user.Plant);
@@ -198,11 +198,11 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
-  UpdateUser(user: UserWithRole, selectedFile: File): Observable<any> {
+  UpdateUser(user: UserWithRole): Observable<any> {
     const formData: FormData = new FormData();
-    if (selectedFile) {
-      formData.append('selectedFile', selectedFile, selectedFile.name);
-    }
+    // if (selectedFile) {
+    //   formData.append('selectedFile', selectedFile, selectedFile.name);
+    // }
     formData.append('UserID', user.UserID.toString());
     formData.append('UserName', user.UserName);
     formData.append('Plant', user.Plant);

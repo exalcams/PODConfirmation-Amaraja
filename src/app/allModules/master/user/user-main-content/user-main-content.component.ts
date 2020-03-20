@@ -28,8 +28,8 @@ export class UserMainContentComponent implements OnInit, OnChanges {
   userMainFormGroup: FormGroup;
   AllRoles: RoleWithApp[] = [];
   notificationSnackBarComponent: NotificationSnackBarComponent;
-  fileToUpload: File;
-  fileUploader: FileUploader;
+  // fileToUpload: File;
+  // fileUploader: FileUploader;
   baseAddress: string;
   slectedProfile: Uint8Array;
   authenticationDetails: AuthenticationDetails;
@@ -85,12 +85,12 @@ export class UserMainContentComponent implements OnInit, OnChanges {
       // const control = this.userMainFormGroup.get(key);
       this.userMainFormGroup.get(key).markAsUntouched();
     });
-    this.fileToUpload = null;
+    // this.fileToUpload = null;
   }
 
   SaveClicked(): void {
     if (this.userMainFormGroup.valid) {
-      const file: File = this.fileToUpload;
+      // const file: File = this.fileToUpload;
       if (this.user.UserID) {
         const dialogConfig: MatDialogConfig = {
           data: {
@@ -111,7 +111,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
               // this.user.Password = this.userMainFormGroup.get('password').value;
               this.user.ModifiedBy = this.authenticationDetails.userID.toString();
-              this._masterService.UpdateUser(this.user, file).subscribe(
+              this._masterService.UpdateUser(this.user).subscribe(
                 (data) => {
                   // console.log(data);
                   this.ResetControl();
@@ -151,7 +151,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
               // this.user.Password = this.userMainFormGroup.get('password').value;
               this.user.CreatedBy = this.authenticationDetails.userID.toString();
               // this.user.Profile = this.slectedProfile;
-              this._masterService.CreateUser(this.user, file).subscribe(
+              this._masterService.CreateUser(this.user).subscribe(
                 (data) => {
                   // console.log(data);
                   this.ResetControl();
@@ -251,11 +251,11 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     }
   }
 
-  handleFileInput(evt): void {
-    if (evt.target.files && evt.target.files.length > 0) {
-      this.fileToUpload = evt.target.files[0];
-    }
-  }
+  // handleFileInput(evt): void {
+  //   if (evt.target.files && evt.target.files.length > 0) {
+  //     this.fileToUpload = evt.target.files[0];
+  //   }
+  // }
 }
 
 

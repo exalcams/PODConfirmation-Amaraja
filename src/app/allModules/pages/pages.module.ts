@@ -58,11 +58,16 @@ import { AcademyCoursesComponent } from './academy/courses/courses.component';
 import { AcademyCourseComponent } from './academy/course/course.component';
 import { InvoiceItemComponent } from './invoice-item/invoice-item.component';
 import { DecimalPipe } from '@angular/common';
+import { InvoiceDetailsComponent } from './invoice-details/invoice-details.component';
 
 const routes = [
     {
         path: 'dashboard',
         component: DashboardComponent
+    },
+    {
+        path: 'invoices',
+        component: InvoiceDetailsComponent
     },
     {
         path: 'invItem',
@@ -142,7 +147,7 @@ const routes = [
 
         FormsModule
     ],
-    declarations: [DashboardComponent, AcademyCourseComponent, AcademyCoursesComponent, InvoiceItemComponent],
+    declarations: [DashboardComponent, AcademyCourseComponent, AcademyCoursesComponent, InvoiceItemComponent, InvoiceDetailsComponent],
     providers: [
         AcademyCoursesService,
         AcademyCourseService,

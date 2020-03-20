@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { InvoiceDetails, ApproverDetails } from 'app/models/invoice-details';
+import { InvoiceDetails, ApproverDetails, DeliveryCount } from 'app/models/invoice-details';
 
 @Injectable({
     providedIn: 'root'
@@ -104,6 +104,23 @@ export class DashboardService {
                         'Content-Type': 'application/json'
                     })
                 }
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+
+    GetDeliveryCount(userID: Guid): Observable<DeliveryCount | string> {
+        return this._httpClient
+            .get<DeliveryCount>(
+                `${this.baseAddress}api/Dashboard/GetDeliveryCount?UserID=${userID}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetDeliveredInvoices(userID: Guid, Condition: string): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/GetDeliveredInvoices?UserID=${userID}&Condition=${Condition}`
             )
             .pipe(catchError(this.errorHandler));
     }

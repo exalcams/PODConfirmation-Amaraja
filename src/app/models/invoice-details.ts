@@ -69,7 +69,8 @@ export class InvoiceUpdation {
 
 export class ReportInvoice {
     INV_NO: string;
-    INV_DATE: string;
+    ITEM_ID: number;
+    INV_DATE?: Date;
     INV_TYPE: string;
     LR_NO: string;
     LR_DATE: string;
@@ -90,7 +91,7 @@ export class ReportInvoice {
     OUTBOUND_DELIVERY: string;
     OUTBOUND_DELIVERY_DATE: string;
     ACTUAL_DISPATCH_DATE: string;
-    PROPOSED_DELIVERY_DATE: string;
+    PROPOSED_DELIVERY_DATE?: Date;
     VEHICLE_REPORTED_DATE?: Date;
     ACTUAL_DELIVERY_DATE?: Date;
     POD_UPLOADE_STATUS: string;
@@ -101,4 +102,10 @@ export class ReportInvoice {
 export class StatusTemplate {
     key: string;
     value: string;
+}
+
+export class DeliveryCount {
+    TotalDelivery: number;
+    InLineDelivery: number;
+    DelayedDelivery: number;
 }

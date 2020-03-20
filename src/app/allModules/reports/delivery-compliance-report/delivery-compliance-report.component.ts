@@ -12,6 +12,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { ReportService } from 'app/services/report.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-delivery-compliance-report',
@@ -31,6 +32,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
   FilteredInvoiceDetails: ReportInvoice[] = [];
   displayedColumns: string[] = [
     'INV_NO',
+    'ITEM_ID',
     'INV_DATE',
     'INV_TYPE',
     'LR_NO',
@@ -57,18 +59,21 @@ export class DeliveryComplianceReportComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   InvoiceFilterFormGroup: FormGroup;
   AllStatusTemplates: StatusTemplate[] = [];
+  isDateError: boolean;
   constructor(
     private _router: Router,
     private _reportService: ReportService,
     private _shareParameterService: ShareParameterService,
     public snackBar: MatSnackBar,
     private _formBuilder: FormBuilder,
+    private _datePipe: DatePipe
   ) {
     this.isProgressBarVisibile = true;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.AllStatusTemplates = [
-      { key: 'All', value: 'All' },
+      // { key: 'All', value: 'All' },
       { key: 'Pending (customer)', value: 'INSERT' },
+      { key: 'Saved (customer)', value: 'Saved' },
       { key: 'Confirmed (customer)', value: 'Saved and Uploaded' },
       { key: 'Approved (AR User)', value: 'Approved' }
     ];
@@ -82,7 +87,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
       this.currentUserID = this.authenticationDetails.userID;
       this.currentUserRole = this.authenticationDetails.userRole;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
-      if (this.MenuItems.indexOf('Dashboard') < 0) {
+      if (this.MenuItems.indexOf('DeliveryComplianceReport') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
         );
         this._router.navigate(['/auth/login']);
@@ -92,13 +97,17 @@ export class DeliveryComplianceReportComponent implements OnInit {
     }
 
     this.InvoiceFilterFormGroup = this._formBuilder.group({
-      Status: ['All', Validators.required],
+      Status: ['INSERT', Validators.required],
       StartDate: [],
       EndDate: []
     });
-
+    this.isDateError = false;
     if (this.currentUserRole.toLowerCase() === 'amararaja user') {
       this.getFilteredInvoiceDetails();
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+      );
+      this._router.navigate(['/auth/login']);
     }
   }
 
@@ -111,31 +120,58 @@ export class DeliveryComplianceReportComponent implements OnInit {
   }
 
   getFilteredInvoiceDetails(): void {
-    this.isProgressBarVisibile = true;
-    const Status = this.InvoiceFilterFormGroup.get('Status').value;
-    const StartDate = this.InvoiceFilterFormGroup.get('StartDate').value;
-    const EndDate = this.InvoiceFilterFormGroup.get('EndDate').value;
-    this._reportService
-      .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate)
-      .subscribe(
-        data => {
-          this.FilteredInvoiceDetails = data as ReportInvoice[];
-          this.allInvoicesCount = this.FilteredInvoiceDetails.length;
-          this.dataSource = new MatTableDataSource(
-            this.FilteredInvoiceDetails
-          );
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          this.isProgressBarVisibile = false;
-        },
-        err => {
-          this.isProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar(
-            err instanceof Object ? 'Something went wrong' : err,
-            SnackBarStatus.danger
-          );
+    if (this.InvoiceFilterFormGroup.valid) {
+      if (!this.isDateError) {
+        this.isProgressBarVisibile = true;
+        const Status = this.InvoiceFilterFormGroup.get('Status').value;
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+          StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
         }
-      );
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+          EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this._reportService
+          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate)
+          .subscribe(
+            data => {
+              this.FilteredInvoiceDetails = data as ReportInvoice[];
+              this.allInvoicesCount = this.FilteredInvoiceDetails.length;
+              this.dataSource = new MatTableDataSource(
+                this.FilteredInvoiceDetails
+              );
+              this.dataSource.paginator = this.paginator;
+              this.dataSource.sort = this.sort;
+              this.isProgressBarVisibile = false;
+            },
+            err => {
+              this.isProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar(
+                err instanceof Object ? 'Something went wrong' : err,
+                SnackBarStatus.danger
+              );
+            }
+          );
+      }
+    } else {
+      Object.keys(this.InvoiceFilterFormGroup.controls).forEach(key => {
+        this.InvoiceFilterFormGroup.get(key).markAsTouched();
+        this.InvoiceFilterFormGroup.get(key).markAsDirty();
+      });
+    }
+  }
+
+  DateSelected(): void {
+    const FROMDATEVAL = this.InvoiceFilterFormGroup.get('StartDate').value as Date;
+    const TODATEVAL = this.InvoiceFilterFormGroup.get('EndDate').value as Date;
+    if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
+      this.isDateError = true;
+    } else {
+      this.isDateError = false;
+    }
   }
 
   isAllSelected(): boolean {

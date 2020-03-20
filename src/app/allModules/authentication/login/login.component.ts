@@ -204,6 +204,34 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('InvoiceDetails') >= 0) {
+      this.children.push(
+        {
+          id: 'invoiceDetails',
+          title: 'Invoices',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          // icon: 'dashboardIcon',
+          // isSvgIcon: true,
+          icon: 'receipt',
+          url: '/pages/invoices',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('DeliveryComplianceReport') >= 0) {
+      this.children.push(
+        {
+          id: 'deliveryComplianceReport',
+          title: 'Report',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          // icon: 'dashboardIcon',
+          // isSvgIcon: true,
+          icon: 'assignment',
+          url: '/reports/delivery',
+        }
+      );
+    }
     // if (this.MenuItems.indexOf('InvoiceItem') >= 0) {
     //   this.children.push(
     //     {
