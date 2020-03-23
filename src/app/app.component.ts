@@ -76,8 +76,15 @@ export class AppComponent implements OnInit, OnDestroy {
         // Use a language
         this._translateService.use('en');
         mdIconRegistry.addSvgIcon('menuIcon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/menu/menu.svg'));
-        mdIconRegistry.addSvgIcon('dashboardIcon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/menu/dashboardd.svg'));
-
+        mdIconRegistry.addSvgIcon('dashboardIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/dashboard.svg'));
+        mdIconRegistry.addSvgIcon('receiptIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/receipt.svg'));
+        mdIconRegistry.addSvgIcon('assignmentIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/assignment.svg'));
+        mdIconRegistry.addSvgIcon('viewListIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/viewList.svg'));
+        mdIconRegistry.addSvgIcon('accountCircleIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/accountCircle.svg'));
+        mdIconRegistry.addSvgIcon('exitToAppIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/exitToApp.svg'));
+        mdIconRegistry.addSvgIcon('closeIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/close.svg'));
+        mdIconRegistry.addSvgIcon('infoIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/info.svg'));
+        mdIconRegistry.addSvgIcon('keyboardArrowDownIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/keyboardArrowDown.svg'));
         /**
          * ------------------------------------------------------------------
          * ngxTranslate Fix Start

@@ -238,18 +238,24 @@ export class InvoiceItemComponent implements OnInit {
 
   SaveAndUploadInvoiceItem(): void {
     if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'approved') {
-      if (this.InvoiceItemFormGroup.valid) {
-        const el: HTMLElement = this.fileInput.nativeElement;
-        el.click();
-        // const event = new MouseEvent('click', { bubbles: true });
-        // this.renderer.invokeElementMethod(
-        //   this.fileInput.nativeElement, 'dispatchEvent', [event]);
+      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'saved and uploaded') {
+        if (this.InvoiceItemFormGroup.valid) {
+          const el: HTMLElement = this.fileInput.nativeElement;
+          el.click();
+          // const event = new MouseEvent('click', { bubbles: true });
+          // this.renderer.invokeElementMethod(
+          //   this.fileInput.nativeElement, 'dispatchEvent', [event]);
+        } else {
+          this.ShowValidationErrors(this.InvoiceItemFormGroup);
+        }
       } else {
-        this.ShowValidationErrors(this.InvoiceItemFormGroup);
+        this.notificationSnackBarComponent.openSnackBar(
+          'POD document has already been uploaded', SnackBarStatus.danger
+        );
       }
     } else {
       this.notificationSnackBarComponent.openSnackBar(
-        'Invoice has already been approved ', SnackBarStatus.danger
+        'Invoice has already been approved', SnackBarStatus.danger
       );
     }
   }
@@ -267,12 +273,19 @@ export class InvoiceItemComponent implements OnInit {
 
   SaveInvoiceItem(): void {
     if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'approved') {
-      if (this.InvoiceItemFormGroup.valid) {
-        const Actiontype = 'Save';
-        const Catagory = 'Invoice item';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
+      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'saved and uploaded') {
+
+        if (this.InvoiceItemFormGroup.valid) {
+          const Actiontype = 'Save';
+          const Catagory = 'Invoice item';
+          this.OpenConfirmationDialog(Actiontype, Catagory);
+        } else {
+          this.ShowValidationErrors(this.InvoiceItemFormGroup);
+        }
       } else {
-        this.ShowValidationErrors(this.InvoiceItemFormGroup);
+        this.notificationSnackBarComponent.openSnackBar(
+          'POD document has already been uploaded', SnackBarStatus.danger
+        );
       }
     } else {
       this.notificationSnackBarComponent.openSnackBar(

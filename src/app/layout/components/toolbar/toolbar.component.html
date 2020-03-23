@@ -41,14 +41,14 @@
                 <div fxLayout="row" fxLayoutAlign="center center">
                     <img class="avatar mr-0 mr-sm-16" [src]="CurrentLoggedInUserProfile">
                     <span class="username mr-12" fxHide fxShow.gt-sm>{{CurrentLoggedInUser}}</span>
-                    <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
+                    <mat-icon class="s-16" fxHide.xs svgIcon="keyboardArrowDownIcon"></mat-icon>
                 </div>
             </button>
 
             <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
 
                 <button mat-menu-item (click)="ChangePasswordClick()">
-                    <mat-icon>account_circle</mat-icon>
+                    <mat-icon svgIcon="accountCircleIcon"></mat-icon>
                     <span>Change Password</span>
                 </button>
 
@@ -58,7 +58,7 @@
                 </button> -->
 
                 <button mat-menu-item class="" (click)="logOutClick()">
-                    <mat-icon>exit_to_app</mat-icon>
+                    <mat-icon svgIcon="exitToAppIcon"></mat-icon>
                     <span>Logout</span>
                 </button>
 
