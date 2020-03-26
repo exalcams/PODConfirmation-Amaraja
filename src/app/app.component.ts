@@ -85,6 +85,10 @@ export class AppComponent implements OnInit, OnDestroy {
         mdIconRegistry.addSvgIcon('closeIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/close.svg'));
         mdIconRegistry.addSvgIcon('infoIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/info.svg'));
         mdIconRegistry.addSvgIcon('keyboardArrowDownIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/keyboardArrowDown.svg'));
+        mdIconRegistry.addSvgIcon('keyboardArrowRightIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/keyboardArrowRight.svg'));
+        mdIconRegistry.addSvgIcon('addIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/add.svg'));
+        mdIconRegistry.addSvgIcon('searchIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/search.svg'));
+
         /**
          * ------------------------------------------------------------------
          * ngxTranslate Fix Start

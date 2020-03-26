@@ -116,12 +116,12 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('authorizationData', JSON.stringify(data));
     this.UpdateMenu();
     this.notificationSnackBarComponent.openSnackBar('Logged in successfully', SnackBarStatus.success);
-    // if (data.userRole === 'Administrator') {
-    //   this._router.navigate(['pages/adminDashboard']);
-    // } else {
-    //   this._router.navigate(['pages/dashboard']);
-    // }
-    this._router.navigate(['pages/dashboard']);
+    if (data.userRole === 'Administrator') {
+      this._router.navigate(['master/user']);
+    } else {
+      this._router.navigate(['pages/dashboard']);
+    }
+    // this._router.navigate(['pages/dashboard']);
   }
 
   OpenChangePasswordDialog(data: AuthenticationDetails): void {

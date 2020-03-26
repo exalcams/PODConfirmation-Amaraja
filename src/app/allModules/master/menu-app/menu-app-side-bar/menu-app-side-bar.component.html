@@ -3,13 +3,13 @@
         <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
             <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
                 <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
-                    <mat-icon class="s-16">search</mat-icon>
+                    <mat-icon class="s-16" svgIcon="searchIcon"></mat-icon>
                     <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
                 </div>
             </div>
             <div fxFlex fxLayout="row" fxLayoutAlign="end center">
                 <button mat-mini-fab class="mr-8 btnBg" matTooltip="Add Menu" (click)="clearMenuApp()">
-                    <mat-icon aria-label="Add Menu">add</mat-icon>
+                    <mat-icon aria-label="Add Menu" svgIcon="addIcon"></mat-icon>
                 </button>
             </div>
         </mat-toolbar-row>
