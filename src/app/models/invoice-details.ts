@@ -36,6 +36,7 @@ export class InvoiceDetails {
 
 export class InvoiceItemDetails {
     ITEM_ID: number;
+    ITEM_NO: string;
     HEADER_ID: number;
     MATERIAL_CODE: string;
     MATERIAL_DESCRIPTION: string;

@@ -52,7 +52,7 @@
 
                       <div fxFlex fxLayoutAlign="start center">
                         <span class="boldClass mx-4">Item </span>
-                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('ITEM_ID')?.value}}
+                        {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('ITEM_NO')?.value}}
                       </div>
 
                       <div fxFlex fxLayoutAlign="start center">
@@ -181,7 +181,6 @@
                         <div fxFlex fxLayoutAlign="start center"
                           *ngIf="(currentUserRole | lowercase)==='amararaja user'">
                           <span class="boldClass mx-4">Remarks</span>
-                          {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('REMARKS')?.value}}
                           <span class="ml-4">
                             {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('REMARKS')?.value}}
                           </span>

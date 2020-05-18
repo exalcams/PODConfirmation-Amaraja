@@ -33,7 +33,8 @@ export class InvoiceItemComponent implements OnInit {
   SelectedInvoiceDetail: InvoiceDetails;
   InvoiceItemDetailsList: InvoiceItemDetails[] = [];
   InvoiceItemDetailsDisplayedColumns: string[] = [
-    'ITEM_ID',
+    // 'ITEM_ID',
+    'ITEM_NO',
     'HEADER_ID',
     'MATERIAL_CODE',
     'MATERIAL_DESCRIPTION',
@@ -179,6 +180,7 @@ export class InvoiceItemComponent implements OnInit {
     }
     const REQTYValue = Number(REQTYVal);
     const row = this._formBuilder.group({
+      ITEM_NO: [invItem.ITEM_NO, Validators.required],
       ITEM_ID: [invItem.ITEM_ID, Validators.required],
       HEADER_ID: [invItem.HEADER_ID, Validators.required],
       MATERIAL_CODE: [invItem.MATERIAL_CODE, Validators.required],
