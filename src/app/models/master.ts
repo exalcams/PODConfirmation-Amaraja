@@ -80,3 +80,5 @@ export class UserNotification {
     CreatedOn: Date;
     ModifiedOn?: Date;
 }
+
+

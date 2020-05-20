@@ -1,4 +1,7 @@
 export class InvoiceDetails {
+    public constructor(init?: Partial<InvoiceDetails>) {
+        Object.assign(this, init);
+    }
     HEADER_ID: number;
     PLANT: string;
     PLANT_NAME: string;
@@ -66,6 +69,11 @@ export class ApproverDetails {
 export class InvoiceUpdation {
     VEHICLE_REPORTED_DATE: string;
     InvoiceItems: InvoiceItemDetails[];
+}
+
+export class InvoiceUpdation1 {
+    VEHICLE_REPORTED_DATE: string;
+    HEADER_ID: number;
 }
 
 export class ReportInvoice {

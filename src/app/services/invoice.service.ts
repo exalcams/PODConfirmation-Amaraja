@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { InvoiceDetails, InvoiceItemDetails, InvoiceUpdation } from 'app/models/invoice-details';
+import { InvoiceDetails, InvoiceItemDetails, InvoiceUpdation, InvoiceUpdation1 } from 'app/models/invoice-details';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +61,20 @@ export class InvoiceService {
     return this._httpClient
       .post<any>(
         `${this.baseAddress}api/PODConfirmation/UpdateInvoiceItems`,
+        invoiceUpdation,
+        {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json'
+          })
+        }
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  ConfirmInvoiceItems(invoiceUpdation: InvoiceUpdation1): Observable<any> {
+    return this._httpClient
+      .post<any>(
+        `${this.baseAddress}api/PODConfirmation/ConfirmInvoiceItems`,
         invoiceUpdation,
         {
           headers: new HttpHeaders({

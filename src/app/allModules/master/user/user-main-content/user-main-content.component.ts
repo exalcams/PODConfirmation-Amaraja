@@ -33,6 +33,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
   baseAddress: string;
   slectedProfile: Uint8Array;
   authenticationDetails: AuthenticationDetails;
+  IsPlantDisplay: boolean;
 
   constructor(private _masterService: MasterService,
     private _router: Router,
@@ -45,18 +46,22 @@ export class UserMainContentComponent implements OnInit, OnChanges {
       roleID: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       contactNumber: ['', [Validators.required, Validators.pattern]],
-      plant: ['', Validators.required],
+      plant: [''],
       profile: ['']
     });
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.user = new UserWithRole();
     this.authenticationDetails = new AuthenticationDetails();
     this.baseAddress = _authService.baseAddress;
+    this.IsPlantDisplay = false;
   }
   GetAllRoles(): void {
     this._masterService.GetAllRoles().subscribe(
       (data) => {
         this.AllRoles = <RoleWithApp[]>data;
+        if (this.user) {
+          this.CheckRole(this.user.RoleID);
+        }
         // console.log(this.AllMenuApps);
       },
       (err) => {
@@ -223,6 +228,30 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     }
   }
 
+  RoleSelected(event: any): void {
+    this.CheckRole(event.value);
+  }
+
+  CheckRole(roleID: Guid): void {
+    const res = this.CheckIsAmarajaUser(roleID);
+    if (res) {
+      this.IsPlantDisplay = true;
+      this.userMainFormGroup.get('plant').setValidators(Validators.required);
+      this.userMainFormGroup.get('plant').updateValueAndValidity();
+    } else {
+      this.IsPlantDisplay = false;
+      this.userMainFormGroup.get('plant').clearValidators();
+      this.userMainFormGroup.get('plant').updateValueAndValidity();
+    }
+  }
+
+  CheckIsAmarajaUser(roleID: Guid): boolean {
+    const rol = this.AllRoles.filter(x => x.RoleID === roleID)[0];
+    if (rol) {
+      return rol.RoleName.toLowerCase() === 'amararaja user';
+    }
+    return false;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.currentSelectedUser) {
@@ -243,6 +272,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
       this.userMainFormGroup.get('roleID').patchValue(this.user.RoleID);
       this.userMainFormGroup.get('email').patchValue(this.user.Email);
       this.userMainFormGroup.get('contactNumber').patchValue(this.user.ContactNumber);
+      this.CheckRole(this.user.RoleID);
       // this.userMainFormGroup.get('password').patchValue(this.user.Password);
       // this.userMainFormGroup.get('confirmPassword').patchValue(this.user.Password);
     } else {

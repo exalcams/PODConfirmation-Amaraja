@@ -178,7 +178,7 @@ export class InvoiceItemComponent implements OnInit {
     if (invItem.RECEIVED_QUANTITY) {
       REQTYVal = this._decimalPipe.transform(invItem.RECEIVED_QUANTITY, '1.2-2');
     }
-    const REQTYValue = Number(REQTYVal);
+    const REQTYValue = (Number(REQTYVal)) > 0 ? Number(REQTYVal) : QTYValue;
     const row = this._formBuilder.group({
       ITEM_NO: [invItem.ITEM_NO, Validators.required],
       ITEM_ID: [invItem.ITEM_ID, Validators.required],
@@ -240,7 +240,7 @@ export class InvoiceItemComponent implements OnInit {
 
   SaveAndUploadInvoiceItem(): void {
     if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'approved') {
-      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'saved and uploaded') {
+      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'confirmed') {
         if (this.InvoiceItemFormGroup.valid) {
           const el: HTMLElement = this.fileInput.nativeElement;
           el.click();
@@ -252,7 +252,7 @@ export class InvoiceItemComponent implements OnInit {
         }
       } else {
         this.notificationSnackBarComponent.openSnackBar(
-          'POD document has already been uploaded', SnackBarStatus.danger
+          'Invoice has already been confirmed', SnackBarStatus.danger
         );
       }
     } else {
@@ -266,7 +266,7 @@ export class InvoiceItemComponent implements OnInit {
     if (evt.target.files && evt.target.files.length > 0) {
       this.fileToUpload = evt.target.files[0];
       this.fileToUploadList.push(this.fileToUpload);
-      const Actiontype = 'Save & Upload';
+      const Actiontype = 'Confirm';
       const Catagory = 'Invoice item';
       this.OpenConfirmationDialog(Actiontype, Catagory);
     }
@@ -275,7 +275,7 @@ export class InvoiceItemComponent implements OnInit {
 
   SaveInvoiceItem(): void {
     if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'approved') {
-      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'saved and uploaded') {
+      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'confirmed') {
 
         if (this.InvoiceItemFormGroup.valid) {
           const Actiontype = 'Save';
@@ -286,7 +286,7 @@ export class InvoiceItemComponent implements OnInit {
         }
       } else {
         this.notificationSnackBarComponent.openSnackBar(
-          'POD document has already been uploaded', SnackBarStatus.danger
+          'Invoice has already been confirmed', SnackBarStatus.danger
         );
       }
     } else {
@@ -298,7 +298,7 @@ export class InvoiceItemComponent implements OnInit {
 
   ApproveInvoiceItem(): void {
     if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'approved') {
-      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() === 'saved and uploaded') {
+      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() === 'confirmed') {
         if (this.InvoiceItemFormGroup.valid) {
           const Actiontype = 'Approve';
           const Catagory = 'Invoice item';
@@ -372,7 +372,7 @@ export class InvoiceItemComponent implements OnInit {
       SelectedRFQItem.REASON = x.get('REASON').value;
       SelectedRFQItem.REMARKS = x.get('REMARKS').value;
       SelectedRFQItem.STATUS = Actiontype === 'Save' ? 'Saved' : Actiontype === 'Approve' ? 'Approved' :
-        Actiontype === 'Save & Upload' ? 'Saved and uploaded' : '';
+        Actiontype === 'Confirm' ? 'confirmed' : '';
     });
     return this.InvoiceItemDetailsList;
   }
@@ -389,8 +389,8 @@ export class InvoiceItemComponent implements OnInit {
     this._invoiceService.UpdateInvoiceItems(invoiceUpdation).subscribe(
       data => {
         const Ststs = Actiontype === 'Save' ? 'Saved' : Actiontype === 'Approve' ? 'Approved' :
-          Actiontype === 'Save & Upload' ? 'Saved and uploaded' : '';
-        if (Actiontype === 'Save & Upload' && this.fileToUploadList && this.fileToUploadList.length) {
+          Actiontype === 'Confirm' ? 'confirmed' : '';
+        if (Actiontype === 'Confirm' && this.fileToUploadList && this.fileToUploadList.length) {
           this._invoiceService.AddInvoiceAttachment(this.SelectedInvoiceDetail.HEADER_ID,
             this.currentUserID.toString(), this.fileToUploadList).subscribe(
               (dat) => {

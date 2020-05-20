@@ -41,7 +41,7 @@
     </mat-form-field>
 
     <mat-form-field class="pl-8" fxFlex="50">
-      <mat-select placeholder="Role Name" formControlName="roleID">
+      <mat-select placeholder="Role Name" formControlName="roleID" (selectionChange)="RoleSelected($event)">
         <mat-option *ngFor="let rol of AllRoles" [value]="rol.RoleID">{{rol.RoleName}}</mat-option>
       </mat-select>
       <mat-error
@@ -51,7 +51,7 @@
 
   </div>
   <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
-    <mat-form-field class="pl-8" fxFlex="50">
+    <mat-form-field class="pl-8" fxFlex="50" [style.display]="IsPlantDisplay?'inline-block':'none'">
       <input matInput placeholder="Plant" formControlName="plant">
       <mat-error *ngIf="userMainFormGroup.get('plant').touched &&  userMainFormGroup.get('plant').hasError('required')">
         Plant required</mat-error>
