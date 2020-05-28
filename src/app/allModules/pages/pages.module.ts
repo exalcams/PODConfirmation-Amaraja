@@ -54,8 +54,6 @@ import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AcademyCoursesService } from 'app/services/courses.service';
 import { AcademyCourseService } from 'app/services/course.service';
-import { AcademyCoursesComponent } from './academy/courses/courses.component';
-import { AcademyCourseComponent } from './academy/course/course.component';
 import { InvoiceItemComponent } from './invoice-item/invoice-item.component';
 import { DecimalPipe } from '@angular/common';
 import { InvoiceDetailsComponent } from './invoice-details/invoice-details.component';
@@ -147,7 +145,7 @@ const routes = [
 
         FormsModule
     ],
-    declarations: [DashboardComponent, AcademyCourseComponent, AcademyCoursesComponent, InvoiceItemComponent, InvoiceDetailsComponent],
+    declarations: [DashboardComponent, InvoiceItemComponent, InvoiceDetailsComponent],
     providers: [
         AcademyCoursesService,
         AcademyCourseService,

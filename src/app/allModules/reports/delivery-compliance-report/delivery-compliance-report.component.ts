@@ -72,10 +72,10 @@ export class DeliveryComplianceReportComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.AllStatusTemplates = [
       // { key: 'All', value: 'All' },
-      { key: 'Pending (customer)', value: 'INSERT' },
+      { key: 'Pending (customer)', value: 'Open' },
       { key: 'Saved (customer)', value: 'Saved' },
-      { key: 'Confirmed (customer)', value: 'Saved and Uploaded' },
-      { key: 'Approved (AR User)', value: 'Approved' }
+      { key: 'Confirmed (customer)', value: 'Confirmed' },
+      // { key: 'Approved (AR User)', value: 'Approved' }
     ];
   }
 
@@ -97,7 +97,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
     }
 
     this.InvoiceFilterFormGroup = this._formBuilder.group({
-      Status: ['INSERT', Validators.required],
+      Status: ['Open', Validators.required],
       StartDate: [],
       EndDate: []
     });

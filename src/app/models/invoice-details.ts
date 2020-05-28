@@ -1,13 +1,13 @@
 export class InvoiceDetails {
-    public constructor(init?: Partial<InvoiceDetails>) {
-        Object.assign(this, init);
-    }
     HEADER_ID: number;
     PLANT: string;
     PLANT_NAME: string;
     INV_NO: string;
     INV_DATE: string;
     INV_TYPE: string;
+    CUSTOMER: string;
+    CUSTOMER_NAME: string;
+    ODIN: string;
     MATERIAL_CODE: string;
     MATERIAL_DESCRIPTION: string;
     QUANTITY: string;
@@ -81,6 +81,9 @@ export class ReportInvoice {
     ITEM_ID: number;
     INV_DATE?: Date;
     INV_TYPE: string;
+    CUSTOMER: string;
+    CUSTOMER_NAME: string;
+    ODIN: string;
     LR_NO: string;
     LR_DATE: string;
     VEHICLE_NO: string;

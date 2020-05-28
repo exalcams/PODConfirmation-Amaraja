@@ -57,6 +57,13 @@ export class InvoiceService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetInvoiceItemDetailsByUserAndID(UserName: string, ID: number): Observable<InvoiceItemDetails[] | string> {
+    return this._httpClient.get<InvoiceItemDetails[]>(
+      `${this.baseAddress}api/PODConfirmation/GetInvoiceItemDetailsByUserAndID?UserName=${UserName}&ID=${ID}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
+
   UpdateInvoiceItems(invoiceUpdation: InvoiceUpdation): Observable<any> {
     return this._httpClient
       .post<any>(

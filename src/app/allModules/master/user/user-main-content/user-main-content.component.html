@@ -6,11 +6,15 @@
   <div fxLayout="row" fxLayoutAlign="start">
 
     <mat-form-field class="pl-8" fxFlex="50">
-      <input matInput placeholder="User Name" formControlName="userName">
+      <input matInput placeholder="User Name" formControlName="userName" (keydown)="disableSpace($event)">
       <mat-error
-        *ngIf="userMainFormGroup.get('userName').touched &&  userMainFormGroup.get('userName').hasError('required')">
-        User
-        Name required</mat-error>
+        *ngIf="userMainFormGroup.get('userName').touched && userMainFormGroup.get('userName').hasError('required')">
+        User Name required
+      </mat-error>
+      <mat-error *ngIf="userMainFormGroup.get('userName').touched && !userMainFormGroup.get('userName').hasError('required')
+        && userMainFormGroup.get('userName').hasError('pattern')">
+        Please fill out user name without any space
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="pl-8" fxFlex="50">

@@ -25,6 +25,7 @@ import { MasterService } from 'app/services/master.service';
 export class InvoiceItemComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
+  currentUserName: string;
   currentUserRole: string;
   MenuItems: string[];
   isProgressBarVisibile: boolean;
@@ -86,6 +87,7 @@ export class InvoiceItemComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.userID;
+      this.currentUserName = this.authenticationDetails.userName;
       this.currentUserRole = this.authenticationDetails.userRole;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('InvoiceItem') < 0) {
@@ -102,7 +104,7 @@ export class InvoiceItemComponent implements OnInit {
       InvoiceItems: this.InvoiceItemFormArray
     });
     this.GetAllReasons();
-    this.GetInvoiceItemDetailsByID();
+    this.GetInvoiceItemDetailsByUserAndID();
   }
 
   ResetControl(): void {
@@ -166,7 +168,30 @@ export class InvoiceItemComponent implements OnInit {
         }
       );
   }
-
+  GetInvoiceItemDetailsByUserAndID(): void {
+    this.isProgressBarVisibile = true;
+    this._invoiceService.GetInvoiceItemDetailsByUserAndID
+      (this.currentUserName, this.SelectedInvoiceDetail.HEADER_ID).subscribe(
+        data => {
+          this.isProgressBarVisibile = false;
+          this.InvoiceItemFormGroup.controls.VehicleReportedDate.patchValue(this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE);
+          this.InvoiceItemDetailsList = data as InvoiceItemDetails[];
+          // this.InvoiceItemDetailsDataSource = new MatTableDataSource(this.InvoiceItemDetailsList);
+          // this.InvoiceItemDetailsDataSource.paginator = this.InvoiceItemDetailsPaginator;
+          // this.InvoiceItemDetailsDataSource.sort = this.InvoiceItemDetailsSort;
+          // console.log(this.InvoiceItemDetailsList);
+          this.InvoiceItemDetailsList.forEach(x => {
+            this.SetInvoiceItemValues(x);
+          });
+        },
+        err => {
+          this.isProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar(
+            err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger
+          );
+        }
+      );
+  }
 
   SetInvoiceItemValues(invItem: InvoiceItemDetails): void {
     let QTYVal = '0';
@@ -180,22 +205,22 @@ export class InvoiceItemComponent implements OnInit {
     }
     const REQTYValue = (Number(REQTYVal)) > 0 ? Number(REQTYVal) : QTYValue;
     const row = this._formBuilder.group({
-      ITEM_NO: [invItem.ITEM_NO, Validators.required],
-      ITEM_ID: [invItem.ITEM_ID, Validators.required],
-      HEADER_ID: [invItem.HEADER_ID, Validators.required],
-      MATERIAL_CODE: [invItem.MATERIAL_CODE, Validators.required],
-      MATERIAL_DESCRIPTION: [invItem.MATERIAL_DESCRIPTION, Validators.required],
-      QUANTITY: [QTYValue, Validators.required],
+      ITEM_NO: [invItem.ITEM_NO],
+      ITEM_ID: [invItem.ITEM_ID],
+      HEADER_ID: [invItem.HEADER_ID],
+      MATERIAL_CODE: [invItem.MATERIAL_CODE],
+      MATERIAL_DESCRIPTION: [invItem.MATERIAL_DESCRIPTION],
+      QUANTITY: [QTYValue],
       RECEIVED_QUANTITY: [REQTYValue, [Validators.required, Validators.min(0), Validators.max(QTYValue)]],
-      QUANTITY_UOM: [invItem.QUANTITY_UOM, Validators.required],
-      LR_NO: [invItem.LR_NO, Validators.required],
-      LR_DATE: [invItem.LR_DATE, Validators.required],
-      FWD_AGENT: [invItem.FWD_AGENT, Validators.required],
-      CARRIER: [invItem.CARRIER, Validators.required],
-      FREIGHT_ORDER: [invItem.FREIGHT_ORDER, Validators.required],
-      FREIGHT_ORDER_DATE: [invItem.FREIGHT_ORDER_DATE, Validators.required],
-      STATUS: [invItem.STATUS, Validators.required],
-      STATUS_DESCRIPTION: [invItem.STATUS_DESCRIPTION, Validators.required],
+      QUANTITY_UOM: [invItem.QUANTITY_UOM],
+      LR_NO: [invItem.LR_NO],
+      LR_DATE: [invItem.LR_DATE],
+      FWD_AGENT: [invItem.FWD_AGENT],
+      CARRIER: [invItem.CARRIER],
+      FREIGHT_ORDER: [invItem.FREIGHT_ORDER],
+      FREIGHT_ORDER_DATE: [invItem.FREIGHT_ORDER_DATE],
+      STATUS: [invItem.STATUS],
+      STATUS_DESCRIPTION: [invItem.STATUS_DESCRIPTION],
       REASON: [invItem.REASON],
       REMARKS: [invItem.REMARKS],
     });
@@ -399,7 +424,7 @@ export class InvoiceItemComponent implements OnInit {
                 this.ResetControl();
                 this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE = new Date(VehReportedDate);
                 this.SelectedInvoiceDetail.STATUS = Ststs;
-                this.GetInvoiceItemDetailsByID();
+                this.GetInvoiceItemDetailsByUserAndID();
               },
               (err) => {
                 console.error(err);
@@ -414,7 +439,7 @@ export class InvoiceItemComponent implements OnInit {
           this.ResetControl();
           this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE = new Date(VehReportedDate);
           this.SelectedInvoiceDetail.STATUS = Ststs;
-          this.GetInvoiceItemDetailsByID();
+          this.GetInvoiceItemDetailsByUserAndID();
         }
       },
       err => {

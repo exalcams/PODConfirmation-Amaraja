@@ -42,7 +42,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     private dialog: MatDialog,
     private _authService: AuthService) {
     this.userMainFormGroup = this._formBuilder.group({
-      userName: ['', Validators.required],
+      userName: ['', [Validators.required, Validators.pattern('^\\S*$')]],
       roleID: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       contactNumber: ['', [Validators.required, Validators.pattern]],
@@ -280,7 +280,14 @@ export class UserMainContentComponent implements OnInit, OnChanges {
       this.ResetControl();
     }
   }
-
+  disableSpace(event): boolean {
+    // this.AmountSelected();
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode === 32) {
+      return false;
+    }
+    return true;
+  }
   // handleFileInput(evt): void {
   //   if (evt.target.files && evt.target.files.length > 0) {
   //     this.fileToUpload = evt.target.files[0];

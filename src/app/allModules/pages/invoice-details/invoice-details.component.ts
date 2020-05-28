@@ -26,6 +26,7 @@ import { DatePipe } from '@angular/common';
 export class InvoiceDetailsComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
+    currentUserName: string;
     currentUserRole: string;
     MenuItems: string[];
     isProgressBarVisibile: boolean;
@@ -40,6 +41,7 @@ export class InvoiceDetailsComponent implements OnInit {
         'INV_DATE',
         'INV_TYPE',
         'PLANT',
+        'ODIN',
         'VEHICLE_NO',
         'VEHICLE_CAPACITY',
         'FWD_AGENT',
@@ -82,6 +84,7 @@ export class InvoiceDetailsComponent implements OnInit {
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.currentUserID = this.authenticationDetails.userID;
+            this.currentUserName = this.authenticationDetails.userName;
             this.currentUserRole = this.authenticationDetails.userRole;
             this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
             if (this.MenuItems.indexOf('InvoiceDetails') < 0) {
@@ -100,7 +103,7 @@ export class InvoiceDetailsComponent implements OnInit {
         // } else {
         //     this.getAllInvoiceDetails();
         // }
-        this.getAllInvoiceDetails();
+        this.GetAllInvoiceDetailByUser();
     }
 
     ResetControl(): void {
@@ -139,8 +142,43 @@ export class InvoiceDetailsComponent implements OnInit {
                     this.allInvoiceDetails.forEach(x => {
                         this.InsertInvoiceDetailsFormGroup(x);
                     });
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    if (this.allInvoicesCount > 0) {
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                    }
+                    this.isProgressBarVisibile = false;
+                },
+                err => {
+                    this.isProgressBarVisibile = false;
+                    this.notificationSnackBarComponent.openSnackBar(
+                        err instanceof Object ? 'Something went wrong' : err,
+                        SnackBarStatus.danger
+                    );
+                }
+            );
+    }
+
+    GetAllInvoiceDetailByUser(): void {
+        this.isProgressBarVisibile = true;
+        this._dashboardService
+            .GetAllInvoiceDetailByUser(this.currentUserName)
+            .subscribe(
+                data => {
+                    this.allInvoiceDetails = data as InvoiceDetails[];
+                    this.allInvoicesCount = this.allInvoiceDetails.length;
+                    // this.dataSource = new MatTableDataSource(
+                    //     this.allInvoiceDetails
+                    // );
+                    // this.dataSource.paginator = this.paginator;
+                    // this.dataSource.sort = this.sort;
+                    this.ClearFormArray(this.InvoiceDetailsFormArray);
+                    this.allInvoiceDetails.forEach(x => {
+                        this.InsertInvoiceDetailsFormGroup(x);
+                    });
+                    if (this.allInvoicesCount > 0) {
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                    }
                     this.isProgressBarVisibile = false;
                 },
                 err => {
@@ -188,6 +226,7 @@ export class InvoiceDetailsComponent implements OnInit {
             INV_DATE: [asnItem.INV_DATE],
             INV_TYPE: [asnItem.INV_TYPE],
             PLANT: [asnItem.PLANT],
+            ODIN: [asnItem.ODIN],
             VEHICLE_NO: [asnItem.VEHICLE_NO],
             VEHICLE_CAPACITY: [asnItem.VEHICLE_CAPACITY],
             FWD_AGENT: [asnItem.FWD_AGENT],
@@ -324,13 +363,13 @@ export class InvoiceDetailsComponent implements OnInit {
                                 this.isProgressBarVisibile = false;
                                 this.notificationSnackBarComponent.openSnackBar(`Invoice ${Ststs} successfully`, SnackBarStatus.success);
                                 this.ResetControl();
-                                this.getAllInvoiceDetails();
+                                this.GetAllInvoiceDetailByUser();
                             },
                             (err) => {
                                 console.error(err);
                                 this.isProgressBarVisibile = false;
                                 this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                                this.getAllInvoiceDetails();
+                                this.GetAllInvoiceDetailByUser();
                             }
                         );
                 } else {
@@ -338,7 +377,7 @@ export class InvoiceDetailsComponent implements OnInit {
                     this.notificationSnackBarComponent.openSnackBar
                         (`Invoice ${Ststs} successfully`, SnackBarStatus.success);
                     this.ResetControl();
-                    this.getAllInvoiceDetails();
+                    this.GetAllInvoiceDetailByUser();
                 }
             },
             err => {

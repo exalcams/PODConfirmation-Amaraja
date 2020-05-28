@@ -58,6 +58,14 @@ export class DashboardService {
             .pipe(catchError(this.errorHandler));
     }
 
+    GetAllInvoiceDetailByUser(UserName: string): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/PODConfirmation/GetAllInvoiceDetailByUser?UserName=${UserName}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
     GetConfirmedInvoiceDetails(userID: Guid): Observable<InvoiceDetails[] | string> {
         return this._httpClient
             .get<InvoiceDetails[]>(

@@ -165,10 +165,10 @@
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" matRipple></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
               <div *ngIf="!FilteredInvoiceDetails?.length">
-                <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
+                <mat-icon svgIcon="infoIcon" style="color: #1b56ca;margin-top: 10px;margin-left: 70px"></mat-icon>
                 <span style="margin-left: 10px;">The table does not contain any data</span>
               </div>
             </div>
