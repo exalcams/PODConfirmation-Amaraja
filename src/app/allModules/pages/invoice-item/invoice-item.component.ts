@@ -213,12 +213,12 @@ export class InvoiceItemComponent implements OnInit {
       QUANTITY: [QTYValue],
       RECEIVED_QUANTITY: [REQTYValue, [Validators.required, Validators.min(0), Validators.max(QTYValue)]],
       QUANTITY_UOM: [invItem.QUANTITY_UOM],
-      LR_NO: [invItem.LR_NO],
-      LR_DATE: [invItem.LR_DATE],
-      FWD_AGENT: [invItem.FWD_AGENT],
-      CARRIER: [invItem.CARRIER],
-      FREIGHT_ORDER: [invItem.FREIGHT_ORDER],
-      FREIGHT_ORDER_DATE: [invItem.FREIGHT_ORDER_DATE],
+      // LR_NO: [invItem.LR_NO],
+      // LR_DATE: [invItem.LR_DATE],
+      // FWD_AGENT: [invItem.FWD_AGENT],
+      // CARRIER: [invItem.CARRIER],
+      // FREIGHT_ORDER: [invItem.FREIGHT_ORDER],
+      // FREIGHT_ORDER_DATE: [invItem.FREIGHT_ORDER_DATE],
       STATUS: [invItem.STATUS],
       STATUS_DESCRIPTION: [invItem.STATUS_DESCRIPTION],
       REASON: [invItem.REASON],
@@ -230,12 +230,12 @@ export class InvoiceItemComponent implements OnInit {
     row.get('MATERIAL_DESCRIPTION').disable();
     row.get('QUANTITY').disable();
     row.get('QUANTITY_UOM').disable();
-    row.get('LR_NO').disable();
-    row.get('LR_DATE').disable();
-    row.get('FWD_AGENT').disable();
-    row.get('CARRIER').disable();
-    row.get('FREIGHT_ORDER').disable();
-    row.get('FREIGHT_ORDER_DATE').disable();
+    // row.get('LR_NO').disable();
+    // row.get('LR_DATE').disable();
+    // row.get('FWD_AGENT').disable();
+    // row.get('CARRIER').disable();
+    // row.get('FREIGHT_ORDER').disable();
+    // row.get('FREIGHT_ORDER_DATE').disable();
     this.InvoiceItemFormArray.push(row);
     this.DynamicResonValidator(QTYValue, REQTYValue, row);
     // this.InvoiceItemDataSource.next(this.InvoiceItemFormArray.controls);

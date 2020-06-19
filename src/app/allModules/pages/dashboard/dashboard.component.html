@@ -10,8 +10,10 @@
     </mat-card>
     <div>
       <mat-tab-group (selectedTabChange)="tabChanged($event)">
-        <mat-tab label="{{'In line delivery ('+deliveryCount?.InLineDelivery+' / '+deliveryCount?.TotalDelivery+')'}}"></mat-tab>
-        <mat-tab label="{{'Delayed delivery ('+deliveryCount?.DelayedDelivery+' / '+deliveryCount?.TotalDelivery+')'}}"></mat-tab>
+        <mat-tab label="{{'In line delivery ('+deliveryCount?.InLineDelivery+' / '+deliveryCount?.TotalDelivery+')'}}">
+        </mat-tab>
+        <mat-tab label="{{'Delayed delivery ('+deliveryCount?.DelayedDelivery+' / '+deliveryCount?.TotalDelivery+')'}}">
+        </mat-tab>
       </mat-tab-group>
     </div>
     <div class="sidenav-content mt-4">
@@ -76,16 +78,8 @@
                     <td mat-cell *matCellDef="let element"> {{element.QUANTITY_UOM}} </td>
                   </ng-container>
   
-                  <ng-container matColumnDef="LR_NO">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Lr No </th>
-                    <td mat-cell *matCellDef="let element"> {{element.LR_NO}} </td>
-                  </ng-container>
-  
-                  <ng-container matColumnDef="LR_DATE">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Lr Date </th>
-                    <td mat-cell *matCellDef="let element"> {{element.LR_DATE}} </td>
-                  </ng-container> -->
-
+                  -->
+                  
                 <ng-container matColumnDef="VEHICLE_NO">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle No </th>
                   <td mat-cell *matCellDef="let element"> {{element.VEHICLE_NO}} </td>
@@ -106,6 +100,26 @@
                   <td mat-cell *matCellDef="let element"> {{element.CARRIER}} </td>
                 </ng-container>
 
+                <ng-container matColumnDef="LR_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Lr No </th>
+                  <td mat-cell *matCellDef="let element"> {{element.LR_NO}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="LR_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Lr Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.LR_DATE}} </td>
+                </ng-container> 
+
+                <ng-container matColumnDef="FREIGHT_ORDER">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order </th>
+                  <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="FREIGHT_ORDER_DATE">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER_DATE | date:'dd/MM/yyyy'}} </td>
+                </ng-container>
+
                 <ng-container matColumnDef="EWAYBILL_NO">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> E-way bill No </th>
                   <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_NO}} </td>
@@ -113,7 +127,7 @@
 
                 <ng-container matColumnDef="EWAYBILL_DATE">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> E-way bill Date </th>
-                  <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_DATE}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_DATE | date:'dd/MM/yyyy'}} </td>
                 </ng-container>
 
                 <!-- <ng-container matColumnDef="OUTBOUND_DELIVERY">
@@ -136,15 +150,6 @@
                   <td mat-cell *matCellDef="let element"> {{element.ACTUAL_DELIVERY_DATE | date:'dd/MM/yyyy'}} </td>
                 </ng-container>
 
-                <!-- <ng-container matColumnDef="FREIGHT_ORDER">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order </th>
-                    <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER}} </td>
-                  </ng-container>
-  
-                  <ng-container matColumnDef="FREIGHT_ORDER_DATE">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order Date</th>
-                    <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER_DATE}} </td>
-                  </ng-container> -->
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
                 <tr mat-row (click)="invoiceRowClick(row)" *matRowDef="let row; columns: displayedColumns;" matRipple

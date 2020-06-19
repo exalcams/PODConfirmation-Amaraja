@@ -18,11 +18,15 @@
     </mat-card>
     <div class="sidenav-content">
       <form autocomplete="off" name="form" [formGroup]="InvoiceItemFormGroup" novalidate>
-        <div class="m-0 p-0">
+        <div class="m-0 p-0 mr-8">
           <div fxLayout="row" class="borderTop mt-4">
+            <div fxFlex fxLayoutAlign="start center">
+              <span class="boldClass mx-4">Invoice : </span>
+              {{SelectedInvoiceDetail?.INV_NO}}
+            </div>
             <mat-form-field class="m-4" *ngIf="(currentUserRole | lowercase)==='customer'">
-              <input matInput [matDatepicker]="picker" placeholder="Vehicle Reported Date" formControlName="VehicleReportedDate"
-                (keydown)="onKeydown($event)">
+              <input matInput [matDatepicker]="picker" placeholder="Vehicle Reported Date"
+                formControlName="VehicleReportedDate" (keydown)="onKeydown($event)">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('VehicleReportedDate').touched &&
@@ -31,7 +35,8 @@
               </mat-error>
             </mat-form-field>
 
-            <div fxFlex class="m-4" fxLayoutAlign="start center" *ngIf="(currentUserRole | lowercase)==='amararaja user'">
+            <div class="m-4" fxLayoutAlign="start center"
+              *ngIf="(currentUserRole | lowercase)==='amararaja user'">
               <span class="boldClass mx-4">Vehicle reported date</span>
               {{InvoiceItemFormGroup.get('VehicleReportedDate')?.value | date: 'dd/MM/yyyy'}}
             </div>
@@ -45,39 +50,39 @@
                   <div fxLayout="column">
                     <div fxFlex fxLayout class="p-4">
 
-                      <div fxFlex fxLayoutAlign="start center">
+                      <!-- <div fxFlex fxLayoutAlign="start center">
                         <span class="boldClass mx-4">Invoice </span>
                         {{SelectedInvoiceDetail?.INV_NO}}
-                      </div>
+                      </div> -->
 
-                      <div fxFlex fxLayoutAlign="start center">
+                      <div fxFlex="33" fxLayoutAlign="start center">
                         <span class="boldClass mx-4">Item </span>
                         {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('ITEM_NO')?.value}}
                       </div>
 
                       <div fxFlex fxLayoutAlign="start center">
-                        <span class="boldClass mx-4">Material </span>
+                        <span class="boldClass mx-4 pl-8">Material </span>
                         <span class="materialColor">
-                          <span class="ml-4">
+                          <!-- <span class="ml-4">
                             {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('MATERIAL_DESCRIPTION')?.value}}
-                          </span>
-                          <!-- <span>
+                          </span> -->
+                          <span>
                             {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('MATERIAL_CODE')?.value}} -
                             <span class="ml-4">
                               {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('MATERIAL_DESCRIPTION')?.value}}
                             </span>
-                          </span> -->
+                          </span>
                         </span>
                       </div>
 
-                      <div fxFlex fxLayoutAlign="start center">
+                      <!-- <div fxFlex fxLayoutAlign="start center">
                         <span class="boldClass mx-4">LR No.</span>
                         {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('LR_NO')?.value}}
-                      </div>
+                      </div> -->
 
 
                     </div>
-                    <div fxFlex fxLayout class="p-4">
+                    <!-- <div fxFlex fxLayout class="p-4">
 
                       <div fxFlex fxLayoutAlign="start center">
                         <span class="boldClass mx-4">LR Date </span>
@@ -99,13 +104,13 @@
                         {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FREIGHT_ORDER')?.value}}
                       </div>
 
-                    </div>
+                    </div> -->
                     <div fxFlex fxLayout class="p-4">
 
-                      <div fxFlex fxLayoutAlign="start center">
+                      <!-- <div fxFlex fxLayoutAlign="start center">
                         <span class="boldClass mx-4">Freight Ord. Dt</span>
                         {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][i]?.get('FREIGHT_ORDER_DATE')?.value}}
-                      </div>
+                      </div> -->
 
                       <div fxFlex fxLayoutAlign="start center">
                         <span class="boldClass mx-4">Quantity</span>
@@ -153,7 +158,8 @@
                       <div fxFlex fxLayoutAlign="start center">
                         <mat-form-field *ngIf="(currentUserRole | lowercase)==='customer'" class="pl-8" fxFlex>
                           <mat-select matInput formControlName="REASON" placeholder="Reason">
-                            <mat-option [value]="rest.Description" *ngFor="let rest of AllReasons">{{rest.Description}}</mat-option>
+                            <mat-option [value]="rest.Description" *ngFor="let rest of AllReasons">{{rest.Description}}
+                            </mat-option>
                           </mat-select>
                           <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('REASON').touched &&
                         InvoiceItemFormGroup.get('InvoiceItems')['controls'][i].get('REASON').hasError('required')">
