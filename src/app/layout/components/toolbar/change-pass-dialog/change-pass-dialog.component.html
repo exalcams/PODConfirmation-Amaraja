@@ -30,7 +30,7 @@
         </mat-error>
         <mat-error *ngIf="!resetPasswordForm.get('newPassword').hasError('required') &&
                                  resetPasswordForm.get('newPassword').hasError('pattern')">
-          Password should be minimum of 6 to maximum of 15 characters and should have minimum 1 special character.
+          Password should be minimum of 6 to maximum of 15 characters and Must contain at least one lower case letter,one upper case letter, one digit and one special character
         </mat-error>
       </mat-form-field>
 

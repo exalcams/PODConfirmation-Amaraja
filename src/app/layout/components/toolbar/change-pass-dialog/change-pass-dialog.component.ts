@@ -29,7 +29,7 @@ export class ChangePassDialogComponent implements OnInit {
     this.resetPasswordForm = this._formBuilder.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', [Validators.required,
-      Validators.pattern('^(?=.*[A-Za-z])(?=.*[@$!%*#?&])[A-Za-z@$!%*#?&]{8,}$')]],
+      Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,15}$')]],
       confirmPassword: ['', [Validators.required, CustomValidator.confirmPasswordValidator]]
     });
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
