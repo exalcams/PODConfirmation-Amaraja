@@ -7,6 +7,7 @@ import { FuseSharedModule } from '@fuse/shared.module';
 
 import { ToolbarComponent } from 'app/layout/components/toolbar/toolbar.component';
 import { ChangePassDialogComponent } from './change-pass-dialog/change-pass-dialog.component';
+import { SharedModule } from 'app/shared/shared-module';
 
 @NgModule({
     declarations: [
@@ -25,7 +26,8 @@ import { ChangePassDialogComponent } from './change-pass-dialog/change-pass-dial
         MatToolbarModule,
         FuseSharedModule,
         FuseSearchBarModule,
-        FuseShortcutsModule
+        FuseShortcutsModule,
+        SharedModule,
     ],
     exports     : [
         ToolbarComponent,

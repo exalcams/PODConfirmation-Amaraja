@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation, ElementRef } from '@an
 import { AuthenticationDetails } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { InvoiceDetails, ApproverDetails, InvoiceUpdation, InvoiceUpdation1 } from 'app/models/invoice-details';
+import { InvoiceDetails, ApproverDetails, InvoiceUpdation, InvoiceUpdation1, StatusTemplate } from 'app/models/invoice-details';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
@@ -44,6 +44,8 @@ export class InvoiceDetailsComponent implements OnInit {
         'ODIN',
         'VEHICLE_NO',
         'VEHICLE_CAPACITY',
+        'LR_NO',
+        'LR_DATE',
         'FWD_AGENT',
         'CARRIER',
         'FREIGHT_ORDER',
@@ -64,7 +66,9 @@ export class InvoiceDetailsComponent implements OnInit {
     fileToUpload: File;
     fileToUploadList: File[] = [];
     SelectedInvoiceDetail: InvoiceDetails;
-
+    InvoiceFilterFormGroup: FormGroup;
+    AllStatusTemplates: StatusTemplate[] = [];
+    isDateError: boolean;
     constructor(
         private _router: Router,
         private _dashboardService: DashboardService,
@@ -78,6 +82,7 @@ export class InvoiceDetailsComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.SelectedInvoiceDetail = new InvoiceDetails();
+        this.isDateError = false;
     }
 
     ngOnInit(): void {
@@ -100,12 +105,24 @@ export class InvoiceDetailsComponent implements OnInit {
         this.InvoiceDetailsFormGroup = this._formBuilder.group({
             InvoiceDetails: this.InvoiceDetailsFormArray
         });
+        this.InvoiceFilterFormGroup = this._formBuilder.group({
+            Status: [''],
+            StartDate: [],
+            EndDate: []
+        });
         // if (this.currentUserRole.toLowerCase() === 'amararaja user') {
         //     this.getConfirmedInvoiceDetails();
         // } else {
         //     this.getAllInvoiceDetails();
         // }
-        this.GetAllInvoiceDetailByUser();
+        this.AllStatusTemplates = [
+            // { key: 'All', value: 'All' },
+            { key: 'Pending', value: 'Open' },
+            { key: 'Saved', value: 'Saved' },
+            { key: 'Confirmed', value: 'Confirmed' },
+            // { key: 'Approved (AR User)', value: 'Approved' }
+          ];
+        this.GetOpenAndSavedInvoiceDetailByUser();
     }
 
     ResetControl(): void {
@@ -141,6 +158,7 @@ export class InvoiceDetailsComponent implements OnInit {
                     // this.dataSource.paginator = this.paginator;
                     // this.dataSource.sort = this.sort;
                     this.ClearFormArray(this.InvoiceDetailsFormArray);
+                    this.dataSource = new MatTableDataSource(this.InvoiceDetailsFormArray.controls);
                     this.allInvoiceDetails.forEach(x => {
                         this.InsertInvoiceDetailsFormGroup(x);
                     });
@@ -160,10 +178,10 @@ export class InvoiceDetailsComponent implements OnInit {
             );
     }
 
-    GetAllInvoiceDetailByUser(): void {
+    GetOpenAndSavedInvoiceDetailByUser(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService
-            .GetAllInvoiceDetailByUser(this.currentUserName)
+            .GetOpenAndSavedInvoiceDetailByUser(this.currentUserName)
             .subscribe(
                 data => {
                     this.allInvoiceDetails = data as InvoiceDetails[];
@@ -174,6 +192,7 @@ export class InvoiceDetailsComponent implements OnInit {
                     // this.dataSource.paginator = this.paginator;
                     // this.dataSource.sort = this.sort;
                     this.ClearFormArray(this.InvoiceDetailsFormArray);
+                    this.dataSource = new MatTableDataSource(this.InvoiceDetailsFormArray.controls);
                     this.allInvoiceDetails.forEach(x => {
                         this.InsertInvoiceDetailsFormGroup(x);
                     });
@@ -367,13 +386,13 @@ export class InvoiceDetailsComponent implements OnInit {
                                 this.isProgressBarVisibile = false;
                                 this.notificationSnackBarComponent.openSnackBar(`Invoice ${Ststs} successfully`, SnackBarStatus.success);
                                 this.ResetControl();
-                                this.GetAllInvoiceDetailByUser();
+                                this.GetOpenAndSavedInvoiceDetailByUser();
                             },
                             (err) => {
                                 console.error(err);
                                 this.isProgressBarVisibile = false;
                                 this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                                this.GetAllInvoiceDetailByUser();
+                                this.GetOpenAndSavedInvoiceDetailByUser();
                             }
                         );
                 } else {
@@ -381,7 +400,7 @@ export class InvoiceDetailsComponent implements OnInit {
                     this.notificationSnackBarComponent.openSnackBar
                         (`Invoice ${Ststs} successfully`, SnackBarStatus.success);
                     this.ResetControl();
-                    this.GetAllInvoiceDetailByUser();
+                    this.GetOpenAndSavedInvoiceDetailByUser();
                 }
             },
             err => {
@@ -415,6 +434,72 @@ export class InvoiceDetailsComponent implements OnInit {
                     );
                 }
             );
+    }
+    SearchInvoices(): void {
+        this.getFilteredInvoiceDetails();
+    }
+    getFilteredInvoiceDetails(): void {
+        if (this.InvoiceFilterFormGroup.valid) {
+            if (!this.isDateError) {
+                this.isProgressBarVisibile = true;
+                const Status = this.InvoiceFilterFormGroup.get('Status').value;
+                let StartDate = null;
+                const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+                if (staDate) {
+                    StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+                }
+                let EndDate = null;
+                const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+                if (enDate) {
+                    EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+                }
+                this._dashboardService
+                    .FilterInvoiceDetailByUser(this.currentUserName, Status, StartDate, EndDate)
+                    .subscribe(
+                        data => {
+                            this.allInvoiceDetails = data as InvoiceDetails[];
+                            this.allInvoicesCount = this.allInvoiceDetails.length;
+                            // this.dataSource = new MatTableDataSource(
+                            //     this.allInvoiceDetails
+                            // );
+                            // this.dataSource.paginator = this.paginator;
+                            // this.dataSource.sort = this.sort;
+                            this.ClearFormArray(this.InvoiceDetailsFormArray);
+                            this.dataSource = new MatTableDataSource(this.InvoiceDetailsFormArray.controls);
+                            this.allInvoiceDetails.forEach(x => {
+                                this.InsertInvoiceDetailsFormGroup(x);
+                            });
+                            if (this.allInvoicesCount > 0) {
+                                this.dataSource.paginator = this.paginator;
+                                this.dataSource.sort = this.sort;
+                            }
+                            this.isProgressBarVisibile = false;
+                        },
+                        err => {
+                            this.isProgressBarVisibile = false;
+                            this.notificationSnackBarComponent.openSnackBar(
+                                err instanceof Object ? 'Something went wrong' : err,
+                                SnackBarStatus.danger
+                            );
+                        }
+                    );
+            }
+        } else {
+            Object.keys(this.InvoiceFilterFormGroup.controls).forEach(key => {
+                this.InvoiceFilterFormGroup.get(key).markAsTouched();
+                this.InvoiceFilterFormGroup.get(key).markAsDirty();
+            });
+        }
+    }
+
+    DateSelected(): void {
+        const FROMDATEVAL = this.InvoiceFilterFormGroup.get('StartDate').value as Date;
+        const TODATEVAL = this.InvoiceFilterFormGroup.get('EndDate').value as Date;
+        if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
+            this.isDateError = true;
+        } else {
+            this.isDateError = false;
+        }
     }
 
 }

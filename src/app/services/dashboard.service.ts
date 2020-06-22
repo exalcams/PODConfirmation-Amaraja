@@ -66,6 +66,21 @@ export class DashboardService {
             .pipe(catchError(this.errorHandler));
     }
 
+    GetOpenAndSavedInvoiceDetailByUser(UserName: string): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/PODConfirmation/GetOpenAndSavedInvoiceDetailByUser?UserName=${UserName}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterInvoiceDetailByUser(UserName: string, Status: string, StartDate: string, EndDate: string): Observable<InvoiceDetails[] | string> {
+        return this._httpClient.get<InvoiceDetails[]>(
+            `${this.baseAddress}api/PODConfirmation/FilterInvoiceDetailByUser?UserName=${UserName}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}`
+        )
+            .pipe(catchError(this.errorHandler));
+    }
+
     GetConfirmedInvoiceDetails(userID: Guid): Observable<InvoiceDetails[] | string> {
         return this._httpClient
             .get<InvoiceDetails[]>(

@@ -9,45 +9,46 @@
   </mat-toolbar>
 
   <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
-      <form name="resetPasswordForm" [formGroup]="resetPasswordForm" novalidate  fxLayout="column" fxFlex>
+    <form name="resetPasswordForm" [formGroup]="resetPasswordForm" novalidate fxLayout="column" fxFlex>
 
-          <mat-form-field>
-              <input type="password" matInput placeholder="Current Password" formControlName="currentPassword" required>
-              <mat-error *ngIf="resetPasswordForm.get('currentPassword').hasError('required')">
-                  Current Password is required
-              </mat-error>
-              <!-- <mat-error *ngIf="resetPasswordForm.get('email').hasError('email')">
+      <mat-form-field
+        [class.mb-16]="(resetPasswordForm.get('currentPassword').touched && resetPasswordForm.get('currentPassword').invalid)">
+        <input type="password" matInput placeholder="Current Password" formControlName="currentPassword" required>
+        <mat-error *ngIf="resetPasswordForm.get('currentPassword').hasError('required')">
+          Current Password is required
+        </mat-error>
+        <!-- <mat-error *ngIf="resetPasswordForm.get('email').hasError('email')">
                 Please enter a valid email address
             </mat-error> -->
-          </mat-form-field>
+      </mat-form-field>
 
-          <mat-form-field>
-              <input matInput type="password" placeholder="New Password" formControlName="newPassword" required>
-              <mat-error *ngIf="resetPasswordForm.get('newPassword').hasError('required')">
-                  New password is required
-              </mat-error>
-              <mat-error *ngIf="!resetPasswordForm.get('newPassword').hasError('required') &&
+      <mat-form-field
+        [class.mb-16]="(resetPasswordForm.get('newPassword').touched && resetPasswordForm.get('newPassword').invalid)">
+        <input matInput type="password" placeholder="New Password" formControlName="newPassword" required>
+        <mat-error *ngIf="resetPasswordForm.get('newPassword').hasError('required')">
+          New password is required
+        </mat-error>
+        <mat-error *ngIf="!resetPasswordForm.get('newPassword').hasError('required') &&
                                  resetPasswordForm.get('newPassword').hasError('pattern')">
-                  Passwords must have minimum One Uppercase letter,three lower case letter,two digit,one special
-                  character and minimum length of 8 and don't start with digit
-              </mat-error>
-          </mat-form-field>
+          Password should be minimum of 6 to maximum of 15 characters and should have minimum 1 special character.
+        </mat-error>
+      </mat-form-field>
 
-          <mat-form-field>
-              <input matInput type="password" placeholder="Confirm Password" formControlName="confirmPassword" required>
-              <mat-error *ngIf="resetPasswordForm.get('confirmPassword').hasError('required')">
-                  Password confirmation is required
-              </mat-error>
-              <mat-error *ngIf="!resetPasswordForm.get('confirmPassword').hasError('required') &&
+      <mat-form-field>
+        <input matInput type="password" placeholder="Confirm Password" formControlName="confirmPassword" required>
+        <mat-error *ngIf="resetPasswordForm.get('confirmPassword').hasError('required')">
+          Password confirmation is required
+        </mat-error>
+        <mat-error *ngIf="!resetPasswordForm.get('confirmPassword').hasError('required') &&
                                resetPasswordForm.get('confirmPassword').hasError('passwordsNotMatching')">
-                  Passwords must match
-              </mat-error>
-          </mat-form-field>
+          Passwords must match
+        </mat-error>
+      </mat-form-field>
 
-          <!-- <button mat-raised-button class="submit-button" aria-label="RESET MY PASSWORD" (click)="ChangePasswordClick()">
+      <!-- <button mat-raised-button class="submit-button" aria-label="RESET MY PASSWORD" (click)="ChangePasswordClick()">
               CHANGE MY PASSWORD
           </button> -->
-      </form>
+    </form>
 
   </div>
 
