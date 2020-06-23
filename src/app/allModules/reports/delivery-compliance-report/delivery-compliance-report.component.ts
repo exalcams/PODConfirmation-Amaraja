@@ -74,8 +74,9 @@ export class DeliveryComplianceReportComponent implements OnInit {
       // { key: 'All', value: 'All' },
       { key: 'Pending (customer)', value: 'Open' },
       { key: 'Saved (customer)', value: 'Saved' },
+      { key: 'Partially Confirmed (customer)', value: 'PartiallyConfirmed' },
       { key: 'Confirmed (customer)', value: 'Confirmed' },
-      // { key: 'Approved (AR User)', value: 'Approved' }
+     
     ];
   }
 

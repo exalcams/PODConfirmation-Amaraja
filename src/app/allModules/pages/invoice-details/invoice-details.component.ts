@@ -108,7 +108,9 @@ export class InvoiceDetailsComponent implements OnInit {
         this.InvoiceFilterFormGroup = this._formBuilder.group({
             Status: [''],
             StartDate: [],
-            EndDate: []
+            EndDate: [],
+            InvoiceNumber:[],
+            LRNumber:[]
         });
         // if (this.currentUserRole.toLowerCase() === 'amararaja user') {
         //     this.getConfirmedInvoiceDetails();
@@ -443,6 +445,8 @@ export class InvoiceDetailsComponent implements OnInit {
             if (!this.isDateError) {
                 this.isProgressBarVisibile = true;
                 const Status = this.InvoiceFilterFormGroup.get('Status').value;
+                const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
+                const LRNumber = this.InvoiceFilterFormGroup.get('LRNumber').value;
                 let StartDate = null;
                 const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
                 if (staDate) {
@@ -454,7 +458,7 @@ export class InvoiceDetailsComponent implements OnInit {
                     EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
                 }
                 this._dashboardService
-                    .FilterInvoiceDetailByUser(this.currentUserName, Status, StartDate, EndDate)
+                    .FilterInvoiceDetailByUser(this.currentUserName, Status, StartDate, EndDate,InvoiceNumber,LRNumber)
                     .subscribe(
                         data => {
                             this.allInvoiceDetails = data as InvoiceDetails[];
