@@ -74,9 +74,9 @@ export class DashboardService {
             .pipe(catchError(this.errorHandler));
     }
 
-    FilterInvoiceDetailByUser(UserName: string, Status: string, StartDate: string, EndDate: string): Observable<InvoiceDetails[] | string> {
+    FilterInvoiceDetailByUser(UserName: string, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string, LRNumber: string): Observable<InvoiceDetails[] | string> {
         return this._httpClient.get<InvoiceDetails[]>(
-            `${this.baseAddress}api/PODConfirmation/FilterInvoiceDetailByUser?UserName=${UserName}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}`
+            `${this.baseAddress}api/PODConfirmation/FilterInvoiceDetailByUser?UserName=${UserName}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&LRNumber=${LRNumber}`
         )
             .pipe(catchError(this.errorHandler));
     }

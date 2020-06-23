@@ -51,6 +51,12 @@
                 End date should not be less than from date
               </div>
             </div>
+            <mat-form-field class="mx-8" fxFlex>
+              <input matInput placeholder="Invoice number" formControlName="InvoiceNumber">
+            </mat-form-field>
+            <mat-form-field class="mx-8" fxFlex>
+              <input matInput placeholder="LR number" formControlName="LRNumber">
+            </mat-form-field>
             <div fxFlex class="mx-8 mt-16">
               <button mat-raised-button class="btnBg" (click)="SearchInvoices()">Search</button>
             </div>
