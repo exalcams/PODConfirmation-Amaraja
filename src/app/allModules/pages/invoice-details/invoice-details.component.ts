@@ -109,8 +109,8 @@ export class InvoiceDetailsComponent implements OnInit {
             Status: [''],
             StartDate: [],
             EndDate: [],
-            InvoiceNumber:[],
-            LRNumber:[]
+            InvoiceNumber: [],
+            LRNumber: []
         });
         // if (this.currentUserRole.toLowerCase() === 'amararaja user') {
         //     this.getConfirmedInvoiceDetails();
@@ -123,7 +123,7 @@ export class InvoiceDetailsComponent implements OnInit {
             { key: 'Saved', value: 'Saved' },
             { key: 'Confirmed', value: 'Confirmed' },
             // { key: 'Approved (AR User)', value: 'Approved' }
-          ];
+        ];
         this.GetOpenAndSavedInvoiceDetailByUser();
     }
 
@@ -458,7 +458,7 @@ export class InvoiceDetailsComponent implements OnInit {
                     EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
                 }
                 this._dashboardService
-                    .FilterInvoiceDetailByUser(this.currentUserName, Status, StartDate, EndDate,InvoiceNumber,LRNumber)
+                    .FilterInvoiceDetailByUser(this.currentUserName, Status, StartDate, EndDate, InvoiceNumber, LRNumber)
                     .subscribe(
                         data => {
                             this.allInvoiceDetails = data as InvoiceDetails[];
@@ -505,5 +505,12 @@ export class InvoiceDetailsComponent implements OnInit {
             this.isDateError = false;
         }
     }
-
+    onKeydown(event): boolean {
+        // console.log(event.key);
+        if (event.key === 'Backspace' || event.key === 'Delete') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
