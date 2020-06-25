@@ -9,6 +9,7 @@ import {
     MatTabChangeEvent
 } from '@angular/material';
 import { Router } from '@angular/router';
+import { ChartType } from 'chart.js';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { AuthenticationDetails } from 'app/models/master';
@@ -59,6 +60,44 @@ export class DashboardComponent implements OnInit {
     selection = new SelectionModel<InvoiceDetails>(true, []);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+
+    // Doughnut Chart
+    public doughnutChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+            position: 'left',
+            labels: {
+                fontSize: 10,
+                padding: 20,
+                usePointStyle: true
+            }
+        },
+        cutoutPercentage: 80,
+        elements: {
+            arc: {
+                borderWidth: 0
+            }
+        },
+        plugins: {
+            labels: {
+                // tslint:disable-next-line:typedef
+                render: function (args) {
+                    return args.value + '%';
+                },
+                fontColor: '#000',
+                position: 'outside'
+            }
+        }
+    };
+    public doughnutChartType: ChartType = 'doughnut';
+    public doughnutChartLabels: any[] = ['INVOICE DISPATCHED', 'POD CONFIRMED'];
+    public doughnutChartData: any[] = [
+        [4, 2]
+    ];
+    // public doughnutChartData: any[] = [];
+    public colors: any[] = [{ backgroundColor: ['#fb7800', '#4452c6'] }];
+   
 
     constructor(
         private _router: Router,

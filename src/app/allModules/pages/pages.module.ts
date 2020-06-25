@@ -48,7 +48,10 @@ import {
     FuseMaterialColorPickerModule,
     FuseWidgetModule
 } from '@fuse/components';
-
+import { ChartsModule } from "ng2-charts";
+import { NgxDonutChartModule } from "ngx-doughnut-chart";
+// import "chartjs-plugin-labels";
+// import "chartjs-plugin-annotation";
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -134,7 +137,7 @@ const routes = [
         MatTreeModule,
 
         NgxChartsModule,
-
+        NgxDonutChartModule,
         FuseSharedModule,
         FuseSidebarModule,
 
@@ -142,7 +145,7 @@ const routes = [
         FuseHighlightModule,
         FuseMaterialColorPickerModule,
         FuseWidgetModule,
-
+        ChartsModule,
         FormsModule
     ],
     declarations: [DashboardComponent, InvoiceItemComponent, InvoiceDetailsComponent],
