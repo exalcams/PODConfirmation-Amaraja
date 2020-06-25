@@ -1,7 +1,83 @@
 <div id="dashboard" class="page-layout carded" fusePerfectScrollbar>
   <div class="center" fxLayout="column" fxLayoutGap="10px">
 
-    <mat-card class="cardHeader p-8 pt-4 pb-0 m-0">
+    <div fxFlex fxLayout>
+      <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
+        <div class="fuse-card auto-width">
+
+          <div class="position-relative p-24" fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <span class="h2">Visitors & Page views</span>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+                Yesterday
+              </div>
+              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+                Today
+              </div>
+            </div>
+          </div>
+
+          <div class="position-relative h-368 pb-16">
+            <canvas style="width: 300px !important;height: 352px !important;" baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
+              [options]="doughnutChartOptions" [colors]="colors">
+            </canvas>
+          </div>
+        </div>
+      </div>
+      <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
+        <div class="fuse-card auto-width">
+
+          <div class="position-relative p-24" fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <span class="h2">Visitors & Page views</span>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+                Yesterday
+              </div>
+              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+                Today
+              </div>
+            </div>
+          </div>
+
+          <div class="position-relative h-368 pb-16">
+            <canvas style="width: 300px !important;
+            height: 352px !important;" baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
+              [options]="doughnutChartOptions" [colors]="colors">
+            </canvas>
+          </div>
+        </div>
+      </div>
+      <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
+        <div class="fuse-card auto-width">
+
+          <div class="position-relative p-24" fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <span class="h2">Visitors & Page views</span>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+                Yesterday
+              </div>
+              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+                Today
+              </div>
+            </div>
+          </div>
+
+          <div class="position-relative h-368 pb-16">
+            <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
+              [options]="doughnutChartOptions" [colors]="colors">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- <mat-card class="cardHeader p-8 pt-4 pb-0 m-0">
       <div fxLayout>
         <div fxFlex fxLayoutAlign="start center" class="h2">
           <b>Delivery Details</b>
@@ -17,16 +93,7 @@
       </mat-tab-group>
     </div>
     <div class="sidenav-content mt-4">
-      <!-- <div fxLayout="row">
-            <div fxFlex="40">
-              <h1 style="float:left;">Invoice Details</h1>
-            </div>
-            <div fxFlex="60">
-              <mat-form-field style="width: 80%; float: right;">
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-              </mat-form-field>
-            </div>
-          </div> -->
+      
       <div fxLayout="column" class="mt-12">
         <div flex class="mt-10">
           <div class="tableData" #TABLE>
@@ -53,33 +120,7 @@
                   <td mat-cell *matCellDef="let element"> {{element.PLANT}} </td>
                 </ng-container>
 
-                <!-- <ng-container matColumnDef="PLANT_NAME">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Plant name </th>
-                    <td mat-cell *matCellDef="let element"> {{element.PLANT_NAME}} </td>
-                  </ng-container> -->
-
-                <!-- <ng-container matColumnDef="MATERIAL_CODE">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Code </th>
-                    <td mat-cell *matCellDef="let element"> {{element.MATERIAL_CODE}} </td>
-                  </ng-container>
-  
-                  <ng-container matColumnDef="MATERIAL_DESCRIPTION">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Description </th>
-                    <td mat-cell *matCellDef="let element"> {{element.MATERIAL_DESCRIPTION}} </td>
-                  </ng-container>
-  
-                  <ng-container matColumnDef="QUANTITY">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
-                    <td mat-cell *matCellDef="let element"> {{element.QUANTITY}} </td>
-                  </ng-container>
-  
-                  <ng-container matColumnDef="QUANTITY_UOM">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity Unit </th>
-                    <td mat-cell *matCellDef="let element"> {{element.QUANTITY_UOM}} </td>
-                  </ng-container>
-  
-                  -->
-                  
+            
                 <ng-container matColumnDef="VEHICLE_NO">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle No </th>
                   <td mat-cell *matCellDef="let element"> {{element.VEHICLE_NO}} </td>
@@ -130,15 +171,7 @@
                   <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_DATE | date:'dd/MM/yyyy'}} </td>
                 </ng-container>
 
-                <!-- <ng-container matColumnDef="OUTBOUND_DELIVERY">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Outbound Delivery </th>
-                    <td mat-cell *matCellDef="let element"> {{element.OUTBOUND_DELIVERY}} </td>
-                  </ng-container>
-  
-                  <ng-container matColumnDef="OUTBOUND_DELIVERY_DATE">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Outbound Delivery Date </th>
-                    <td mat-cell *matCellDef="let element"> {{element.OUTBOUND_DELIVERY_DATE}} </td>
-                  </ng-container> -->
+              
 
                 <ng-container matColumnDef="PROPOSED_DELIVERY_DATE">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposed Delivery Date </th>
@@ -167,7 +200,7 @@
           </mat-paginator>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
   </mat-progress-spinner>
