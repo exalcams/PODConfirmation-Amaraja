@@ -97,6 +97,42 @@ export class DashboardComponent implements OnInit {
     ];
     // public doughnutChartData: any[] = [];
     public colors: any[] = [{ backgroundColor: ['#fb7800', '#4452c6'] }];
+
+    public doughnutChartOptions1 = {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+            position: 'left',
+            labels: {
+                fontSize: 10,
+                padding: 20,
+                usePointStyle: true
+            }
+        },
+        cutoutPercentage: 80,
+        elements: {
+            arc: {
+                borderWidth: 0
+            }
+        },
+        plugins: {
+            labels: {
+                // tslint:disable-next-line:typedef
+                render: function (args) {
+                    return args.value + '%';
+                },
+                fontColor: '#000',
+                position: 'outside'
+            }
+        }
+    };
+    public doughnutChartType1: ChartType = 'doughnut';
+    public doughnutChartLabels1: any[] = ['ON-TIME DELIVERY', 'LITE DELIVERY'];
+    public doughnutChartData1: any[] = [
+        [4, 2]
+    ];
+    // public doughnutChartData: any[] = [];
+    public colors1: any[] = [{ backgroundColor: ['#52de97', '#eff54f'] }];
    
 
     constructor(

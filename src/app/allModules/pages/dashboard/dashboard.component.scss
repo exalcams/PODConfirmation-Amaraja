@@ -8,6 +8,8 @@
   }
   .center {
     padding: 5px !important;
+    background-color: white;
+    height: 100% !important;
   }
   .cardHeader {
     background-color: #fffdf9;
@@ -15,6 +17,18 @@
   }
   .boldClass {
     font-weight: bold;
+  }
+  .orangeBorderBottom {
+    border-bottom: 2px solid #fb7800;
+  }
+  .tile {
+    @include mat-elevation(2);
+    min-height: 60px !important;
+    max-height: 250px !important;
+    img {
+      height: 36px;
+    }
+    cursor: pointer;
   }
 
   .boldItalicClass {

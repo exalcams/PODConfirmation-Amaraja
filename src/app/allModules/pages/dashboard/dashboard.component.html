@@ -2,80 +2,91 @@
   <div class="center" fxLayout="column" fxLayoutGap="10px">
 
     <div fxFlex fxLayout>
-      <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
-        <div class="fuse-card auto-width">
-
-          <div class="position-relative p-24" fxLayout="row" fxLayoutAlign="space-between center">
-            <div fxLayout="column" fxLayoutAlign="start start">
-              <span class="h2">Visitors & Page views</span>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="start center">
-              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
-                Yesterday
-              </div>
-              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
-                Today
-              </div>
-            </div>
+      <div class="tile mx-20" fxFlex="30" fxLayout="column" style="background-color: white;height: 250px !important;"
+        fxLayoutAlign="start">
+        <div class="position-relative p-12" fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="column" fxLayoutAlign="start start">
+            <span>APPROVED / PENDING INVOICES</span>
           </div>
+          <!-- <div fxLayout="row" fxLayoutAlign="start center">
+            <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+              Yesterday
+            </div>
+            <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+              Today
+            </div>
+          </div> -->
+        </div>
+        <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
+          <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels"
+            style="width: 360px !important;height: 190px !important;" [chartType]="doughnutChartType"
+            [options]="doughnutChartOptions" [colors]="colors">
+          </canvas>
+        </div>
+      </div>
+      <div class="tile mx-20" fxFlex="30" fxLayout="column" style="background-color: white;height: 250px !important;"
+        fxLayoutAlign="start">
+        <div class="position-relative p-12" fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="column" fxLayoutAlign="start start">
+            <span>DELIVERY STATUS</span>
+          </div>
+          <!-- <div fxLayout="row" fxLayoutAlign="start center">
+            <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+              Yesterday
+            </div>
+            <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
+              Today
+            </div>
+          </div> -->
+        </div>
+        <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
+          <canvas baseChart [data]="doughnutChartData1" [labels]="doughnutChartLabels1"
+            style="width: 360px !important;height: 190px !important;" [chartType]="doughnutChartType1"
+            [options]="doughnutChartOptions1" [colors]="colors1">
+          </canvas>
+        </div>
+      </div>
+      <!-- <div class="tile mx-20" fxFlex="35" fxLayout="column" fxLayoutAlign="start"></div> -->
+    </div>
+    <div fxFlex style="margin-left: 20px !important;">
+      <div fxLayoutAlign="start center" style="margin-left: 20px;" class="pt-8">
+        <span class="orangeBorderBottom pl-8"> INVOICES </span>
+      </div>
+      <div style="margin-left: 20px;">
+        <div fxLayout="column" fxLayoutAlign="start" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start start">
+          <div fxFlex="100" fxFlex.gt-sm="20">
+            <div class="fuse-card auto-width mb-32" style="margin-top: 20px; border: 1px solid #e2e2e2;
+            border-radius: 10px;" [ngClass.gt-sm]="'mb-0 mr-32'">
 
-          <div class="position-relative h-368 pb-16">
-            <canvas style="width: 300px !important;height: 352px !important;" baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
-              [options]="doughnutChartOptions" [colors]="colors">
-            </canvas>
+              <div class="p-16 pb-0" fxLayout="row wrap" fxLayoutAlign="start end">
+                <div class="pr-16">
+                  <div class="h3 secondary-text">INVOICE NO : 12346</div>
+                </div>
+                <div>
+                  <div class="pr-16">
+                    <div class="h3 secondary-text">INVOICE NO : 12346</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="pr-16">
+                    <div class="h3 secondary-text">INVOICE NO : 12346</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="pr-16">
+                    <div class="h3 secondary-text">INVOICE NO : 12346</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="h-96 w-100-p">
+
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
-      <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
-        <div class="fuse-card auto-width">
-
-          <div class="position-relative p-24" fxLayout="row" fxLayoutAlign="space-between center">
-            <div fxLayout="column" fxLayoutAlign="start start">
-              <span class="h2">Visitors & Page views</span>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="start center">
-              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
-                Yesterday
-              </div>
-              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
-                Today
-              </div>
-            </div>
-          </div>
-
-          <div class="position-relative h-368 pb-16">
-            <canvas style="width: 300px !important;
-            height: 352px !important;" baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
-              [options]="doughnutChartOptions" [colors]="colors">
-            </canvas>
-          </div>
-        </div>
-      </div>
-      <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
-        <div class="fuse-card auto-width">
-
-          <div class="position-relative p-24" fxLayout="row" fxLayoutAlign="space-between center">
-            <div fxLayout="column" fxLayoutAlign="start start">
-              <span class="h2">Visitors & Page views</span>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="start center">
-              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
-                Yesterday
-              </div>
-              <div class="py-8 px-12 border-radius-2 line-height-1 mr-8 cursor-pointer">
-                Today
-              </div>
-            </div>
-          </div>
-
-          <div class="position-relative h-368 pb-16">
-            <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
-              [options]="doughnutChartOptions" [colors]="colors">
-            </canvas>
-          </div>
-        </div>
-      </div>
-
     </div>
     <!-- <mat-card class="cardHeader p-8 pt-4 pb-0 m-0">
       <div fxLayout>
