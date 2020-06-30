@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="7.792" height="12.467" viewBox="0 0 7.792 12.467">
+    <defs>
+        <style>
+            .prefix__cls-1{fill:#fda859}
+        </style>
+    </defs>
+    <g id="prefix__adjust" transform="rotate(-90 6.234 6.234)">
+        <g id="prefix__Group_1443" data-name="Group 1443">
+            <g id="prefix__Group_1442" data-name="Group 1442">
+                <path id="prefix__Path_58" d="M11.948 1.3h-1.384a1.806 1.806 0 0 0-3.464 0H.519a.519.519 0 0 0 0 1.039H7.1a1.806 1.806 0 0 0 3.467 0h1.383a.519.519 0 0 0 0-1.039zM8.831 2.6a.779.779 0 1 1 .779-.779.78.78 0 0 1-.779.779z" class="prefix__cls-1" data-name="Path 58"/>
+            </g>
+        </g>
+        <g id="prefix__Group_1445" data-name="Group 1445" transform="translate(0 4.156)">
+            <g id="prefix__Group_1444" data-name="Group 1444">
+                <path id="prefix__Path_59" d="M11.948 1.3H5.37a1.806 1.806 0 0 0-3.47 0H.519a.519.519 0 1 0 0 1.039H1.9a1.806 1.806 0 0 0 3.467 0h6.578a.519.519 0 0 0 0-1.039zM3.636 2.6a.779.779 0 1 1 .779-.779.78.78 0 0 1-.779.779z" class="prefix__cls-1" data-name="Path 59"/>
+            </g>
+        </g>
+    </g>
+</svg>
