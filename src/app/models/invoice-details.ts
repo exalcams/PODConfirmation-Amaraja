@@ -115,3 +115,16 @@ export class DeliveryCount {
     InLineDelivery: number;
     DelayedDelivery: number;
 }
+
+export class InvoiceStatusCount {
+    TotalInvoices: number;
+    ConfirmedInvoices: number;
+    PendingInvoices: number;
+}
+
+export class InvoiceHeaderDetail {
+    INV_NO: string;
+    VEHICLE_NO: string;
+    EWAYBILL_NO: string;
+    OUTBOUND_DELIVERY: string;
+}
