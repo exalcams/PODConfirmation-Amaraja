@@ -103,6 +103,7 @@ export class ReportInvoice {
     POD_UPLOADE_STATUS: string;
     TRANSIT_LEAD_TIME: string;
     CANC_INV_STATUS: string;
+    STATUS: string;
 }
 
 export class StatusTemplate {

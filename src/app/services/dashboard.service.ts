@@ -173,17 +173,6 @@ export class DashboardService {
             .pipe(catchError(this.errorHandler));
     }
 
-    GetDeliveredInvoices(
-        userID: Guid,
-        Condition: string
-    ): Observable<InvoiceDetails[] | string> {
-        return this._httpClient
-            .get<InvoiceDetails[]>(
-                `${this.baseAddress}api/Dashboard/GetDeliveredInvoices?UserID=${userID}&Condition=${Condition}`
-            )
-            .pipe(catchError(this.errorHandler));
-    }
-
     GetInvoiceStatusCountByUserID(
         userID: Guid
     ): Observable<InvoiceStatusCount | string> {
@@ -200,6 +189,55 @@ export class DashboardService {
         return this._httpClient
             .get<InvoiceStatusCount>(
                 `${this.baseAddress}api/Dashboard/GetInvoiceStatusCountByUser?UserName=${userName}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterDeliveryCount(userID: Guid, StartDate: string, EndDate: string): Observable<DeliveryCount | string> {
+        return this._httpClient
+            .get<DeliveryCount>(
+                `${this.baseAddress}api/Dashboard/FilterDeliveryCount?UserID=${userID}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterDeliveryCountByUser(
+        userName: string, StartDate: string, EndDate: string
+    ): Observable<DeliveryCount | string> {
+        return this._httpClient
+            .get<DeliveryCount>(
+                `${this.baseAddress}api/Dashboard/FilterDeliveryCountByUser?UserName=${userName}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterInvoiceStatusCount(
+        userID: Guid, StartDate: string, EndDate: string
+    ): Observable<InvoiceStatusCount | string> {
+        return this._httpClient
+            .get<InvoiceStatusCount>(
+                `${this.baseAddress}api/Dashboard/FilterInvoiceStatusCount?UserID=${userID}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterInvoiceStatusCountByUser(
+        userName: string, StartDate: string, EndDate: string
+    ): Observable<InvoiceStatusCount | string> {
+        return this._httpClient
+            .get<InvoiceStatusCount>(
+                `${this.baseAddress}api/Dashboard/FilterInvoiceStatusCountByUser?UserName=${userName}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetDeliveredInvoices(
+        userID: Guid,
+        Condition: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/GetDeliveredInvoices?UserID=${userID}&Condition=${Condition}`
             )
             .pipe(catchError(this.errorHandler));
     }

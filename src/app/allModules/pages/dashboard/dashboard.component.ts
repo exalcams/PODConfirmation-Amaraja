@@ -25,6 +25,8 @@ import { DashboardService } from "app/services/dashboard.service";
 import { ShareParameterService } from "app/services/share-parameters.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { Guid } from "guid-typescript";
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: "app-dashboard",
@@ -44,6 +46,8 @@ export class DashboardComponent implements OnInit {
     notificationSnackBarComponent: NotificationSnackBarComponent;
     deliveryCount: DeliveryCount;
     condition: string;
+    InvoiceFilterFormGroup: FormGroup;
+    isDateError: boolean;
     allInvoiceDetails: InvoiceDetails[] = [];
     allInvoiceHeaderDetails: InvoiceHeaderDetail[] = [];
     displayedColumns: string[] = [
@@ -91,10 +95,12 @@ export class DashboardComponent implements OnInit {
             labels: {
                 // tslint:disable-next-line:typedef
                 render: function (args) {
-                    return args.value + "%";
+                    return args.value ;
                 },
                 fontColor: "#000",
-                position: "outside",
+                position: "default",
+                // outsidePadding: 0,
+                // textMargin: 0
             },
         },
     };
@@ -128,10 +134,12 @@ export class DashboardComponent implements OnInit {
             labels: {
                 // tslint:disable-next-line:typedef
                 render: function (args) {
-                    return args.value + "%";
+                    return args.value;
                 },
                 fontColor: "#000",
-                position: "outside",
+                position: "default",
+                // outsidePadding: 0,
+                // textMargin: 0
             },
         },
     };
@@ -145,7 +153,9 @@ export class DashboardComponent implements OnInit {
         private _router: Router,
         private _dashboardService: DashboardService,
         private _shareParameterService: ShareParameterService,
-        public snackBar: MatSnackBar
+        public snackBar: MatSnackBar,
+        private _formBuilder: FormBuilder,
+        private _datePipe: DatePipe,
     ) {
         this.isProgressBarVisibile = true;
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(
@@ -153,6 +163,7 @@ export class DashboardComponent implements OnInit {
         );
         this.deliveryCount = new DeliveryCount();
         this.condition = "InLineDelivery";
+        this.isDateError = false;
     }
 
     ngOnInit(): void {
@@ -178,6 +189,13 @@ export class DashboardComponent implements OnInit {
         } else {
             this._router.navigate(["/auth/login"]);
         }
+        this.InvoiceFilterFormGroup = this._formBuilder.group({
+            // Status: [''],
+            StartDate: [],
+            EndDate: [],
+            // InvoiceNumber: [''],
+            // LRNumber: ['']
+        });
         this.GetInvoiceStatusCount();
         this.GetDeliveryCounts();
         this.GetInvoiceHeaderDetails();
@@ -388,6 +406,171 @@ export class DashboardComponent implements OnInit {
                         );
                     }
                 );
+        }
+    }
+
+    SearchInvoices(): void {
+        this.getFilteredInvoiceDetails();
+    }
+    getFilteredInvoiceDetails(): void {
+        if (this.InvoiceFilterFormGroup.valid) {
+            if (!this.isDateError) {
+                this.FilterInvoiceStatusCount();
+                this.FilterDeliveryCount();
+            }
+        } else {
+            Object.keys(this.InvoiceFilterFormGroup.controls).forEach(key => {
+                this.InvoiceFilterFormGroup.get(key).markAsTouched();
+                this.InvoiceFilterFormGroup.get(key).markAsDirty();
+            });
+        }
+    }
+
+    FilterInvoiceStatusCount(): void {
+        // const Status = this.InvoiceFilterFormGroup.get('Status').value;
+        // const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
+        // const LRNumber = this.InvoiceFilterFormGroup.get('LRNumber').value;
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        if (this.currentUserRole === "Amararaja User") {
+            this._dashboardService
+                .FilterInvoiceStatusCount(this.currentUserID, StartDate, EndDate)
+                .subscribe(
+                    (data: InvoiceStatusCount) => {
+                        const chartData: number[] = [];
+
+                        chartData.push(data.ConfirmedInvoices);
+                        chartData.push(data.PendingInvoices);
+
+                        this.doughnutChartData = chartData;
+
+                        this.isProgressBarVisibile = false;
+                    },
+                    (err) => {
+                        this.isProgressBarVisibile = false;
+                        this.notificationSnackBarComponent.openSnackBar(
+                            err instanceof Object
+                                ? "Something went wrong"
+                                : err,
+                            SnackBarStatus.danger
+                        );
+                    }
+                );
+        } else if (this.currentUserRole === "Customer") {
+            this._dashboardService
+                .FilterInvoiceStatusCountByUser(this.currentUsername, StartDate, EndDate)
+                .subscribe(
+                    (data: InvoiceStatusCount) => {
+                        const chartData: number[] = [];
+
+                        chartData.push(data.ConfirmedInvoices);
+                        chartData.push(data.PendingInvoices);
+
+                        this.doughnutChartData = chartData;
+
+                        this.isProgressBarVisibile = false;
+                    },
+                    (err) => {
+                        this.isProgressBarVisibile = false;
+                        this.notificationSnackBarComponent.openSnackBar(
+                            err instanceof Object
+                                ? "Something went wrong"
+                                : err,
+                            SnackBarStatus.danger
+                        );
+                    }
+                );
+        }
+    }
+
+    FilterDeliveryCount(): void {
+        // const Status = this.InvoiceFilterFormGroup.get('Status').value;
+        // const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
+        // const LRNumber = this.InvoiceFilterFormGroup.get('LRNumber').value;
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        if (this.currentUserRole === "Amararaja User") {
+            this._dashboardService
+                .FilterDeliveryCount(this.currentUserID, StartDate, EndDate)
+                .subscribe(
+                    (data: DeliveryCount) => {
+                        const chartData: number[] = [];
+
+                        chartData.push(data.InLineDelivery);
+                        chartData.push(data.DelayedDelivery);
+
+                        this.doughnutChartData1 = chartData;
+
+                        this.isProgressBarVisibile = false;
+                    },
+                    (err) => {
+                        this.isProgressBarVisibile = false;
+                        this.notificationSnackBarComponent.openSnackBar(
+                            err instanceof Object
+                                ? "Something went wrong"
+                                : err,
+                            SnackBarStatus.danger
+                        );
+                    }
+                );
+        } else if (this.currentUserRole === "Customer") {
+            this._dashboardService
+                .FilterDeliveryCountByUser(this.currentUsername, StartDate, EndDate)
+                .subscribe(
+                    (data: DeliveryCount) => {
+                        const chartData: number[] = [];
+
+                        chartData.push(data.InLineDelivery);
+                        chartData.push(data.DelayedDelivery);
+
+                        this.doughnutChartData1 = chartData;
+
+                        this.isProgressBarVisibile = false;
+                    },
+                    (err) => {
+                        this.isProgressBarVisibile = false;
+                        this.notificationSnackBarComponent.openSnackBar(
+                            err instanceof Object
+                                ? "Something went wrong"
+                                : err,
+                            SnackBarStatus.danger
+                        );
+                    }
+                );
+        }
+    }
+
+    DateSelected(): void {
+        const FROMDATEVAL = this.InvoiceFilterFormGroup.get('StartDate').value as Date;
+        const TODATEVAL = this.InvoiceFilterFormGroup.get('EndDate').value as Date;
+        if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
+            this.isDateError = true;
+        } else {
+            this.isDateError = false;
+        }
+    }
+    onKeydown(event): boolean {
+        // console.log(event.key);
+        if (event.key === 'Backspace' || event.key === 'Delete') {
+            return true;
+        } else {
+            return false;
         }
     }
 }

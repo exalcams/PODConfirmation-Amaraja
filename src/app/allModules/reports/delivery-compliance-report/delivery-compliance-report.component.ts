@@ -35,6 +35,8 @@ export class DeliveryComplianceReportComponent implements OnInit {
     'ITEM_ID',
     'INV_DATE',
     'INV_TYPE',
+    // 'CUSTOMER',
+    'CUSTOMER_NAME',
     'LR_NO',
     'LR_DATE',
     'VEHICLE_NO',
@@ -52,6 +54,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
     'PLANT',
     'OUTBOUND_DELIVERY',
     'OUTBOUND_DELIVERY_DATE',
+    'STATUS',
   ];
   dataSource = new MatTableDataSource<ReportInvoice>();
   selection = new SelectionModel<ReportInvoice>(true, []);
@@ -76,7 +79,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
       { key: 'Saved (customer)', value: 'Saved' },
       { key: 'Partially Confirmed (customer)', value: 'PartiallyConfirmed' },
       { key: 'Confirmed (customer)', value: 'Confirmed' },
-     
+
     ];
   }
 
@@ -100,7 +103,9 @@ export class DeliveryComplianceReportComponent implements OnInit {
     this.InvoiceFilterFormGroup = this._formBuilder.group({
       Status: ['Open', Validators.required],
       StartDate: [],
-      EndDate: []
+      EndDate: [],
+      InvoiceNumber: [''],
+      CustomerName: ['']
     });
     this.isDateError = false;
     if (this.currentUserRole.toLowerCase() === 'amararaja user') {
@@ -125,6 +130,8 @@ export class DeliveryComplianceReportComponent implements OnInit {
       if (!this.isDateError) {
         this.isProgressBarVisibile = true;
         const Status = this.InvoiceFilterFormGroup.get('Status').value;
+        const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
+        const CustomerName = this.InvoiceFilterFormGroup.get('CustomerName').value;
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
         if (staDate) {
@@ -136,7 +143,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
           EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this._reportService
-          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate)
+          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber,CustomerName)
           .subscribe(
             data => {
               this.FilteredInvoiceDetails = data as ReportInvoice[];

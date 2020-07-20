@@ -109,8 +109,8 @@ export class InvoiceDetailsComponent implements OnInit {
             Status: [''],
             StartDate: [],
             EndDate: [],
-            InvoiceNumber: [],
-            LRNumber: []
+            InvoiceNumber: [''],
+            LRNumber: ['']
         });
         // if (this.currentUserRole.toLowerCase() === 'amararaja user') {
         //     this.getConfirmedInvoiceDetails();

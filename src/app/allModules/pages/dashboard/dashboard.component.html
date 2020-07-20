@@ -1,11 +1,58 @@
 <div id="dashboard" class="page-layout carded" fusePerfectScrollbar>
   <div class="center" fxLayout="column" fxLayoutGap="5px">
-
+    <form autocomplete="off" name="form" [formGroup]="InvoiceFilterFormGroup" novalidate>
+      <div fxLayout class="mt-4 mx-12">
+        <!-- <mat-form-field class="mx-8" fxFlex>
+          <mat-select matInput formControlName="Status" placeholder="Status">
+            <mat-option [value]="rest.value" *ngFor="let rest of AllStatusTemplates">{{rest.key}}
+            </mat-option>
+          </mat-select>
+          <mat-error class="pl-4 errorClass" *ngIf="InvoiceFilterFormGroup.get('Status').touched &&
+          InvoiceFilterFormGroup.get('Status').hasError('required')">
+            From date is required
+          </mat-error>
+        </mat-form-field> -->
+        <mat-form-field class="mx-8" fxFlex>
+          <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="StartDate"
+            (keydown)="onKeydown($event)" (dateChange)="DateSelected()">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error class="pl-4 errorClass" *ngIf="InvoiceFilterFormGroup.get('StartDate').touched &&
+          InvoiceFilterFormGroup.get('StartDate').hasError('required')">
+            Start date is required
+          </mat-error>
+        </mat-form-field>
+        <div class="mx-8" fxFlex>
+          <mat-form-field style="width: 100%;">
+            <input matInput [matDatepicker]="picker1" placeholder="End Date" formControlName="EndDate"
+              (keydown)="onKeydown($event)" (dateChange)="DateSelected()">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+            <mat-error class="pl-4 errorClass" *ngIf="InvoiceFilterFormGroup.get('EndDate').touched &&
+            InvoiceFilterFormGroup.get('EndDate').hasError('required')">
+              End date is required
+            </mat-error>
+          </mat-form-field>
+          <div *ngIf="isDateError" style="color:#f44336;font-size: 12px;margin-top: -16px">
+            End date should not be less than from date
+          </div>
+        </div>
+        <!-- <mat-form-field class="mx-8" fxFlex>
+          <input matInput placeholder="Invoice number" formControlName="InvoiceNumber">
+        </mat-form-field>
+        <mat-form-field class="mx-8" fxFlex>
+          <input matInput placeholder="LR number" formControlName="LRNumber">
+        </mat-form-field> -->
+        <div fxFlex class="mr-8 ml-24 mt-16">
+          <button mat-raised-button class="btnBg" (click)="SearchInvoices()">Search</button>
+        </div>
+      </div>
+    </form>
     <div fxFlex fxLayout class="mt-16">
       <div class="tile mx-20" fxFlex="50" fxLayout="column" style="background-color: white;height: 300px !important;">
         <div class="position-relative p-12" fxLayout="row" fxLayoutAlign="space-between center">
           <span>APPROVED / PENDING INVOICES</span>
-          <span class="smallerFont">Past 7 Days</span>
+          <!-- <span class="smallerFont">Past 7 Days</span> -->
           <img src="assets/images/adjust.svg" style="height: 15px !important;">
         </div>
         <div style="border-bottom: 2px solid #F3F6EE;"></div>
@@ -21,7 +68,7 @@
       <div class="tile mx-20" fxFlex="50" fxLayout="column" style="background-color: white;height: 300px !important;">
         <div class="position-relative p-12" fxLayout="row" fxLayoutAlign="space-between center">
           <span>DELIVERY STATUS</span>
-          <span class="smallerFont">Past 7 Days</span>
+          <!-- <span class="smallerFont">Past 7 Days</span> -->
           <img src="assets/images/adjust.svg" style="height: 15px !important;">
         </div>
         <div style="border-bottom: 2px solid #F3F6EE;"></div>
