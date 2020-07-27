@@ -104,7 +104,11 @@ export class InvoiceItemComponent implements OnInit {
       InvoiceItems: this.InvoiceItemFormArray
     });
     this.GetAllReasons();
-    this.GetInvoiceItemDetailsByUserAndID();
+    if (this.currentUserRole === "Amararaja User") {
+      this.GetInvoiceItemDetailsByID();
+    } else if (this.currentUserRole === "Customer") {
+      this.GetInvoiceItemDetailsByUserAndID();
+    }
   }
 
   ResetControl(): void {

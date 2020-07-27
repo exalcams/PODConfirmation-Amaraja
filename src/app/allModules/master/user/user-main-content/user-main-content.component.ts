@@ -11,6 +11,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Router } from '@angular/router';
 import { UserWithRole, RoleWithApp, AuthenticationDetails } from 'app/models/master';
+import { CustomValidator } from 'app/shared/custom-validator';
 
 @Component({
   selector: 'user-main-content',
@@ -47,8 +48,16 @@ export class UserMainContentComponent implements OnInit, OnChanges {
       email: ['', [Validators.required, Validators.email]],
       contactNumber: ['', [Validators.required, Validators.pattern]],
       plant: [''],
+      password: ['', [Validators.required,
+      Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,15}$')]],
+      confirmPassword: ['', [Validators.required, confirmPasswordValidator]],
       profile: ['']
     });
+    this.userMainFormGroup.get('password').valueChanges.subscribe(
+      (data) => {
+        this.userMainFormGroup.get('confirmPassword').updateValueAndValidity();
+      }
+    );
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.user = new UserWithRole();
     this.authenticationDetails = new AuthenticationDetails();
@@ -114,7 +123,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
               this.user.RoleID = <Guid>this.userMainFormGroup.get('roleID').value;
               this.user.Email = this.userMainFormGroup.get('email').value;
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
-              // this.user.Password = this.userMainFormGroup.get('password').value;
+              this.user.Password = this.userMainFormGroup.get('password').value;
               this.user.ModifiedBy = this.authenticationDetails.userID.toString();
               this._masterService.UpdateUser(this.user).subscribe(
                 (data) => {
@@ -153,7 +162,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
               this.user.RoleID = this.userMainFormGroup.get('roleID').value;
               this.user.Email = this.userMainFormGroup.get('email').value;
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
-              // this.user.Password = this.userMainFormGroup.get('password').value;
+              this.user.Password = this.userMainFormGroup.get('password').value;
               this.user.CreatedBy = this.authenticationDetails.userID.toString();
               // this.user.Profile = this.slectedProfile;
               this._masterService.CreateUser(this.user).subscribe(
@@ -201,7 +210,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
               this.user.RoleID = <Guid>this.userMainFormGroup.get('roleID').value;
               this.user.Email = this.userMainFormGroup.get('email').value;
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
-              // this.user.Password = this.userMainFormGroup.get('password').value;
+              this.user.Password = this.userMainFormGroup.get('password').value;
               this.user.ModifiedBy = this.authenticationDetails.userID.toString();
               this._masterService.DeleteUser(this.user).subscribe(
                 (data) => {
@@ -273,8 +282,8 @@ export class UserMainContentComponent implements OnInit, OnChanges {
       this.userMainFormGroup.get('email').patchValue(this.user.Email);
       this.userMainFormGroup.get('contactNumber').patchValue(this.user.ContactNumber);
       this.CheckRole(this.user.RoleID);
-      // this.userMainFormGroup.get('password').patchValue(this.user.Password);
-      // this.userMainFormGroup.get('confirmPassword').patchValue(this.user.Password);
+      this.userMainFormGroup.get('password').patchValue(this.user.Password);
+      this.userMainFormGroup.get('confirmPassword').patchValue(this.user.Password);
     } else {
       // this.menuAppMainFormGroup.get('appName').patchValue('');
       this.ResetControl();

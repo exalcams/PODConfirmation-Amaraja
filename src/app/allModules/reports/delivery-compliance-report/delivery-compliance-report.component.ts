@@ -32,9 +32,11 @@ export class DeliveryComplianceReportComponent implements OnInit {
   FilteredInvoiceDetails: ReportInvoice[] = [];
   displayedColumns: string[] = [
     'INV_NO',
-    'ITEM_ID',
+    'ODIN',
+    'ITEM_NO',
     'INV_DATE',
     'INV_TYPE',
+    'PLANT',
     // 'CUSTOMER',
     'CUSTOMER_NAME',
     'LR_NO',
@@ -51,7 +53,6 @@ export class DeliveryComplianceReportComponent implements OnInit {
     'QUANTITY',
     'RECEIVED_QUANTITY',
     'QUANTITY_UOM',
-    'PLANT',
     'OUTBOUND_DELIVERY',
     'OUTBOUND_DELIVERY_DATE',
     'STATUS',
@@ -74,7 +75,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
     this.isProgressBarVisibile = true;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.AllStatusTemplates = [
-      // { key: 'All', value: 'All' },
+      { key: 'All Invoices', value: 'All' },
       { key: 'Pending (customer)', value: 'Open' },
       { key: 'Saved (customer)', value: 'Saved' },
       { key: 'Partially Confirmed (customer)', value: 'PartiallyConfirmed' },
@@ -143,7 +144,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
           EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this._reportService
-          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber,CustomerName)
+          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, CustomerName)
           .subscribe(
             data => {
               this.FilteredInvoiceDetails = data as ReportInvoice[];
@@ -207,6 +208,19 @@ export class DeliveryComplianceReportComponent implements OnInit {
     } else {
       return false;
     }
+  }
+  invoiceRowClick(inv: ReportInvoice): void {
+    const invoiceDetails: InvoiceDetails = new InvoiceDetails();
+    invoiceDetails.HEADER_ID = inv.HEADER_ID;
+    invoiceDetails.INV_NO = inv.INV_NO;
+    invoiceDetails.ODIN = inv.ODIN;
+    invoiceDetails.VEHICLE_NO = inv.VEHICLE_NO;
+    invoiceDetails.EWAYBILL_NO = inv.EWAYBILL_NO;
+    invoiceDetails.OUTBOUND_DELIVERY = inv.OUTBOUND_DELIVERY;
+    invoiceDetails.VEHICLE_REPORTED_DATE = inv.VEHICLE_REPORTED_DATE;
+    invoiceDetails.STATUS = inv.STATUS;
+    this._shareParameterService.SetInvoiceDetail(invoiceDetails);
+    this._router.navigate(['/pages/invItem']);
   }
 }
 
