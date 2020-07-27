@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit {
             labels: {
                 // tslint:disable-next-line:typedef
                 render: function (args) {
-                    return args.value ;
+                    return args.value;
                 },
                 fontColor: "#000",
                 position: "default",
@@ -572,5 +572,19 @@ export class DashboardComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    GoToInvoiceItem(inv: InvoiceHeaderDetail): void {
+        const invoiceDetails: InvoiceDetails = new InvoiceDetails();
+        invoiceDetails.HEADER_ID = inv.HEADER_ID;
+        invoiceDetails.INV_NO = inv.INV_NO;
+        invoiceDetails.ODIN = inv.ODIN;
+        invoiceDetails.VEHICLE_NO = inv.VEHICLE_NO;
+        invoiceDetails.EWAYBILL_NO = inv.EWAYBILL_NO;
+        invoiceDetails.OUTBOUND_DELIVERY = inv.OUTBOUND_DELIVERY;
+        invoiceDetails.VEHICLE_REPORTED_DATE = inv.VEHICLE_REPORTED_DATE;
+        invoiceDetails.STATUS = inv.STATUS;
+        this._shareParameterService.SetInvoiceDetail(invoiceDetails);
+        this._router.navigate(['/pages/invItem']);
     }
 }

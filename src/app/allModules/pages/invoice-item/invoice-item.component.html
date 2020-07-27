@@ -11,8 +11,8 @@
           <button *ngIf="(currentUserRole | lowercase)==='customer'" mat-raised-button class="mr-4 confirmBtn"
             (click)="SaveAndUploadInvoiceItem()">Confirm</button>
           <input hidden type="file" #fileInput id="file" (change)="handleFileInput($event)" />
-          <button *ngIf="(currentUserRole | lowercase)==='amararaja user'" mat-raised-button class="btnBg"
-            (click)="ApproveInvoiceItem()">Approve</button>
+          <!-- <button *ngIf="(currentUserRole | lowercase)==='amararaja user'" mat-raised-button class="btnBg"
+            (click)="ApproveInvoiceItem()">Approve</button> -->
         </div>
       </div>
     </mat-card>
@@ -22,7 +22,7 @@
           <div fxLayout="row" class="borderTop mt-4">
             <div fxFlex fxLayoutAlign="start center">
               <span class="boldClass mx-4">Invoice : </span>
-              {{SelectedInvoiceDetail?.INV_NO}}
+              {{SelectedInvoiceDetail?.ODIN}}
             </div>
             <mat-form-field class="m-4" *ngIf="(currentUserRole | lowercase)==='customer'">
               <input matInput [matDatepicker]="picker" placeholder="Vehicle Reported Date"

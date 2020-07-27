@@ -94,8 +94,9 @@
         <div class="card m-16" *ngFor="let inv of allInvoiceHeaderDetails">
           <div class="card-preview">
             <div class="fuse-card variable-width">
-              <div class="p-16 cardHeader" fxLayout="row" fxLayoutAlign="center center">
-                <div class="text-bold">INVOICE NO : <span class="colorPrimary">{{inv.INV_NO}}</span></div>
+              <div class="p-16 cardHeader" fxLayout="column" fxLayoutAlign="center center">
+                <div class="text-bold">INVOICE NO </div>
+                <div class="text-bold colorPrimary">{{inv.ODIN}}</div>
               </div>
               <div class="ml-24 py-16">
                 <div class="px-4">
@@ -122,7 +123,7 @@
 
               </div>
               <div class="pb-16" fxLayout="row" fxLayoutAlign="center center">
-                <button mat-raised-button class="buttonPrimary">View Details</button>
+                <button mat-raised-button class="buttonPrimary" (click)="GoToInvoiceItem(inv)">View Details</button>
               </div>
             </div>
           </div>

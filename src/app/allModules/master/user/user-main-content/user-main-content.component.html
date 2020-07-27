@@ -54,6 +54,33 @@
     </mat-form-field>
 
   </div>
+  <div fxLayout="row" fxLayoutAlign="start" *ngIf="!user?.UserID">
+
+    <mat-form-field class="pl-8" fxFlex="50"
+    [class.mb-24]="(userMainFormGroup.get('password').touched && userMainFormGroup.get('password').invalid)">
+      <input matInput type="password" placeholder="Password" formControlName="password">
+      <mat-error *ngIf="userMainFormGroup.get('password').hasError('required')">
+        Password is required
+      </mat-error>
+      <mat-error *ngIf="!userMainFormGroup.get('password').hasError('required') &&
+                                 userMainFormGroup.get('password').hasError('pattern')">
+        Password should be minimum of 6 to maximum of 15 characters and Must contain at least one lower case letter,one
+        upper case letter, one digit and one special character
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="pl-8" fxFlex="50">
+      <input matInput type="password" placeholder="Confirm Password" formControlName="confirmPassword">
+      <mat-error *ngIf="userMainFormGroup.get('confirmPassword').hasError('required')">
+        Password confirmation is required
+      </mat-error>
+      <mat-error *ngIf="!userMainFormGroup.get('confirmPassword').hasError('required') &&
+                               userMainFormGroup.get('confirmPassword').hasError('passwordsNotMatching')">
+        Passwords must match
+      </mat-error>
+    </mat-form-field>
+
+  </div>
   <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
     <mat-form-field class="pl-8" fxFlex="50" [style.display]="IsPlantDisplay?'inline-block':'none'">
       <input matInput placeholder="Plant" formControlName="plant">

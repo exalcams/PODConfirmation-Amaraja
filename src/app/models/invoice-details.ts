@@ -70,6 +70,7 @@ export class InvoiceUpdation1 {
 }
 
 export class ReportInvoice {
+    HEADER_ID: number;
     INV_NO: string;
     ITEM_ID: number;
     ITEM_NO: string;
@@ -124,8 +125,12 @@ export class InvoiceStatusCount {
 }
 
 export class InvoiceHeaderDetail {
+    HEADER_ID: number;
     INV_NO: string;
+    ODIN: string;
     VEHICLE_NO: string;
     EWAYBILL_NO: string;
     OUTBOUND_DELIVERY: string;
+    VEHICLE_REPORTED_DATE: Date | string | null;
+    STATUS: string;
 }

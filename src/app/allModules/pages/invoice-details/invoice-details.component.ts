@@ -38,10 +38,10 @@ export class InvoiceDetailsComponent implements OnInit {
     displayedColumns: string[] = [
         // 'SELECT',
         'INV_NO',
+        'ODIN',
         'INV_DATE',
         'INV_TYPE',
         'PLANT',
-        'ODIN',
         'VEHICLE_NO',
         'VEHICLE_CAPACITY',
         'LR_NO',
@@ -106,7 +106,7 @@ export class InvoiceDetailsComponent implements OnInit {
             InvoiceDetails: this.InvoiceDetailsFormArray
         });
         this.InvoiceFilterFormGroup = this._formBuilder.group({
-            Status: [''],
+            Status: ['Open'],
             StartDate: [],
             EndDate: [],
             InvoiceNumber: [''],
@@ -118,13 +118,13 @@ export class InvoiceDetailsComponent implements OnInit {
         //     this.getAllInvoiceDetails();
         // }
         this.AllStatusTemplates = [
-            // { key: 'All', value: 'All' },
+            { key: 'All Invoices', value: 'All' },
             { key: 'Pending', value: 'Open' },
             { key: 'Saved', value: 'Saved' },
             { key: 'Confirmed', value: 'Confirmed' },
             // { key: 'Approved (AR User)', value: 'Approved' }
         ];
-        this.GetOpenAndSavedInvoiceDetailByUser();
+        this.getFilteredInvoiceDetails();
     }
 
     ResetControl(): void {
