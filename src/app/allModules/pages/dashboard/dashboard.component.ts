@@ -111,7 +111,7 @@ export class DashboardComponent implements OnInit {
     ];
     public doughnutChartData: any[] = [[0, 0]];
     // public doughnutChartData: any[] = [];
-    public colors: any[] = [{ backgroundColor: ["#fb7800", "#4452c6"] }];
+    public colors: any[] = [{ backgroundColor: ["#4452c6", "#fb7800"] }];
 
     public doughnutChartOptions1 = {
         responsive: true,
