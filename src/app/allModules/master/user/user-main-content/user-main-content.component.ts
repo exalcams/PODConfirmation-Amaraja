@@ -10,7 +10,7 @@ import { AuthService } from 'app/services/auth.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Router } from '@angular/router';
-import { UserWithRole, RoleWithApp, AuthenticationDetails } from 'app/models/master';
+import { UserWithRole, RoleWithApp, AuthenticationDetails, Plant } from 'app/models/master';
 import { CustomValidator } from 'app/shared/custom-validator';
 
 @Component({
@@ -28,6 +28,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
   user: UserWithRole;
   userMainFormGroup: FormGroup;
   AllRoles: RoleWithApp[] = [];
+  AllPlants: Plant[] = [];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   // fileToUpload: File;
   // fileUploader: FileUploader;
@@ -43,11 +44,12 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     private dialog: MatDialog,
     private _authService: AuthService) {
     this.userMainFormGroup = this._formBuilder.group({
-      userName: ['', [Validators.required, Validators.pattern('^\\S*$')]],
+      userCode: ['', [Validators.required, Validators.pattern('^\\S*$')]],
+      userName: ['', [Validators.required]],
       roleID: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       contactNumber: ['', [Validators.required, Validators.pattern]],
-      plant: [''],
+      PlantList: [''],
       password: ['', [Validators.required,
       Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,15}$')]],
       confirmPassword: ['', [Validators.required, confirmPasswordValidator]],
@@ -64,6 +66,30 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     this.baseAddress = _authService.baseAddress;
     this.IsPlantDisplay = false;
   }
+
+
+  ngOnInit(): void {
+
+    // Retrive authorizationData
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
+    this.GetAllRoles();
+    this.GetAllPlants();
+  }
+
+  ResetControl(): void {
+    this.user = new UserWithRole();
+    this.userMainFormGroup.reset();
+    Object.keys(this.userMainFormGroup.controls).forEach(key => {
+      // const control = this.userMainFormGroup.get(key);
+      this.userMainFormGroup.get(key).markAsUntouched();
+    });
+    // this.fileToUpload = null;
+  }
   GetAllRoles(): void {
     this._masterService.GetAllRoles().subscribe(
       (data) => {
@@ -79,27 +105,30 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     );
   }
 
-  ngOnInit(): void {
-
-    // Retrive authorizationData
-    const retrievedObject = localStorage.getItem('authorizationData');
-    if (retrievedObject) {
-      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-    } else {
-      this._router.navigate(['/auth/login']);
-    }
-    this.GetAllRoles();
-
+  GetAllPlants(): void {
+    this._masterService.GetAllPlants().subscribe(
+      (data) => {
+        this.AllPlants = data as Plant[];
+        const plant = new Plant();
+        plant.PlantCode = 'All';
+        plant.Description = 'All';
+        this.AllPlants.unshift(plant);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
 
-  ResetControl(): void {
-    this.user = new UserWithRole();
-    this.userMainFormGroup.reset();
-    Object.keys(this.userMainFormGroup.controls).forEach(key => {
-      // const control = this.userMainFormGroup.get(key);
-      this.userMainFormGroup.get(key).markAsUntouched();
-    });
-    // this.fileToUpload = null;
+  OnPlantChanged(event): void {
+    const val = event.value as string[];
+    if (val && val.length) {
+      if (val.includes("All")) {
+        const pls = this.AllPlants.map(x => x.PlantCode);
+        // this.userMainFormGroup.get('PlantList').patchValue(pls);
+        this.userMainFormGroup.get('PlantList').patchValue(["All"]);
+      }
+    }
   }
 
   SaveClicked(): void {
@@ -118,8 +147,9 @@ export class UserMainContentComponent implements OnInit, OnChanges {
           result => {
             if (result) {
               this.ShowProgressBarEvent.emit('show');
+              this.user.UserCode = this.userMainFormGroup.get('userCode').value;
               this.user.UserName = this.userMainFormGroup.get('userName').value;
-              this.user.Plant = this.userMainFormGroup.get('plant').value;
+              this.user.PlantList = this.userMainFormGroup.get('PlantList').value;
               this.user.RoleID = <Guid>this.userMainFormGroup.get('roleID').value;
               this.user.Email = this.userMainFormGroup.get('email').value;
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
@@ -157,8 +187,9 @@ export class UserMainContentComponent implements OnInit, OnChanges {
             if (result) {
               this.ShowProgressBarEvent.emit('show');
               this.user = new UserWithRole();
+              this.user.UserCode = this.userMainFormGroup.get('userCode').value;
               this.user.UserName = this.userMainFormGroup.get('userName').value;
-              this.user.Plant = this.userMainFormGroup.get('plant').value;
+              this.user.PlantList = this.userMainFormGroup.get('PlantList').value;
               this.user.RoleID = this.userMainFormGroup.get('roleID').value;
               this.user.Email = this.userMainFormGroup.get('email').value;
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
@@ -205,8 +236,9 @@ export class UserMainContentComponent implements OnInit, OnChanges {
           result => {
             if (result) {
               this.ShowProgressBarEvent.emit('show');
+              this.user.UserCode = this.userMainFormGroup.get('userCode').value;
               this.user.UserName = this.userMainFormGroup.get('userName').value;
-              this.user.Plant = this.userMainFormGroup.get('plant').value;
+              this.user.PlantList = this.userMainFormGroup.get('PlantList').value;
               this.user.RoleID = <Guid>this.userMainFormGroup.get('roleID').value;
               this.user.Email = this.userMainFormGroup.get('email').value;
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
@@ -245,12 +277,12 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     const res = this.CheckIsAmarajaUser(roleID);
     if (res) {
       this.IsPlantDisplay = true;
-      this.userMainFormGroup.get('plant').setValidators(Validators.required);
-      this.userMainFormGroup.get('plant').updateValueAndValidity();
+      this.userMainFormGroup.get('PlantList').setValidators(Validators.required);
+      this.userMainFormGroup.get('PlantList').updateValueAndValidity();
     } else {
       this.IsPlantDisplay = false;
-      this.userMainFormGroup.get('plant').clearValidators();
-      this.userMainFormGroup.get('plant').updateValueAndValidity();
+      this.userMainFormGroup.get('PlantList').clearValidators();
+      this.userMainFormGroup.get('PlantList').updateValueAndValidity();
     }
   }
 
@@ -266,8 +298,9 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     if (this.currentSelectedUser) {
       this.user = new UserWithRole();
       this.user.UserID = this.currentSelectedUser.UserID;
+      this.user.UserCode = this.currentSelectedUser.UserCode;
       this.user.UserName = this.currentSelectedUser.UserName;
-      this.user.Plant = this.currentSelectedUser.Plant;
+      this.user.PlantList = this.currentSelectedUser.PlantList;
       this.user.RoleID = this.currentSelectedUser.RoleID;
       this.user.Email = this.currentSelectedUser.Email;
       this.user.ContactNumber = this.currentSelectedUser.ContactNumber;
@@ -276,8 +309,9 @@ export class UserMainContentComponent implements OnInit, OnChanges {
       this.user.CreatedOn = this.currentSelectedUser.CreatedOn;
       this.user.ModifiedBy = this.currentSelectedUser.ModifiedBy;
       this.user.ModifiedOn = this.currentSelectedUser.ModifiedOn;
+      this.userMainFormGroup.get('userCode').patchValue(this.user.UserCode);
       this.userMainFormGroup.get('userName').patchValue(this.user.UserName);
-      this.userMainFormGroup.get('plant').patchValue(this.user.Plant);
+      this.userMainFormGroup.get('PlantList').patchValue(this.user.PlantList);
       this.userMainFormGroup.get('roleID').patchValue(this.user.RoleID);
       this.userMainFormGroup.get('email').patchValue(this.user.Email);
       this.userMainFormGroup.get('contactNumber').patchValue(this.user.ContactNumber);

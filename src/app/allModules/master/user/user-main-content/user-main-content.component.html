@@ -6,16 +6,33 @@
   <div fxLayout="row" fxLayoutAlign="start">
 
     <mat-form-field class="pl-8" fxFlex="50">
+      <input matInput placeholder="User Code" formControlName="userCode" (keydown)="disableSpace($event)">
+      <mat-error
+        *ngIf="userMainFormGroup.get('userCode').touched && userMainFormGroup.get('userCode').hasError('required')">
+        User Code required
+      </mat-error>
+      <mat-error *ngIf="userMainFormGroup.get('userCode').touched && !userMainFormGroup.get('userCode').hasError('required')
+        && userMainFormGroup.get('userCode').hasError('pattern')">
+        Please fill out user code without any space
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="pl-8" fxFlex="50">
       <input matInput placeholder="User Name" formControlName="userName" (keydown)="disableSpace($event)">
       <mat-error
         *ngIf="userMainFormGroup.get('userName').touched && userMainFormGroup.get('userName').hasError('required')">
         User Name required
       </mat-error>
-      <mat-error *ngIf="userMainFormGroup.get('userName').touched && !userMainFormGroup.get('userName').hasError('required')
+      <!-- <mat-error *ngIf="userMainFormGroup.get('userName').touched && !userMainFormGroup.get('userName').hasError('required')
         && userMainFormGroup.get('userName').hasError('pattern')">
         Please fill out user name without any space
-      </mat-error>
+      </mat-error> -->
     </mat-form-field>
+
+    
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="start">
 
     <mat-form-field class="pl-8" fxFlex="50">
       <input matInput placeholder="Email ID" formControlName="email">
@@ -27,9 +44,6 @@
         Please enter a valid email address
       </mat-error>
     </mat-form-field>
-  </div>
-
-  <div fxLayout="row" fxLayoutAlign="start">
 
     <mat-form-field class="pl-8" fxFlex="50">
       <input matInput placeholder="Mobile Number" pattern="^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$"
@@ -44,20 +58,11 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="pl-8" fxFlex="50">
-      <mat-select placeholder="Role Name" formControlName="roleID" (selectionChange)="RoleSelected($event)">
-        <mat-option *ngFor="let rol of AllRoles" [value]="rol.RoleID">{{rol.RoleName}}</mat-option>
-      </mat-select>
-      <mat-error
-        *ngIf="userMainFormGroup.get('roleID').touched && userMainFormGroup.get('roleID').hasError('required')">Role
-        Name required</mat-error>
-    </mat-form-field>
-
   </div>
   <div fxLayout="row" fxLayoutAlign="start" *ngIf="!user?.UserID">
 
     <mat-form-field class="pl-8" fxFlex="50"
-    [class.mb-24]="(userMainFormGroup.get('password').touched && userMainFormGroup.get('password').invalid)">
+      [class.mb-24]="(userMainFormGroup.get('password').touched && userMainFormGroup.get('password').invalid)">
       <input matInput type="password" placeholder="Password" formControlName="password">
       <mat-error *ngIf="userMainFormGroup.get('password').hasError('required')">
         Password is required
@@ -82,10 +87,28 @@
 
   </div>
   <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
-    <mat-form-field class="pl-8" fxFlex="50" [style.display]="IsPlantDisplay?'inline-block':'none'">
+    <!-- <mat-form-field class="pl-8" fxFlex="50" [style.display]="IsPlantDisplay?'inline-block':'none'">
       <input matInput placeholder="Plant" formControlName="plant">
       <mat-error *ngIf="userMainFormGroup.get('plant').touched &&  userMainFormGroup.get('plant').hasError('required')">
         Plant required</mat-error>
+    </mat-form-field> -->
+    
+    <mat-form-field class="pl-8" fxFlex="50">
+      <mat-select placeholder="Role Name" formControlName="roleID" (selectionChange)="RoleSelected($event)">
+        <mat-option *ngFor="let rol of AllRoles" [value]="rol.RoleID">{{rol.RoleName}}</mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="userMainFormGroup.get('roleID').touched && userMainFormGroup.get('roleID').hasError('required')">Role
+        Name required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="pl-8" fxFlex="50" [style.display]="IsPlantDisplay?'inline-block':'none'">
+      <mat-select placeholder="Plant" formControlName="PlantList" multiple (selectionChange)="OnPlantChanged($event)">
+        <mat-option *ngFor="let mp of AllPlants" [value]="mp.PlantCode">{{mp.PlantCode}}</mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="userMainFormGroup.get('PlantList').touched && userMainFormGroup.get('PlantList').hasError('required')">
+        Plant is required</mat-error>
     </mat-form-field>
   </div>
 

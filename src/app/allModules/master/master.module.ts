@@ -21,6 +21,7 @@ import { RoleMainContentComponent } from './role/role-main-content/role-main-con
 import { MenuAppSideBarComponent } from './menu-app/menu-app-side-bar/menu-app-side-bar.component';
 import { MenuAppMainContentComponent } from './menu-app/menu-app-main-content/menu-app-main-content.component';
 import { ReasonComponent } from './reason/reason.component';
+import { PlantComponent } from './plant/plant.component';
 
 const menuRoutes: Routes = [
     // {
@@ -34,6 +35,10 @@ const menuRoutes: Routes = [
     {
         path: 'user',
         component: UserComponent,
+    },
+    {
+        path: 'plant',
+        component: PlantComponent,
     },
     {
         path: 'reason',
@@ -52,6 +57,7 @@ const menuRoutes: Routes = [
        MenuAppSideBarComponent,
        MenuAppMainContentComponent,
        ReasonComponent,
+       PlantComponent,
     ],
     imports: [
         MatButtonModule,

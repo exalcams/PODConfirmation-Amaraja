@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { MatSnackBar } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { UserWithRole, AuthenticationDetails } from 'app/models/master';
+import { UserWithRole, AuthenticationDetails, Plant } from 'app/models/master';
 
 @Component({
   selector: 'app-user',
@@ -17,6 +17,7 @@ import { UserWithRole, AuthenticationDetails } from 'app/models/master';
 export class UserComponent implements OnInit {
   MenuItems: string[];
   AllUsers: UserWithRole[] = [];
+  AllPlants: Plant[] = [];
   SelectedUser: UserWithRole;
   authenticationDetails: AuthenticationDetails;
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -38,13 +39,27 @@ export class UserComponent implements OnInit {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
         this._router.navigate(['/auth/login']);
       }
+      // this.GetAllPlants();
       this.GetAllUsers();
     } else {
       this._router.navigate(['/auth/login']);
     }
 
   }
-
+  GetAllPlants(): void {
+    this._masterService.GetAllPlants().subscribe(
+      (data) => {
+        this.AllPlants = data as Plant[];
+        this.IsProgressBarVisibile = false;
+        // console.log(this.AllUsers);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
   GetAllUsers(): void {
     this._masterService.GetAllUsers().subscribe(
       (data) => {
@@ -55,7 +70,8 @@ export class UserComponent implements OnInit {
       (err) => {
         console.error(err);
         this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);      }
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
     );
   }
   OnUserSelectionChanged(selectedUser: UserWithRole): void {

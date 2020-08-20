@@ -4,14 +4,15 @@ export class UserWithRole {
     UserID: Guid;
     RoleID: Guid;
     UserName: string;
-    Plant:string;
+    UserCode: string;
     Email: string;
     Password: string;
     ContactNumber: string;
+    PlantList: string[];
     IsActive: boolean;
-    CreatedOn: Date;
+    CreatedOn: Date | string;
     CreatedBy: string;
-    ModifiedOn?: Date;
+    ModifiedOn: Date | string | null;
     ModifiedBy: string;
 }
 export class RoleWithApp {
@@ -45,6 +46,7 @@ export class Reason {
 export class AuthenticationDetails {
     isAuth: boolean;
     userID: Guid;
+    userCode: string;
     userName: string;
     displayName: string;
     emailAddress: string;
@@ -80,5 +82,21 @@ export class UserNotification {
     CreatedOn: Date;
     ModifiedOn?: Date;
 }
-
-
+export class Plant {
+    PlantCode: string;
+    Description: string;
+    IsActive: boolean;
+    CreatedOn: Date | string;
+    CreatedBy: string;
+    ModifiedOn: Date | string | null;
+    ModifiedBy: string;
+}
+export class UserPlantMap {
+    UserID: string;
+    PlantCode: string;
+    IsActive: boolean;
+    CreatedOn: Date | string;
+    CreatedBy: string;
+    ModifiedOn: Date | string | null;
+    ModifiedBy: string;
+}

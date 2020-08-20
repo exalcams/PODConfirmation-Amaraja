@@ -10,7 +10,7 @@ import { ShareParameterService } from 'app/services/share-parameters.service';
 import { InvoiceService } from 'app/services/invoice.service';
 import { Guid } from 'guid-typescript';
 import { fuseAnimations } from '@fuse/animations';
-import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { MasterService } from 'app/services/master.service';
@@ -26,6 +26,7 @@ export class InvoiceItemComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserName: string;
+  currentUserCode: string;
   currentUserRole: string;
   MenuItems: string[];
   isProgressBarVisibile: boolean;
@@ -56,6 +57,17 @@ export class InvoiceItemComponent implements OnInit {
   fileToUploadList: File[] = [];
   InvoiceItemFormGroup: FormGroup;
   InvoiceItemFormArray: FormArray = this._formBuilder.array([]);
+  displayedColumns: string[] = [
+      // 'SELECT',
+      'ITEM_NO',
+      'MATERIAL_CODE',
+      'QUANTITY',
+      'RECEIVED_QUANTITY',
+      'REASON',
+      'REMARKS',
+  ];
+  dataSource: MatTableDataSource<AbstractControl>;
+
   AllReasons: Reason[] = [];
   // ReasonTemplates: string[] = [];
 
@@ -88,6 +100,7 @@ export class InvoiceItemComponent implements OnInit {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.userID;
       this.currentUserName = this.authenticationDetails.userName;
+      this.currentUserCode = this.authenticationDetails.userCode;
       this.currentUserRole = this.authenticationDetails.userRole;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('InvoiceItem') < 0) {
@@ -125,6 +138,7 @@ export class InvoiceItemComponent implements OnInit {
 
   ResetInvoiceItems(): void {
     this.ClearFormArray(this.InvoiceItemFormArray);
+    this.dataSource = new MatTableDataSource(this.InvoiceItemFormArray.controls);
   }
   ClearFormArray = (formArray: FormArray) => {
     while (formArray.length !== 0) {
@@ -175,7 +189,7 @@ export class InvoiceItemComponent implements OnInit {
   GetInvoiceItemDetailsByUserAndID(): void {
     this.isProgressBarVisibile = true;
     this._invoiceService.GetInvoiceItemDetailsByUserAndID
-      (this.currentUserName, this.SelectedInvoiceDetail.HEADER_ID).subscribe(
+      (this.currentUserCode, this.SelectedInvoiceDetail.HEADER_ID).subscribe(
         data => {
           this.isProgressBarVisibile = false;
           this.InvoiceItemFormGroup.controls.VehicleReportedDate.patchValue(this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE);
@@ -241,6 +255,7 @@ export class InvoiceItemComponent implements OnInit {
     // row.get('FREIGHT_ORDER').disable();
     // row.get('FREIGHT_ORDER_DATE').disable();
     this.InvoiceItemFormArray.push(row);
+    this.dataSource = new MatTableDataSource(this.InvoiceItemFormArray.controls);
     this.DynamicResonValidator(QTYValue, REQTYValue, row);
     // this.InvoiceItemDataSource.next(this.InvoiceItemFormArray.controls);
   }
