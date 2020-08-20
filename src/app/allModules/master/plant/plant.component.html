@@ -1,0 +1,87 @@
+<div id="plant" class="page-layout carded fullwidth inner-scroll">
+  <div class="top-bg topBg"></div>
+  <div class="center normal">
+    <div class="m-12 p-0 content-card" fxLayout>
+      <div fxFlex="40" class="rightBorder plant-side-bar">
+        <div class="sidenav-header">
+          <mat-toolbar>
+            <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+              <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                  <mat-icon class="s-16" svgIcon="searchIcon"></mat-icon>
+                  <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+                </div>
+              </div>
+              <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+                <button mat-mini-fab class="mr-8 btnBg" matTooltip="Add Plant" (click)="AddPlant()">
+                  <mat-icon aria-label="Add Plant" svgIcon="addIcon"></mat-icon>
+                </button>
+              </div>
+            </mat-toolbar-row>
+          </mat-toolbar>
+        </div>
+        <div class="sidenav-content py-16" fusePerfectScrollbar fxFlex>
+          <div *ngFor="let ap of AllPlants | filter: searchText">
+            <div [attr.aria-label]="ap.Type">
+              <div fxLayout="row" fxLayoutAlign="start center" class="side-bar-items" matRipple
+                (click)="loadSelectedPlant(ap)" [ngClass]="{'active accent2':SelectedPlant==ap}">
+                <div fxFlex fxLayoutAlign="start center">
+                  {{ap.PlantCode+' - '+ap.Description}}
+                </div>
+                <!-- <div fxFlex fxLayoutAlign="start center">
+                  {{ap.Description}}
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <div *ngIf="(AllPlants | filter: searchText).length === 0" class="no-results-message">
+            <span class="pl-12"> No results..</span>
+          </div>
+        </div>
+      </div>
+      <div fxFlex="59" class="plant-side-bar">
+        <div class="sidenav-content" fusePerfectScrollbar fxFlex>
+          <form class="p-24 normal" autocomplete="off" fxLayout="column" fxLayoutAlign="start" name="form"
+            [formGroup]="PlantFormGroup">
+            <div fxLayout="row" class="pt-8">
+              <div fxFlex class="h2 mb-24">{{SelectedPlant.CreatedBy?'Update':'Create'}} Plant</div>
+            </div>
+            <div fxLayout="row wrap" fxLayoutAlign="start">
+              <mat-form-field fxFlex>
+                <input matInput placeholder="Plant code" formControlName="PlantCode">
+                <mat-error
+                  *ngIf="PlantFormGroup.get('PlantCode').touched && PlantFormGroup.get('PlantCode').hasError('required')">
+                  Plant Code is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div fxLayout="row wrap" fxLayoutAlign="start" fxFlex="1 0 auto">
+              <mat-form-field fxFlex>
+                <input matInput placeholder="Plant Description" formControlName="Description">
+                <mat-error
+                  *ngIf="PlantFormGroup.get('Description').touched && PlantFormGroup.get('Description').hasError('required')">
+                  Description is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div fxLayout="row wrap" fxLayoutAlign="end">
+              <button mat-raised-button type="button" (click)="ResetControl()" *ngIf="!SelectedPlant.CreatedBy"
+                style="margin-right:10px">
+                Clear
+              </button>
+              <button mat-raised-button color="warn" type="button" (click)="DeleteClicked()"
+                *ngIf="SelectedPlant.CreatedBy" style="margin-right:10px">
+                Delete
+              </button>
+              <button mat-raised-button class="btnBg" type="button" (click)="SaveClicked()">
+                {{SelectedPlant.CreatedBy?'Update':'Create'}}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div fxFlex="1"></div>
+    </div>
+  </div>
+  <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion1" color="accent" mode="indeterminate">
+  </mat-progress-spinner>
+  <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+</div>

@@ -274,6 +274,16 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('Plant') >= 0) {
+      this.subChildren.push(
+        {
+          id: 'plant',
+          title: 'Plant',
+          type: 'item',
+          url: '/master/plant'
+        }
+      );
+    }
     if (this.MenuItems.indexOf('Reason') >= 0) {
       this.subChildren.push(
         {

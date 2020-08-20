@@ -27,6 +27,7 @@ export class InvoiceDetailsComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
     currentUserName: string;
+    currentUserCode: string;
     currentUserRole: string;
     MenuItems: string[];
     isProgressBarVisibile: boolean;
@@ -92,6 +93,7 @@ export class InvoiceDetailsComponent implements OnInit {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.currentUserID = this.authenticationDetails.userID;
             this.currentUserName = this.authenticationDetails.userName;
+            this.currentUserCode = this.authenticationDetails.userCode;
             this.currentUserRole = this.authenticationDetails.userRole;
             this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
             if (this.MenuItems.indexOf('InvoiceDetails') < 0) {
@@ -183,7 +185,7 @@ export class InvoiceDetailsComponent implements OnInit {
     GetOpenAndSavedInvoiceDetailByUser(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService
-            .GetOpenAndSavedInvoiceDetailByUser(this.currentUserName)
+            .GetOpenAndSavedInvoiceDetailByUser(this.currentUserCode)
             .subscribe(
                 data => {
                     this.allInvoiceDetails = data as InvoiceDetails[];
@@ -458,7 +460,7 @@ export class InvoiceDetailsComponent implements OnInit {
                     EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
                 }
                 this._dashboardService
-                    .FilterInvoiceDetailByUser(this.currentUserName, Status, StartDate, EndDate, InvoiceNumber, LRNumber)
+                    .FilterInvoiceDetailByUser(this.currentUserCode, Status, StartDate, EndDate, InvoiceNumber, LRNumber)
                     .subscribe(
                         data => {
                             this.allInvoiceDetails = data as InvoiceDetails[];

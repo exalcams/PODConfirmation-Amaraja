@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
     currentUserRole: string;
+    currentUserCode: string;
     currentUsername: string;
     MenuItems: string[];
     isProgressBarVisibile: boolean;
@@ -111,7 +112,7 @@ export class DashboardComponent implements OnInit {
     ];
     public doughnutChartData: any[] = [[0, 0]];
     // public doughnutChartData: any[] = [];
-    public colors: any[] = [{ backgroundColor: ["#4452c6", "#fb7800"] }];
+    public colors: any[] = [{ backgroundColor: ["#52de97", "#fb7800"] }];
 
     public doughnutChartOptions1 = {
         responsive: true,
@@ -175,6 +176,7 @@ export class DashboardComponent implements OnInit {
             ) as AuthenticationDetails;
             this.currentUserID = this.authenticationDetails.userID;
             this.currentUserRole = this.authenticationDetails.userRole;
+            this.currentUserCode = this.authenticationDetails.userCode;
             this.currentUsername = this.authenticationDetails.userName;
             this.MenuItems = this.authenticationDetails.menuItemNames.split(
                 ","
@@ -292,7 +294,7 @@ export class DashboardComponent implements OnInit {
                 );
         } else if (this.currentUserRole === "Customer") {
             this._dashboardService
-                .GetInvoiceStatusCountByUserName(this.currentUsername)
+                .GetInvoiceStatusCountByUserName(this.currentUserCode)
                 .subscribe(
                     (data: InvoiceStatusCount) => {
                         const chartData: number[] = [];
@@ -344,7 +346,7 @@ export class DashboardComponent implements OnInit {
                 );
         } else if (this.currentUserRole === "Customer") {
             this._dashboardService
-                .GetDeliveryCountByUsername(this.currentUsername)
+                .GetDeliveryCountByUsername(this.currentUserCode)
                 .subscribe(
                     (data: DeliveryCount) => {
                         const chartData: number[] = [];
@@ -390,7 +392,7 @@ export class DashboardComponent implements OnInit {
                 );
         } else if (this.currentUserRole === "Customer") {
             this._dashboardService
-                .GetInvoiceHeaderDetailByUsername(this.currentUsername)
+                .GetInvoiceHeaderDetailByUsername(this.currentUserCode)
                 .subscribe(
                     (data: InvoiceHeaderDetail[]) => {
                         this.allInvoiceHeaderDetails = data;
@@ -466,7 +468,7 @@ export class DashboardComponent implements OnInit {
                 );
         } else if (this.currentUserRole === "Customer") {
             this._dashboardService
-                .FilterInvoiceStatusCountByUser(this.currentUsername, StartDate, EndDate)
+                .FilterInvoiceStatusCountByUser(this.currentUserCode, StartDate, EndDate)
                 .subscribe(
                     (data: InvoiceStatusCount) => {
                         const chartData: number[] = [];
@@ -531,7 +533,7 @@ export class DashboardComponent implements OnInit {
                 );
         } else if (this.currentUserRole === "Customer") {
             this._dashboardService
-                .FilterDeliveryCountByUser(this.currentUsername, StartDate, EndDate)
+                .FilterDeliveryCountByUser(this.currentUserCode, StartDate, EndDate)
                 .subscribe(
                     (data: DeliveryCount) => {
                         const chartData: number[] = [];

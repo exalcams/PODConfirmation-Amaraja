@@ -57,9 +57,9 @@ export class InvoiceService {
       .pipe(catchError(this.errorHandler));
   }
 
-  GetInvoiceItemDetailsByUserAndID(UserName: string, ID: number): Observable<InvoiceItemDetails[] | string> {
+  GetInvoiceItemDetailsByUserAndID(UserCode: string, ID: number): Observable<InvoiceItemDetails[] | string> {
     return this._httpClient.get<InvoiceItemDetails[]>(
-      `${this.baseAddress}api/PODConfirmation/GetInvoiceItemDetailsByUserAndID?UserName=${UserName}&ID=${ID}`
+      `${this.baseAddress}api/PODConfirmation/GetInvoiceItemDetailsByUserAndID?UserCode=${UserCode}&ID=${ID}`
     )
       .pipe(catchError(this.errorHandler));
   }
