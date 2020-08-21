@@ -261,4 +261,87 @@ export class DashboardService {
             )
             .pipe(catchError(this.errorHandler));
     }
+
+
+    FilterConfirmedInvoices(
+        UserID: Guid, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterConfirmedInvoices?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterPendingInvoices(
+        UserID: Guid, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterPendingInvoices?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterOnTimeDeliveryInvoices(
+        UserID: Guid, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterOnTimeDeliveryInvoices?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+
+    FilterLateDeliveryInvoices(
+        UserID: Guid, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterLateDeliveryInvoices?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterConfirmedInvoicesByUser(
+        UserCode: string, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterConfirmedInvoicesByUser?UserCode=${UserCode}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterPendingInvoicesByUser(
+        UserCode: string, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterPendingInvoicesByUser?UserCode=${UserCode}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterOnTimeDeliveryInvoicesByUser(
+        UserCode: string, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterOnTimeDeliveryInvoicesByUser?UserCode=${UserCode}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterLateDeliveryInvoicesByUser(
+        UserCode: string, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterLateDeliveryInvoicesByUser?UserCode=${UserCode}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
 }

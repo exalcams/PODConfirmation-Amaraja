@@ -52,28 +52,21 @@ export class DashboardComponent implements OnInit {
     allInvoiceDetails: InvoiceDetails[] = [];
     allInvoiceHeaderDetails: InvoiceHeaderDetail[] = [];
     displayedColumns: string[] = [
-        "INV_NO",
-        "INV_DATE",
-        "INV_TYPE",
-        "PLANT",
-        "VEHICLE_NO",
-        "VEHICLE_CAPACITY",
-        "FWD_AGENT",
-        "CARRIER",
-        "LR_NO",
-        "LR_DATE",
-        "FREIGHT_ORDER",
-        "FREIGHT_ORDER_DATE",
-        "EWAYBILL_NO",
-        "EWAYBILL_DATE",
-        "PROPOSED_DELIVERY_DATE",
-        "ACTUAL_DELIVERY_DATE",
+        'ODIN',
+        'INV_NO',
+        'INV_DATE',
+        'INV_TYPE',
+        'PLANT',
+        'VEHICLE_NO',
+        // 'VEHICLE_CAPACITY',
+        'LR_NO',
+        'LR_DATE',
+        'STATUS'
     ];
     dataSource = new MatTableDataSource<InvoiceDetails>();
-    selection = new SelectionModel<InvoiceDetails>(true, []);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-
+    currentLabel: string;
     // Doughnut Chart
     public doughnutChartOptions = {
         responsive: true,
@@ -145,7 +138,7 @@ export class DashboardComponent implements OnInit {
         },
     };
     public doughnutChartType1: ChartType = "doughnut";
-    public doughnutChartLabels1: any[] = ["ON-TIME DELIVERY", "LATE DELIVERY"];
+    public doughnutChartLabels1: any[] = ["ON TIME DELIVERY", "LATE DELIVERY"];
     public doughnutChartData1: any[] = [[0, 0]];
     // public doughnutChartData: any[] = [];
     public colors1: any[] = [{ backgroundColor: ["#52de97", "#eff54f"] }];
@@ -165,6 +158,7 @@ export class DashboardComponent implements OnInit {
         this.deliveryCount = new DeliveryCount();
         this.condition = "InLineDelivery";
         this.isDateError = false;
+        this.currentLabel = 'PENDING INVOICES';
     }
 
     ngOnInit(): void {
@@ -201,6 +195,7 @@ export class DashboardComponent implements OnInit {
         this.GetInvoiceStatusCount();
         this.GetDeliveryCounts();
         this.GetInvoiceHeaderDetails();
+        this.LoadInitialData();
         // this.GetDeliveryCount();
         // this.GetDeliveredInvoices();
     }
@@ -410,7 +405,13 @@ export class DashboardComponent implements OnInit {
                 );
         }
     }
-
+    LoadInitialData(): void {
+        if (this.currentUserRole === "Amararaja User") {
+            this.FilterPendingInvoices();
+        } else if (this.currentUserRole === "Customer") {
+            this.FilterPendingInvoicesByUser();
+        }
+    }
     SearchInvoices(): void {
         this.getFilteredInvoiceDetails();
     }
@@ -576,17 +577,302 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    GoToInvoiceItem(inv: InvoiceHeaderDetail): void {
-        const invoiceDetails: InvoiceDetails = new InvoiceDetails();
-        invoiceDetails.HEADER_ID = inv.HEADER_ID;
-        invoiceDetails.INV_NO = inv.INV_NO;
-        invoiceDetails.ODIN = inv.ODIN;
-        invoiceDetails.VEHICLE_NO = inv.VEHICLE_NO;
-        invoiceDetails.EWAYBILL_NO = inv.EWAYBILL_NO;
-        invoiceDetails.OUTBOUND_DELIVERY = inv.OUTBOUND_DELIVERY;
-        invoiceDetails.VEHICLE_REPORTED_DATE = inv.VEHICLE_REPORTED_DATE;
-        invoiceDetails.STATUS = inv.STATUS;
+    GoToInvoiceItem(invoiceDetails: InvoiceDetails): void {
+        // const invoiceDetails: InvoiceDetails = new InvoiceDetails();
+        // invoiceDetails.HEADER_ID = inv.HEADER_ID;
+        // invoiceDetails.INV_NO = inv.INV_NO;
+        // invoiceDetails.ODIN = inv.ODIN;
+        // invoiceDetails.INV_DATE = inv.INV_DATE;
+        // invoiceDetails.INV_TYPE = inv.INV_TYPE;
+        // invoiceDetails.PLANT = inv.PLANT;
+        // invoiceDetails.VEHICLE_NO = inv.VEHICLE_NO;
+        // invoiceDetails.EWAYBILL_NO = inv.EWAYBILL_NO;
+        // invoiceDetails.OUTBOUND_DELIVERY = inv.OUTBOUND_DELIVERY;
+        // invoiceDetails.VEHICLE_REPORTED_DATE = inv.VEHICLE_REPORTED_DATE;
+        // invoiceDetails.STATUS = inv.STATUS;
         this._shareParameterService.SetInvoiceDetail(invoiceDetails);
         this._router.navigate(['/pages/invItem']);
+    }
+
+
+    doughnutChartClicked(e: any): void {
+        console.log(e);
+        if (e.active.length > 0) {
+            const chart = e.active[0]._chart;
+            const activePoints = chart.getElementAtEvent(e.event);
+            if (activePoints.length > 0) {
+                // get the internal index of slice in pie chart
+                const clickedElementIndex = activePoints[0]._index;
+                const label = chart.data.labels[clickedElementIndex] as String;
+                // get value by index
+                const value = chart.data.datasets[0].data[clickedElementIndex];
+                console.log(clickedElementIndex, label, value);
+                if (label) {
+                    if (label.toLowerCase() === "pending invoices") {
+                        this.currentLabel = 'PENDING INVOICES';
+                        if (this.currentUserRole === "Amararaja User") {
+                            this.FilterPendingInvoices();
+                        } else if (this.currentUserRole === "Customer") {
+                            this.FilterPendingInvoicesByUser();
+                        }
+                    }
+                    else if (label.toLowerCase() === "confirmed invoices") {
+                        this.currentLabel = 'CONFIRMED INVOICES';
+                        if (this.currentUserRole === "Amararaja User") {
+                            this.FilterConfirmedInvoices();
+                        } else if (this.currentUserRole === "Customer") {
+                            this.FilterConfirmedInvoicesByUser();
+                        }
+                    }
+                }
+            }
+        }
+    }
+    doughnutChart1Clicked(e: any): void {
+        console.log(e);
+        if (e.active.length > 0) {
+            const chart = e.active[0]._chart;
+            const activePoints = chart.getElementAtEvent(e.event);
+            if (activePoints.length > 0) {
+                // get the internal index of slice in pie chart
+                const clickedElementIndex = activePoints[0]._index;
+                const label = chart.data.labels[clickedElementIndex] as String;
+                // get value by index
+                const value = chart.data.datasets[0].data[clickedElementIndex];
+                console.log(clickedElementIndex, label, value);
+                if (label.toLowerCase() === "on time delivery") {
+                    this.currentLabel = 'ON TIME DELIVERY';
+                    if (this.currentUserRole === "Amararaja User") {
+                        this.FilterOnTimeDeliveryInvoices();
+                    } else if (this.currentUserRole === "Customer") {
+                        this.FilterOnTimeDeliveryInvoicesByUser();
+                    }
+                }
+                else if (label.toLowerCase() === "late delivery") {
+                    this.currentLabel = 'LATE DELIVERY';
+                    if (this.currentUserRole === "Amararaja User") {
+                        this.FilterLateDeliveryInvoices();
+                    } else if (this.currentUserRole === "Customer") {
+                        this.FilterLateDeliveryInvoicesByUser();
+                    }
+                }
+            }
+        }
+    }
+
+    FilterConfirmedInvoices(): void {
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterConfirmedInvoices(this.currentUserID, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+    }
+
+    FilterPendingInvoices(): void {
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterPendingInvoices(this.currentUserID, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+    }
+
+    FilterOnTimeDeliveryInvoices(): void {
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterOnTimeDeliveryInvoices(this.currentUserID, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+    }
+
+    FilterLateDeliveryInvoices(): void {
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterLateDeliveryInvoices(this.currentUserID, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+    }
+
+    FilterConfirmedInvoicesByUser(): void {
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterConfirmedInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+    }
+
+    FilterPendingInvoicesByUser(): void {
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterPendingInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+    }
+
+    FilterOnTimeDeliveryInvoicesByUser(): void {
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterOnTimeDeliveryInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+    }
+
+    FilterLateDeliveryInvoicesByUser(): void {
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterLateDeliveryInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
     }
 }

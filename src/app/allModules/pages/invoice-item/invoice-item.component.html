@@ -10,18 +10,60 @@
             (click)="SaveInvoiceItem()">Save</button>
           <button *ngIf="(currentUserRole | lowercase)==='customer'" mat-raised-button class="mr-4 confirmBtn"
             (click)="SaveAndUploadInvoiceItem()">Confirm</button>
-          <input hidden type="file" #fileInput id="file" (change)="handleFileInput($event)" />
+          <input hidden type="file" accept="application/pdf,image/jpg,image/jpeg" #fileInput id="file" (change)="handleFileInput($event)" />
           <!-- <button *ngIf="(currentUserRole | lowercase)==='amararaja user'" mat-raised-button class="btnBg"
             (click)="ApproveInvoiceItem()">Approve</button> -->
         </div>
       </div>
     </mat-card>
     <div class="sidenav-content">
-      <form autocomplete="off" name="form" [formGroup]="InvoiceItemFormGroup" fxLayout="column"
-        fxLayoutAlign="start" fxFlex="1 0 auto" novalidate>
+      <form autocomplete="off" name="form" [formGroup]="InvoiceItemFormGroup" fxLayout="column" fxLayoutAlign="start"
+        fxFlex="1 0 auto" novalidate class="abnormal">
         <!-- <div class="m-0 p-0 mr-8"> -->
         <div fxFlex fxLayout="row" class="borderTop mt-4">
-          <div fxFlex fxLayoutAlign="start center">
+          <table class="customtable">
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Reference No</th>
+                <th>Invoice Date</th>
+                <th>Invoice Type</th>
+                <th>Plant</th>
+                <th>Vehicle No</th>
+                <th>Vehicle Reported Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{SelectedInvoiceDetail?.ODIN}}</td>
+                <td>{{SelectedInvoiceDetail?.INV_NO}}</td>
+                <td>{{SelectedInvoiceDetail?.INV_DATE | date :'dd/MM/yyyy'}}</td>
+                <td>{{SelectedInvoiceDetail?.INV_TYPE}}</td>
+                <td>{{SelectedInvoiceDetail?.PLANT}}</td>
+                <td>{{SelectedInvoiceDetail?.VEHICLE_NO}}</td>
+                <td>
+                  <mat-form-field appearance="outline" class="m-4" *ngIf="(currentUserRole | lowercase)==='customer'">
+                    <input matInput [matDatepicker]="picker" placeholder="Vehicle Reported Date"
+                      formControlName="VehicleReportedDate" (keydown)="onKeydown($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('VehicleReportedDate').touched &&
+                      InvoiceItemFormGroup.get('VehicleReportedDate').hasError('required')">
+                      Vehicle reported date is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div class="m-4" fxLayoutAlign="start center"
+                    *ngIf="(currentUserRole | lowercase)==='amararaja user'">
+                    {{InvoiceItemFormGroup.get('VehicleReportedDate')?.value | date: 'dd/MM/yyyy'}}
+                  </div>
+                </td>
+                <td>{{SelectedInvoiceDetail?.STATUS}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <div fxFlex fxLayoutAlign="start center">
             <span class="boldClass mx-4">Invoice : </span>
             {{SelectedInvoiceDetail?.ODIN}}
           </div>
@@ -39,10 +81,14 @@
           <div class="m-4" fxLayoutAlign="start center" *ngIf="(currentUserRole | lowercase)==='amararaja user'">
             <span class="boldClass mx-4">Vehicle reported date</span>
             {{InvoiceItemFormGroup.get('VehicleReportedDate')?.value | date: 'dd/MM/yyyy'}}
-          </div>
+          </div> -->
 
         </div>
-        <div fxFlex class="abnormal">
+        <div fxFlex>
+          <div fxLayoutAlign="start center" class="pt-8 mb-8">
+            <span class="orangeBorderBottom h2"> ITEM DETAILS </span>
+          </div>
+
           <div style="overflow-x:auto;overflow-y:hidden ;">
             <table class="table" mat-table [dataSource]="dataSource" formArrayName="InvoiceItems">
 
@@ -71,13 +117,15 @@
               </ng-container>
 
               <ng-container matColumnDef="RECEIVED_QUANTITY">
-                <th mat-header-cell *matHeaderCellDef> Received Qty </th>
-                <td mat-cell *matCellDef="let element;let index=index;" [formGroupName]="index">
+                <th mat-header-cell *matHeaderCellDef style="width: 150px;"> Received Qty </th>
+                <td mat-cell style="width: 150px;" *matCellDef="let element;let index=index;" [formGroupName]="index">
                   <mat-form-field *ngIf="(currentUserRole | lowercase)==='customer'" appearance="outline"
-                    class="pl-8 pr-16">
-                    <input matInput formControlName="RECEIVED_QUANTITY" pattern="^[0-9]\d*$" (keyup)="valueChanges(InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('QUANTITY')?.value, 
+                    class="pl-8 pr-16" style="width: 120px;">
+                    <input matInput formControlName="RECEIVED_QUANTITY" pattern="^[0-9]\d*$"
+                      (keyup)="valueChanges(InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('QUANTITY')?.value, 
                     InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('RECEIVED_QUANTITY')?.value,index)">
-                    <mat-error class="pl-4 mt-8 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('RECEIVED_QUANTITY').touched &&
+                    <mat-error class="pl-4 mt-8 errorClass"
+                      *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('RECEIVED_QUANTITY').touched &&
                 InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('RECEIVED_QUANTITY').hasError('required')">
                       Received quantity is required
                     </mat-error>
@@ -86,7 +134,8 @@
             InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('RECEIVED_QUANTITY').hasError('max')">
                       Value should not greater than ordered quantity
                     </mat-error>
-                    <mat-error class="pl-4 mt-8 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('RECEIVED_QUANTITY').touched &&
+                    <mat-error class="pl-4 mt-8 errorClass"
+                      *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('RECEIVED_QUANTITY').touched &&
               !InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('RECEIVED_QUANTITY').hasError('required') &&
               InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('RECEIVED_QUANTITY').hasError('pattern')">
                       Enter valid value for quantity
@@ -95,7 +144,8 @@
                       {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('QUANTITY_UOM')?.value}}
                     </span> -->
                   </mat-form-field>
-                  <div fxLayoutAlign="start center" *ngIf="(currentUserRole | lowercase)==='amararaja user'">
+                  <div style="width:120px" fxLayoutAlign="start center"
+                    *ngIf="(currentUserRole | lowercase)==='amararaja user'">
                     {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('RECEIVED_QUANTITY')?.value}}
                     <span class="ml-4">
                       {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('QUANTITY_UOM')?.value}}
@@ -105,9 +155,10 @@
               </ng-container>
 
               <ng-container matColumnDef="REASON">
-                <th mat-header-cell *matHeaderCellDef> Reason </th>
-                <td mat-cell *matCellDef="let element;let index=index;" [formGroupName]="index">
-                  <mat-form-field style="min-width: 80%;" *ngIf="(currentUserRole | lowercase)==='customer'" appearance="outline" class="pl-8">
+                <th mat-header-cell style="width: 220px;" *matHeaderCellDef> Reason </th>
+                <td mat-cell style="width: 220px;" *matCellDef="let element;let index=index;" [formGroupName]="index">
+                  <mat-form-field style="min-width: 80%;" *ngIf="(currentUserRole | lowercase)==='customer'"
+                    appearance="outline" class="pl-8">
                     <mat-select matInput formControlName="REASON">
                       <mat-option [value]="rest.Description" *ngFor="let rest of AllReasons">{{rest.Description}}
                       </mat-option>
@@ -117,7 +168,8 @@
                       Reason is required
                     </mat-error>
                   </mat-form-field>
-                  <div fxLayoutAlign="start center" *ngIf="(currentUserRole | lowercase)==='amararaja user'">
+                  <div style="min-width: 80%;" fxLayoutAlign="start center"
+                    *ngIf="(currentUserRole | lowercase)==='amararaja user'">
                     {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('REASON')?.value}}
                   </div>
                 </td>
@@ -126,7 +178,8 @@
               <ng-container matColumnDef="REMARKS">
                 <th mat-header-cell *matHeaderCellDef> Remarks </th>
                 <td mat-cell *matCellDef="let element;let index=index;" [formGroupName]="index">
-                  <mat-form-field *ngIf="(currentUserRole | lowercase)==='customer'" appearance="outline" style="width: 100%;" class="pl-8">
+                  <mat-form-field *ngIf="(currentUserRole | lowercase)==='customer'" appearance="outline"
+                    style="width: 100%;" class="pl-8">
                     <textarea cdkTextAreaAutosize cdkAutosizeMinRows="1" matInput formControlName="REMARKS"></textarea>
                     <mat-error class="pl-4 mt-8 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('REMARKS').touched &&
                 InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('REMARKS').hasError('required')">

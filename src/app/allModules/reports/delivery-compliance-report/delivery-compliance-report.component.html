@@ -59,144 +59,153 @@
           </div>
         </form>
         <div flex class="mt-10">
-          <div class="tableData" #TABLE>
-            <div style="overflow-x:auto;overflow-y:hidden ;">
-              <table class="table" mat-table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}">
+          <div style="overflow-x:auto;overflow-y:hidden ;">
+            <table class="tableBodyScroll" mat-table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}">
 
-                <ng-container matColumnDef="INV_NO">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Reference Number </th>
-                  <td mat-cell *matCellDef="let element"> {{element.INV_NO}} </td>
-                </ng-container>
+              <ng-container matColumnDef="ODIN">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Number </th>
+                <td mat-cell *matCellDef="let element"> {{element.ODIN}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="ITEM_NO">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
-                  <td mat-cell *matCellDef="let element"> {{element.ITEM_NO}} </td>
-                </ng-container>
+              <ng-container matColumnDef="INV_NO">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Reference Number </th>
+                <td mat-cell *matCellDef="let element"> {{element.INV_NO}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="INV_DATE">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Date </th>
-                  <td mat-cell *matCellDef="let element"> {{element.INV_DATE | date : 'dd/MM/yyyy'}} </td>
-                </ng-container>
+              <ng-container matColumnDef="ITEM_NO">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
+                <td mat-cell *matCellDef="let element"> {{element.ITEM_NO}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="INV_TYPE">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Type </th>
-                  <td mat-cell *matCellDef="let element"> {{element.INV_TYPE}} </td>
-                </ng-container>
+              <ng-container matColumnDef="INV_DATE">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.INV_DATE | date : 'dd/MM/yyyy'}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="PLANT">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Plant </th>
-                  <td mat-cell *matCellDef="let element"> {{element.PLANT}} </td>
-                </ng-container>
+              <ng-container matColumnDef="INV_TYPE">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Type </th>
+                <td mat-cell *matCellDef="let element"> {{element.INV_TYPE}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="ODIN">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Number </th>
-                  <td mat-cell *matCellDef="let element"> {{element.ODIN}} </td>
-                </ng-container>
+              <ng-container matColumnDef="PLANT">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Plant </th>
+                <td mat-cell *matCellDef="let element"> {{element.PLANT}} </td>
+              </ng-container>
 
-                <!-- <ng-container matColumnDef="CUSTOMER">
+
+              <!-- <ng-container matColumnDef="CUSTOMER">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer </th>
                   <td mat-cell *matCellDef="let element"> {{element.CUSTOMER}} </td>
                 </ng-container> -->
 
-                <ng-container matColumnDef="CUSTOMER_NAME">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer Name </th>
-                  <td mat-cell *matCellDef="let element"> {{element.CUSTOMER_NAME}} </td>
-                </ng-container>
+              <ng-container matColumnDef="CUSTOMER_NAME">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.CUSTOMER_NAME}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="LR_NO">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> LR No </th>
-                  <td mat-cell *matCellDef="let element"> {{element.LR_NO}} </td>
-                </ng-container>
+              <ng-container matColumnDef="LR_NO">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> LR No </th>
+                <td mat-cell *matCellDef="let element"> {{element.LR_NO}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="LR_DATE">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> LR Date </th>
-                  <td mat-cell *matCellDef="let element"> {{element.LR_DATE | date : 'dd/MM/yyyy'}} </td>
-                </ng-container>
+              <ng-container matColumnDef="LR_DATE">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> LR Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.LR_DATE | date : 'dd/MM/yyyy'}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="VEHICLE_NO">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle No </th>
-                  <td mat-cell *matCellDef="let element"> {{element.VEHICLE_NO}} </td>
-                </ng-container>
+              <ng-container matColumnDef="VEHICLE_NO">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle No </th>
+                <td mat-cell *matCellDef="let element"> {{element.VEHICLE_NO}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="CARRIER">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrier </th>
-                  <td mat-cell *matCellDef="let element"> {{element.CARRIER}} </td>
-                </ng-container>
+              <ng-container matColumnDef="CARRIER">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrier </th>
+                <td mat-cell *matCellDef="let element"> {{element.CARRIER}} </td>
+              </ng-container>
 
 
-                <ng-container matColumnDef="VEHICLE_CAPACITY">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle Capacity </th>
-                  <td mat-cell *matCellDef="let element"> {{element.VEHICLE_CAPACITY}} </td>
-                </ng-container>
+              <ng-container matColumnDef="VEHICLE_CAPACITY">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle Capacity </th>
+                <td mat-cell *matCellDef="let element"> {{element.VEHICLE_CAPACITY}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="EWAYBILL_NO">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> E-way bill No </th>
-                  <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_NO}} </td>
-                </ng-container>
+              <ng-container matColumnDef="EWAYBILL_NO">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> E-way bill No </th>
+                <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_NO}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="EWAYBILL_DATE">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> E-way bill Date </th>
-                  <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_DATE | date : 'dd/MM/yyyy'}} </td>
-                </ng-container>
+              <ng-container matColumnDef="EWAYBILL_DATE">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> E-way bill Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.EWAYBILL_DATE | date : 'dd/MM/yyyy'}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="FREIGHT_ORDER">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order </th>
-                  <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER}} </td>
-                </ng-container>
+              <ng-container matColumnDef="FREIGHT_ORDER">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order </th>
+                <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="FREIGHT_ORDER_DATE">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order Date</th>
-                  <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER_DATE | date : 'dd/MM/yyyy'}} </td>
-                </ng-container>
+              <ng-container matColumnDef="FREIGHT_ORDER_DATE">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Freight Order Date</th>
+                <td mat-cell *matCellDef="let element"> {{element.FREIGHT_ORDER_DATE | date : 'dd/MM/yyyy'}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="MATERIAL_CODE">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Code </th>
-                  <td mat-cell *matCellDef="let element"> {{element.MATERIAL_CODE}} </td>
-                </ng-container>
+              <ng-container matColumnDef="MATERIAL_CODE">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Code </th>
+                <td mat-cell *matCellDef="let element"> {{element.MATERIAL_CODE}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="MATERIAL_DESCRIPTION">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Description </th>
-                  <td mat-cell *matCellDef="let element"> {{element.MATERIAL_DESCRIPTION}} </td>
-                </ng-container>
+              <ng-container matColumnDef="MATERIAL_DESCRIPTION">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Description </th>
+                <td mat-cell *matCellDef="let element"> {{element.MATERIAL_DESCRIPTION}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="QUANTITY">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
-                  <td mat-cell *matCellDef="let element"> {{element.QUANTITY}} </td>
-                </ng-container>
+              <ng-container matColumnDef="QUANTITY">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+                <td mat-cell *matCellDef="let element"> {{element.QUANTITY}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="RECEIVED_QUANTITY">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Received Quantity </th>
-                  <td mat-cell *matCellDef="let element"> {{element.RECEIVED_QUANTITY}} </td>
-                </ng-container>
+              <ng-container matColumnDef="RECEIVED_QUANTITY">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Received Quantity </th>
+                <td mat-cell *matCellDef="let element"> {{element.RECEIVED_QUANTITY}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="QUANTITY_UOM">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity Unit </th>
-                  <td mat-cell *matCellDef="let element"> {{element.QUANTITY_UOM}} </td>
-                </ng-container>
+              <ng-container matColumnDef="QUANTITY_UOM">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity Unit </th>
+                <td mat-cell *matCellDef="let element"> {{element.QUANTITY_UOM}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="OUTBOUND_DELIVERY">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Outbound Delivery </th>
-                  <td mat-cell *matCellDef="let element"> {{element.OUTBOUND_DELIVERY}} </td>
-                </ng-container>
+              <ng-container matColumnDef="OUTBOUND_DELIVERY">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Outbound Delivery </th>
+                <td mat-cell *matCellDef="let element"> {{element.OUTBOUND_DELIVERY}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="OUTBOUND_DELIVERY_DATE">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Outbound Delivery Date </th>
-                  <td mat-cell *matCellDef="let element"> {{element.OUTBOUND_DELIVERY_DATE | date : 'dd/MM/yyyy'}} </td>
-                </ng-container>
+              <ng-container matColumnDef="OUTBOUND_DELIVERY_DATE">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Outbound Delivery Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.OUTBOUND_DELIVERY_DATE | date : 'dd/MM/yyyy'}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="STATUS">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                  <td mat-cell *matCellDef="let element"> {{element.STATUS}} </td>
-                </ng-container>
+              <ng-container matColumnDef="STATUS">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                <td mat-cell *matCellDef="let element"> {{element.STATUS}} </td>
+              </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="cursor: pointer;"
+              <ng-container matColumnDef="DOWNLOAD">
+                <th mat-header-cell *matHeaderCellDef> Download</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-icon *ngIf="(element.STATUS | lowercase)==='confirmed'" aria-label="file_download"
+                    (click)="DowloandPODDocument(element.HEADER_ID,element.ATTACHMENT_ID,element.ATTACHMENT_NAME)">
+                    file_download
+                  </mat-icon>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="cursor: pointer;"
                 (click)="invoiceRowClick(row)"></tr>
-              </table>
-              <div *ngIf="!FilteredInvoiceDetails?.length">
-                <mat-icon svgIcon="infoIcon" style="color: #1b56ca;margin-top: 10px;margin-left: 70px"></mat-icon>
-                <span style="margin-left: 10px;">The table does not contain any data</span>
-              </div>
+            </table>
+            <div *ngIf="!FilteredInvoiceDetails?.length">
+              <mat-icon svgIcon="infoIcon" style="color: #1b56ca;margin-top: 10px;margin-left: 70px"></mat-icon>
+              <span style="margin-left: 10px;">The table does not contain any data</span>
             </div>
           </div>
         </div>
