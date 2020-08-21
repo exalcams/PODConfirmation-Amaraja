@@ -13,6 +13,7 @@ import { ReportService } from 'app/services/report.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { DatePipe } from '@angular/common';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-delivery-compliance-report',
@@ -31,8 +32,8 @@ export class DeliveryComplianceReportComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   FilteredInvoiceDetails: ReportInvoice[] = [];
   displayedColumns: string[] = [
-    'INV_NO',
     'ODIN',
+    'INV_NO',
     'ITEM_NO',
     'INV_DATE',
     'INV_TYPE',
@@ -56,6 +57,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
     'OUTBOUND_DELIVERY',
     'OUTBOUND_DELIVERY_DATE',
     'STATUS',
+    'DOWNLOAD',
   ];
   dataSource = new MatTableDataSource<ReportInvoice>();
   selection = new SelectionModel<ReportInvoice>(true, []);
@@ -221,6 +223,23 @@ export class DeliveryComplianceReportComponent implements OnInit {
     invoiceDetails.STATUS = inv.STATUS;
     this._shareParameterService.SetInvoiceDetail(invoiceDetails);
     this._router.navigate(['/pages/invItem']);
+  }
+
+  DowloandPODDocument(HeaderID: number, AttachmentID: number, fileName: string): void {
+    this.isProgressBarVisibile = true;
+    this._reportService.DowloandPODDocument(HeaderID, AttachmentID).subscribe(
+      data => {
+        if (data) {
+          const BlobFile = data as Blob;
+          saveAs(BlobFile, fileName);
+        }
+        this.isProgressBarVisibile = false;
+      },
+      error => {
+        console.error(error);
+        this.isProgressBarVisibile = false;
+      }
+    );
   }
 }
 

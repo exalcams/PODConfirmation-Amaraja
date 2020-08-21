@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
@@ -26,6 +26,14 @@ export class ReportService {
     return this._httpClient.get<ReportInvoice[]>(
       `${this.baseAddress}api/Report/GetFilteredInvoiceDetails?UserID=${UserID}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&CustomerName=${CustomerName}`
     )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DowloandPODDocument(HeaderID: number, AttachmentID: number): Observable<Blob | string> {
+    return this._httpClient.get(`${this.baseAddress}api/Report/DowloandPODDocument?HeaderID=${HeaderID}&AttachmentID=${AttachmentID}`, {
+      responseType: 'blob',
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    })
       .pipe(catchError(this.errorHandler));
   }
 }

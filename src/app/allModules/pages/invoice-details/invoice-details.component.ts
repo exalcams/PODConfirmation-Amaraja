@@ -38,8 +38,8 @@ export class InvoiceDetailsComponent implements OnInit {
     InvoiceDetailsFormArray: FormArray = this._formBuilder.array([]);
     displayedColumns: string[] = [
         // 'SELECT',
-        'INV_NO',
         'ODIN',
+        'INV_NO',
         'INV_DATE',
         'INV_TYPE',
         'PLANT',

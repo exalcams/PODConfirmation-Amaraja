@@ -105,6 +105,8 @@ export class ReportInvoice {
     TRANSIT_LEAD_TIME: string;
     CANC_INV_STATUS: string;
     STATUS: string;
+    ATTACHMENT_ID: number;
+    ATTACHMENT_NAME: string;
 }
 
 export class StatusTemplate {
@@ -128,6 +130,9 @@ export class InvoiceHeaderDetail {
     HEADER_ID: number;
     INV_NO: string;
     ODIN: string;
+    INV_DATE: Date | string | null;
+    INV_TYPE: string;
+    PLANT: string;
     VEHICLE_NO: string;
     EWAYBILL_NO: string;
     OUTBOUND_DELIVERY: string;

@@ -13,6 +13,14 @@
     background-color: #fffdf9;
     height: 45px;
   }
+  // .ps-container > .ps-scrollbar-x-rail,
+  // .ps-container > .ps-scrollbar-y-rail {
+  //   opacity: 0.6;
+  // }
+  // .ps--active-y > .ps__rail-y{
+  //   overflow: hidden !important;
+  //   position: relative !important;
+  // }
   .boldClass {
     font-weight: bold;
   }
@@ -129,6 +137,19 @@
     }
   }
 
+  // table.tableBodyScroll tbody {
+  //   display: block;
+  //   max-height: 300px;
+  //   overflow-y: scroll;
+  // }
+
+  // table.tableBodyScroll thead,
+  // table.tableBodyScroll tbody tr {
+  //   display: table;
+  //   width: 100%;
+  //   table-layout: fixed;
+  // }
+
   // td.mat-cell {
   //   /* row padding */
   //   padding: 16px 0;
@@ -151,7 +172,7 @@
   //    /* row spacing / margin */
   //    border-spacing: 0 8px !important;
   //  }
-  .whiteBg{
+  .whiteBg {
     background-color: white !important;
   }
   .btnBg {

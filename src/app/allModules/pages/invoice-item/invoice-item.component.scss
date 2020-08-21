@@ -16,7 +16,9 @@
   .boldClass {
     font-weight: bold;
   }
-
+  .sidenav-content {
+    background-color: white;
+  }
   .boldItalicClass {
     @extend .boldClass;
     font-style: italic;
@@ -163,6 +165,13 @@
       cursor: not-allowed !important;
     }
   }
+  table.customtable {
+    border: 1px solid black;
+    border-collapse: collapse;
+    td {
+      border: 1px solid black;
+    }
+  }
   @mixin BorderMixin($t, $r, $b, $l, $color) {
     border-color: $color;
     border-style: solid;
@@ -207,5 +216,8 @@
   }
   .errorClass {
     margin-bottom: 8px;
+  }
+  .orangeBorderBottom {
+    border-bottom: 2px solid #fb7800;
   }
 }
