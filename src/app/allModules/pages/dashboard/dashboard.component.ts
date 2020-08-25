@@ -57,6 +57,8 @@ export class DashboardComponent implements OnInit {
         'INV_DATE',
         'INV_TYPE',
         'PLANT',
+        'CUSTOMER',
+        'CUSTOMER_NAME',
         'VEHICLE_NO',
         // 'VEHICLE_CAPACITY',
         'LR_NO',
