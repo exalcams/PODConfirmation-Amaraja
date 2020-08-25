@@ -38,7 +38,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
     'INV_DATE',
     'INV_TYPE',
     'PLANT',
-    // 'CUSTOMER',
+    'CUSTOMER',
     'CUSTOMER_NAME',
     'LR_NO',
     'LR_DATE',
@@ -216,7 +216,13 @@ export class DeliveryComplianceReportComponent implements OnInit {
     invoiceDetails.HEADER_ID = inv.HEADER_ID;
     invoiceDetails.INV_NO = inv.INV_NO;
     invoiceDetails.ODIN = inv.ODIN;
+    invoiceDetails.INV_DATE = inv.INV_DATE;
+    invoiceDetails.INV_TYPE = inv.INV_TYPE;
+    invoiceDetails.PLANT = inv.PLANT;
+    invoiceDetails.CUSTOMER = inv.CUSTOMER;
+    invoiceDetails.CUSTOMER_NAME = inv.CUSTOMER_NAME;
     invoiceDetails.VEHICLE_NO = inv.VEHICLE_NO;
+    invoiceDetails.VEHICLE_REPORTED_DATE = inv.VEHICLE_REPORTED_DATE;
     invoiceDetails.EWAYBILL_NO = inv.EWAYBILL_NO;
     invoiceDetails.OUTBOUND_DELIVERY = inv.OUTBOUND_DELIVERY;
     invoiceDetails.VEHICLE_REPORTED_DATE = inv.VEHICLE_REPORTED_DATE;
