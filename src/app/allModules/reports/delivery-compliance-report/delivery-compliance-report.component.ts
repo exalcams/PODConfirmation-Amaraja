@@ -108,6 +108,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
       StartDate: [],
       EndDate: [],
       InvoiceNumber: [''],
+      Plant: [''],
       CustomerName: ['']
     });
     this.isDateError = false;
@@ -134,6 +135,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
         this.isProgressBarVisibile = true;
         const Status = this.InvoiceFilterFormGroup.get('Status').value;
         const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
+        const Plant = this.InvoiceFilterFormGroup.get('Plant').value;
         const CustomerName = this.InvoiceFilterFormGroup.get('CustomerName').value;
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
@@ -146,7 +148,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
           EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this._reportService
-          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, CustomerName)
+          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, Plant, CustomerName)
           .subscribe(
             data => {
               this.FilteredInvoiceDetails = data as ReportInvoice[];

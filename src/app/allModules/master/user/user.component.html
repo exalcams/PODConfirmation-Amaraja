@@ -1,18 +1,190 @@
-<div id="chat" class="page-layout carded fullwidth inner-scroll">
-  <div class="top-bg topBg"></div>
-  <div class="center">
-      <div class="content-card">
-          <mat-sidenav-container>
-              <mat-sidenav class="sidenav" position="start" opened="true" mode="side" fuseMatSidenavHelper="chat-left-sidenav"
-                  matIsLockedOpen="gt-md">
-                  <user-side-bar [AllUsers]="AllUsers" (UserSelectionChanged)="OnUserSelectionChanged($event)">
-                  </user-side-bar>
-              </mat-sidenav>
-              <user-main-content [currentSelectedUser]="SelectedUser" (SaveSucceed)='RefreshAllUsers($event)'
-                  (ShowProgressBarEvent)="OnShowProgressBarEvent($event)">
-              </user-main-content>
-          </mat-sidenav-container>
-          <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion" color="accent" mode="indeterminate"></mat-progress-spinner>
-      </div>
-  </div>
+<div id="user" class="page-layout carded fullwidth inner-scroll">
+    <div class="top-bg topBg"></div>
+    <div class="center normal">
+        <div class="m-12 p-0 content-card" fxLayout>
+            <div fxFlex="40" class="rightBorder plant-side-bar">
+                <div class="sidenav-header">
+                    <mat-toolbar>
+                        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+                            <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                    <mat-icon class="s-16" svgIcon="searchIcon"></mat-icon>
+                                    <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+                                </div>
+                            </div>
+                            <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+                                <button mat-mini-fab class="mr-8 btnBg" matTooltip="Add User" (click)="AddUser()">
+                                    <mat-icon aria-label="Add User" svgIcon="addIcon"></mat-icon>
+                                </button>
+                            </div>
+                        </mat-toolbar-row>
+                    </mat-toolbar>
+                </div>
+                <div class="sidenav-content py-16" fusePerfectScrollbar fxFlex>
+                    <div *ngFor="let usr of AllUsers | filter: searchText">
+                        <div [attr.aria-label]="usr.UserName">
+                            <div fxLayout="row" fxLayoutAlign="start center" class="side-bar-items" matRipple
+                                (click)="loadSelectedUser(usr)" [ngClass]="{'active accent2':selectID==usr.UserID}">
+                                <!-- <div fxFlex="30%" fxLayoutAlign="start center">
+                                    {{ap.Doc_Type_ID}}
+                                </div> -->
+                                <div fxFlex="70%" fxLayoutAlign="start center">
+                                    {{usr.UserName}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="(AllUsers | filter: searchText).length === 0" class="no-results-message">
+                        <span class="pl-12"> No results..</span>
+                    </div>
+                </div>
+            </div>
+            <div fxFlex="59" class="plant-side-bar">
+                <div class="sidenav-content" fusePerfectScrollbar fxFlex>
+                    <form class="p-24 normal" autocomplete="off" fxLayout="column" fxLayoutAlign="start" name="form"
+                        [formGroup]="userMainFormGroup">
+                        <div fxLayout="row" class="pt-8">
+                            <div fxFlex class="h2 mb-24">{{SelectedUser.UserID?'Update':'Create'}} User</div>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="start">
+
+                            <mat-form-field class="pl-8" fxFlex="50">
+                                <input matInput placeholder="User Code" formControlName="userCode"
+                                    (keydown)="disableSpace($event)">
+                                <mat-error
+                                    *ngIf="userMainFormGroup.get('userCode').touched && userMainFormGroup.get('userCode').hasError('required')">
+                                    User Code required
+                                </mat-error>
+                                <mat-error *ngIf="userMainFormGroup.get('userCode').touched && !userMainFormGroup.get('userCode').hasError('required')
+                    && userMainFormGroup.get('userCode').hasError('pattern')">
+                                    Please fill out user code without any space
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="pl-8" fxFlex="50">
+                                <input matInput placeholder="User Name" formControlName="userName"
+                                    (keydown)="disableSpace($event)">
+                                <mat-error
+                                    *ngIf="userMainFormGroup.get('userName').touched && userMainFormGroup.get('userName').hasError('required')">
+                                    User Name required
+                                </mat-error>
+                                <!-- <mat-error *ngIf="userMainFormGroup.get('userName').touched && !userMainFormGroup.get('userName').hasError('required')
+                    && userMainFormGroup.get('userName').hasError('pattern')">
+                    Please fill out user name without any space
+                  </mat-error> -->
+                            </mat-form-field>
+
+
+                        </div>
+
+                        <div fxLayout="row" fxLayoutAlign="start">
+
+                            <mat-form-field class="pl-8" fxFlex="50">
+                                <input matInput placeholder="Email ID" formControlName="email">
+                                <mat-error
+                                    *ngIf="userMainFormGroup.get('email').touched && userMainFormGroup.get('email').hasError('required')">
+                                    Email is required
+                                </mat-error>
+                                <mat-error *ngIf="userMainFormGroup.get('email').touched && !userMainFormGroup.get('email').hasError('required') &&
+                            userMainFormGroup.get('email').hasError('email')">
+                                    Please enter a valid email address
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="pl-8" fxFlex="50">
+                                <input matInput placeholder="Mobile Number"
+                                    pattern="^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$" formControlName="contactNumber">
+                                <mat-error
+                                    *ngIf="userMainFormGroup.get('contactNumber').touched && userMainFormGroup.get('contactNumber').hasError('required')">
+                                    Mobile Number is required
+                                </mat-error>
+                                <mat-error *ngIf="userMainFormGroup.get('contactNumber').touched && !userMainFormGroup.get('contactNumber').hasError('required') &&
+                            userMainFormGroup.get('contactNumber').hasError('pattern')">
+                                    Please enter a valid Mobile Number
+                                </mat-error>
+                            </mat-form-field>
+
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="start" *ngIf="!SelectedUser?.UserID">
+
+                            <mat-form-field class="pl-8" fxFlex="50"
+                                [class.mb-24]="(userMainFormGroup.get('password').touched && userMainFormGroup.get('password').invalid)">
+                                <input matInput type="password" placeholder="Password" formControlName="password">
+                                <mat-error *ngIf="userMainFormGroup.get('password').hasError('required')">
+                                    Password is required
+                                </mat-error>
+                                <mat-error *ngIf="!userMainFormGroup.get('password').hasError('required') &&
+                                             userMainFormGroup.get('password').hasError('pattern')">
+                                    Password should be minimum of 6 to maximum of 15 characters and Must contain at
+                                    least one lower case letter,one
+                                    upper case letter, one digit and one special character
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="pl-8" fxFlex="50">
+                                <input matInput type="password" placeholder="Confirm Password"
+                                    formControlName="confirmPassword">
+                                <mat-error *ngIf="userMainFormGroup.get('confirmPassword').hasError('required')">
+                                    Password confirmation is required
+                                </mat-error>
+                                <mat-error *ngIf="!userMainFormGroup.get('confirmPassword').hasError('required') &&
+                                           userMainFormGroup.get('confirmPassword').hasError('passwordsNotMatching')">
+                                    Passwords must match
+                                </mat-error>
+                            </mat-form-field>
+
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
+                            <!-- <mat-form-field class="pl-8" fxFlex="50" [style.display]="IsPlantDisplay?'inline-block':'none'">
+                  <input matInput placeholder="Plant" formControlName="plant">
+                  <mat-error *ngIf="userMainFormGroup.get('plant').touched &&  userMainFormGroup.get('plant').hasError('required')">
+                    Plant required</mat-error>
+                </mat-form-field> -->
+
+                            <mat-form-field class="pl-8" fxFlex="50">
+                                <mat-select placeholder="Role Name" formControlName="roleID"
+                                    (selectionChange)="RoleSelected($event)">
+                                    <mat-option *ngFor="let rol of AllRoles" [value]="rol.RoleID">{{rol.RoleName}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error
+                                    *ngIf="userMainFormGroup.get('roleID').touched && userMainFormGroup.get('roleID').hasError('required')">
+                                    Role
+                                    Name required</mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="pl-8" fxFlex="50"
+                                [style.display]="IsPlantDisplay?'inline-block':'none'">
+                                <mat-select placeholder="Plant" formControlName="PlantList" multiple>
+                                    <mat-option #allSelected (click)="toggleAllSelection()" value="all">All</mat-option>
+                                    <mat-option *ngFor="let mp of AllPlants" [value]="mp.PlantCode"
+                                        (click)="togglePerOne()">{{mp.PlantCode}}</mat-option>
+                                </mat-select>
+                                <mat-error
+                                    *ngIf="userMainFormGroup.get('PlantList').touched && userMainFormGroup.get('PlantList').hasError('required')">
+                                    Plant is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row wrap" fxLayoutAlign="end">
+                            <button mat-raised-button type="button" (click)="ResetControl()" *ngIf="!SelectedUser.UserID"
+                                style="margin-right:10px">
+                                Clear
+                            </button>
+                            <button mat-raised-button color="warn" type="button" (click)="DeleteClicked()"
+                                *ngIf="SelectedUser.UserID" style="margin-right:10px">
+                                Delete
+                            </button>
+                            <button mat-raised-button class="btnBg" type="button" (click)="SaveClicked()">
+                                {{SelectedUser.UserID?'Update':'Create'}}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div fxFlex="1"></div>
+        </div>
+    </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
 </div>
