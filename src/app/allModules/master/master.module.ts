@@ -5,23 +5,22 @@ import {
     // tslint:disable-next-line:max-line-length
     MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule,
     MatStepperModule, MatListModule, MatMenuModule, MatRadioModule, MatSidenavModule, MatToolbarModule, 
-    MatSpinner, MatProgressSpinner, MatProgressSpinnerModule, MatTooltip, MatTooltipModule
+    MatProgressSpinnerModule, MatTooltipModule, MatProgressBarModule, MatAutocompleteModule, MatBadgeModule, MatBottomSheetModule, MatButtonToggleModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatDialogModule, MatDividerModule, MatExpansionModule, MatGridListModule, MatNativeDateModule, MatPaginatorModule, MatRippleModule, MatSliderModule, MatSlideToggleModule, MatSnackBarModule, MatTableModule, MatSortModule, MatTabsModule, MatTreeModule
 } from '@angular/material';
 
 import { FuseSharedModule } from '@fuse/shared.module';
-import { FuseProgressBarModule } from '@fuse/components';
-import { FileUploadModule } from 'ng2-file-upload';
+import { FuseSidebarModule, FuseCountdownModule, FuseHighlightModule, FuseMaterialColorPickerModule, FuseWidgetModule } from '@fuse/components';
 import { MenuAppComponent } from './menu-app/menu-app.component';
 import { RoleComponent } from './role/role.component';
 import { UserComponent } from './user/user.component';
-import { UserSideBarComponent } from './user/user-side-bar/user-side-bar.component';
-import { UserMainContentComponent } from './user/user-main-content/user-main-content.component';
 import { RoleSideBarComponent } from './role/role-side-bar/role-side-bar.component';
 import { RoleMainContentComponent } from './role/role-main-content/role-main-content.component';
 import { MenuAppSideBarComponent } from './menu-app/menu-app-side-bar/menu-app-side-bar.component';
 import { MenuAppMainContentComponent } from './menu-app/menu-app-main-content/menu-app-main-content.component';
 import { ReasonComponent } from './reason/reason.component';
 import { PlantComponent } from './plant/plant.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { FormsModule } from '@angular/forms';
 
 const menuRoutes: Routes = [
     // {
@@ -48,8 +47,6 @@ const menuRoutes: Routes = [
 @NgModule({
     declarations: [
        UserComponent,
-       UserSideBarComponent,
-       UserMainContentComponent,
        RoleComponent,
        RoleSideBarComponent,
        RoleMainContentComponent,
@@ -60,23 +57,57 @@ const menuRoutes: Routes = [
        PlantComponent,
     ],
     imports: [
-        MatButtonModule,
-        MatCardModule,
+        RouterModule.forChild(menuRoutes),
+        // HttpClientModule,
+        // TranslateModule,
         MatFormFieldModule,
+        MatAutocompleteModule,
+        MatBadgeModule,
+        MatBottomSheetModule,
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatChipsModule,
+        MatStepperModule,
+        MatDatepickerModule,
+        MatDialogModule,
+        MatDividerModule,
+        MatExpansionModule,
+        MatGridListModule,
         MatIconModule,
         MatInputModule,
-        MatSelectModule,
-        MatStepperModule,
-        MatProgressSpinnerModule,
         MatListModule,
         MatMenuModule,
+        MatNativeDateModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
         MatRadioModule,
+        MatRippleModule,
+        MatSelectModule,
         MatSidenavModule,
+        MatSliderModule,
+        MatSlideToggleModule,
+        MatSnackBarModule,
+        MatTableModule,
+        MatSortModule,
+        MatTabsModule,
         MatToolbarModule,
         MatTooltipModule,
+        MatTreeModule,
+
+        NgxChartsModule,
+
         FuseSharedModule,
-        FileUploadModule,
-        RouterModule.forChild(menuRoutes)
+        FuseSidebarModule,
+
+        FuseCountdownModule,
+        FuseHighlightModule,
+        FuseMaterialColorPickerModule,
+        FuseWidgetModule,
+
+        FormsModule
     ],
     providers: [
 
