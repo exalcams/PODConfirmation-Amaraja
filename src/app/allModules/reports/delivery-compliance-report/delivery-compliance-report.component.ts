@@ -14,6 +14,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
+import { ExcelService } from 'app/services/excel.service';
 
 @Component({
   selector: 'app-delivery-compliance-report',
@@ -37,7 +38,11 @@ export class DeliveryComplianceReportComponent implements OnInit {
     'ITEM_NO',
     'INV_DATE',
     'INV_TYPE',
+    'OUTBOUND_DELIVERY',
+    'OUTBOUND_DELIVERY_DATE',
     'PLANT',
+    'ORGANIZATION',
+    'DIVISION',
     'CUSTOMER',
     'CUSTOMER_NAME',
     'LR_NO',
@@ -49,13 +54,14 @@ export class DeliveryComplianceReportComponent implements OnInit {
     'EWAYBILL_DATE',
     'FREIGHT_ORDER',
     'FREIGHT_ORDER_DATE',
+    'PROPOSED_DELIVERY_DATE',
+    'ACTUAL_DELIVERY_DATE',
+    'TRANSIT_LEAD_TIME',
     'MATERIAL_CODE',
     'MATERIAL_DESCRIPTION',
     'QUANTITY',
     'RECEIVED_QUANTITY',
     'QUANTITY_UOM',
-    'OUTBOUND_DELIVERY',
-    'OUTBOUND_DELIVERY_DATE',
     'STATUS',
     'DOWNLOAD',
   ];
@@ -69,6 +75,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
   constructor(
     private _router: Router,
     private _reportService: ReportService,
+    private _excelService: ExcelService,
     private _shareParameterService: ShareParameterService,
     public snackBar: MatSnackBar,
     private _formBuilder: FormBuilder,
@@ -248,6 +255,48 @@ export class DeliveryComplianceReportComponent implements OnInit {
         this.isProgressBarVisibile = false;
       }
     );
+  }
+
+  exportAsXLSX(): void {
+    const currentPageIndex = this.dataSource.paginator.pageIndex;
+    const PageSize = this.dataSource.paginator.pageSize;
+    const startIndex = currentPageIndex * PageSize;
+    const endIndex = startIndex + PageSize;
+    const itemsShowed = this.FilteredInvoiceDetails.slice(startIndex, endIndex);
+    const itemsShowedd = [];
+    itemsShowed.forEach(x => {
+      const item = {
+        'Invoice No': x.ODIN,
+        'Reference No': x.INV_NO,
+        'Invoice Date': x.INV_DATE ? this._datePipe.transform(x.INV_DATE, 'dd-MM-yyyy') : '',
+        'Invoice Type': x.INV_TYPE,
+        'Outbound delivery': x.OUTBOUND_DELIVERY,
+        'Outbound delivery date': x.OUTBOUND_DELIVERY_DATE ? this._datePipe.transform(x.OUTBOUND_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+        'Plant': x.PLANT,
+        'Organization': x.ORGANIZATION,
+        'Division': x.DIVISION,
+        'LR Number': x.LR_NO,
+        'LR date': x.LR_DATE ? this._datePipe.transform(x.LR_DATE, 'dd-MM-yyyy') : '',
+        'Vehicle No': x.VEHICLE_NO,
+        'Carrier': x.CARRIER,
+        'Vehicle Capacity': x.VEHICLE_CAPACITY,
+        'E-Way bill No': x.EWAYBILL_NO,
+        'E-Way bill date': x.EWAYBILL_DATE ? this._datePipe.transform(x.EWAYBILL_DATE, 'dd-MM-yyyy') : '',
+        'Freight order': x.FREIGHT_ORDER,
+        'Freight order date': x.FREIGHT_ORDER_DATE ? this._datePipe.transform(x.FREIGHT_ORDER_DATE, 'dd-MM-yyyy') : '',
+        'Proposed delivery date': x.PROPOSED_DELIVERY_DATE ? this._datePipe.transform(x.PROPOSED_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+        'Actual delivery date': x.ACTUAL_DELIVERY_DATE ? this._datePipe.transform(x.ACTUAL_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+        'Lead time': x.TRANSIT_LEAD_TIME,
+        'Material Code': x.MATERIAL_CODE,
+        'Material Description': x.MATERIAL_DESCRIPTION,
+        'Quantity': x.QUANTITY,
+        'Received Quantity': x.RECEIVED_QUANTITY,
+        'UOM': x.QUANTITY_UOM,
+        'Status': x.STATUS,
+      };
+      itemsShowedd.push(item);
+    });
+    this._excelService.exportAsExcelFile(itemsShowedd, 'report');
   }
 }
 
