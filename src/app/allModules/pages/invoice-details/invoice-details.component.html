@@ -64,8 +64,16 @@
         </form>
 
         <div flex class="mt-10">
-          <form autocomplete="off" class="abnormal" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
-            novalidate [formGroup]="InvoiceDetailsFormGroup">
+          <form autocomplete="off" class="abnormal" fxLayout="column" fxLayoutAlign="start" 
+            name="form" novalidate [formGroup]="InvoiceDetailsFormGroup">
+            <div fxLayout fxLayoutAlign="end center">
+              <div fxFlex align="end">
+                <button (click)="exportAsXLSX()" class="excelBtn mb-8" mat-stroked-button>
+                  <img class="excelImg" src="assets/images/excel.png">
+                  Export to excel
+                </button>
+              </div>
+            </div>
             <div style="overflow-x:auto;overflow-y:hidden ;">
               <table class="table" mat-table [dataSource]="dataSource" formArrayName="InvoiceDetails">
 
@@ -112,10 +120,49 @@
                   </td>
                 </ng-container>
 
+                <ng-container matColumnDef="OUTBOUND_DELIVERY">
+                  <th mat-header-cell *matHeaderCellDef> Outbound Delivery </th>
+                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('OUTBOUND_DELIVERY')?.value}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="OUTBOUND_DELIVERY_DATE">
+                  <th mat-header-cell *matHeaderCellDef> Outbound Delivery Date </th>
+                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('OUTBOUND_DELIVERY_DATE')?.value | date: 'dd/MM/yyyy'}}
+                  </td>
+                </ng-container>
+
                 <ng-container matColumnDef="PLANT">
                   <th mat-header-cell *matHeaderCellDef> Plant </th>
                   <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
                     {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('PLANT')?.value}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ORGANIZATION">
+                  <th mat-header-cell *matHeaderCellDef> Organization </th>
+                  <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.ORGANIZATION}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="DIVISION">
+                  <th mat-header-cell *matHeaderCellDef> Division </th>
+                  <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.DIVISION}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="LR_NO">
+                  <th mat-header-cell *matHeaderCellDef> LR No </th>
+                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('LR_NO')?.value}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="LR_DATE">
+                  <th mat-header-cell *matHeaderCellDef> LR Date </th>
+                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('LR_DATE')?.value | date: 'dd/MM/yyyy'}}
                   </td>
                 </ng-container>
 
@@ -153,35 +200,6 @@
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="VEHICLE_CAPACITY">
-                  <th mat-header-cell *matHeaderCellDef> Vehicle Capacity </th>
-                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
-                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('VEHICLE_CAPACITY')?.value}}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="LR_NO">
-                  <th mat-header-cell *matHeaderCellDef> LR No </th>
-                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
-                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('LR_NO')?.value}}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="LR_DATE">
-                  <th mat-header-cell *matHeaderCellDef> LR Date </th>
-                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
-                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('LR_DATE')?.value | date: 'dd/MM/yyyy'}}
-                  </td>
-                </ng-container>
-
-
-                <ng-container matColumnDef="FWD_AGENT">
-                  <th mat-header-cell *matHeaderCellDef> Forward Agent </th>
-                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
-                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('FWD_AGENT')?.value}}
-                  </td>
-                </ng-container>
-
                 <ng-container matColumnDef="CARRIER">
                   <th mat-header-cell *matHeaderCellDef> Carrier </th>
                   <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
@@ -189,17 +207,17 @@
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="FREIGHT_ORDER">
-                  <th mat-header-cell *matHeaderCellDef> Freight Order </th>
-                  <td mat-cell *matCellDef="let element;let index=index;">
-                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('FREIGHT_ORDER')?.value}}
+                <ng-container matColumnDef="VEHICLE_CAPACITY">
+                  <th mat-header-cell *matHeaderCellDef> Vehicle Capacity </th>
+                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('VEHICLE_CAPACITY')?.value}}
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="FREIGHT_ORDER_DATE">
-                  <th mat-header-cell *matHeaderCellDef> Freight Order Date</th>
+                <ng-container matColumnDef="FWD_AGENT">
+                  <th mat-header-cell *matHeaderCellDef> Forward Agent </th>
                   <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
-                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('FREIGHT_ORDER_DATE')?.value | date:'dd/MM/yyyy'}}
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('FWD_AGENT')?.value}}
                   </td>
                 </ng-container>
 
@@ -217,17 +235,38 @@
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="OUTBOUND_DELIVERY">
-                  <th mat-header-cell *matHeaderCellDef> Outbound Delivery </th>
-                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
-                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('OUTBOUND_DELIVERY')?.value}}
+                <ng-container matColumnDef="FREIGHT_ORDER">
+                  <th mat-header-cell *matHeaderCellDef> Freight Order </th>
+                  <td mat-cell *matCellDef="let element;let index=index;">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('FREIGHT_ORDER')?.value}}
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="OUTBOUND_DELIVERY_DATE">
-                  <th mat-header-cell *matHeaderCellDef> Outbound Delivery Date </th>
+                <ng-container matColumnDef="FREIGHT_ORDER_DATE">
+                  <th mat-header-cell *matHeaderCellDef> Freight Order Date</th>
                   <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
-                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('OUTBOUND_DELIVERY_DATE')?.value | date: 'dd/MM/yyyy'}}
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('FREIGHT_ORDER_DATE')?.value | date:'dd/MM/yyyy'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="PROPOSED_DELIVERY_DATE">
+                  <th mat-header-cell *matHeaderCellDef> Proposed delivery Date</th>
+                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('PROPOSED_DELIVERY_DATE')?.value | date:'dd/MM/yyyy'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ACTUAL_DELIVERY_DATE">
+                  <th mat-header-cell *matHeaderCellDef> Actual delivery Date</th>
+                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('ACTUAL_DELIVERY_DATE')?.value | date:'dd/MM/yyyy'}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="TRANSIT_LEAD_TIME">
+                  <th mat-header-cell *matHeaderCellDef> Lead time</th>
+                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('TRANSIT_LEAD_TIME')?.value}}
                   </td>
                 </ng-container>
 
@@ -261,7 +300,8 @@
                   <td mat-cell *matCellDef="let element;let index=index;">
                     <button *ngIf="(currentUserRole | lowercase)==='customer'" mat-raised-button class="mr-4 btnBg"
                       (click)="SaveAndUploadInvoiceItem(index)">Confirm</button>
-                    <input hidden type="file" accept="application/pdf,image/jpg,image/jpeg" #fileInput id="file" (change)="handleFileInput($event)" />
+                    <input hidden type="file" accept="application/pdf,image/jpg,image/jpeg" #fileInput id="file"
+                      (change)="handleFileInput($event)" />
                   </td>
                 </ng-container>
 
@@ -277,7 +317,8 @@
           </form>
         </div>
         <div flex>
-          <mat-paginator [style.display]="allInvoiceDetails?.length?'inherit':'none'" [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
+          <mat-paginator [style.display]="allInvoiceDetails?.length?'inherit':'none'"
+            [pageSizeOptions]="[5,10, 20, 30, 50, 75, 100]" showFirstLastButtons>
           </mat-paginator>
         </div>
       </div>

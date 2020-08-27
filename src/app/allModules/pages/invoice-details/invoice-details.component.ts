@@ -15,6 +15,7 @@ import { FormGroup, FormArray, FormBuilder, AbstractControl, Validators } from '
 import { BehaviorSubject } from 'rxjs';
 import { InvoiceService } from 'app/services/invoice.service';
 import { DatePipe } from '@angular/common';
+import { ExcelService } from 'app/services/excel.service';
 
 @Component({
     selector: 'app-invoice-details',
@@ -42,19 +43,24 @@ export class InvoiceDetailsComponent implements OnInit {
         'INV_NO',
         'INV_DATE',
         'INV_TYPE',
-        'PLANT',
-        'VEHICLE_NO',
-        'VEHICLE_CAPACITY',
-        'LR_NO',
-        'LR_DATE',
-        'FWD_AGENT',
-        'CARRIER',
-        'FREIGHT_ORDER',
-        'FREIGHT_ORDER_DATE',
-        'EWAYBILL_NO',
-        'EWAYBILL_DATE',
         'OUTBOUND_DELIVERY',
         'OUTBOUND_DELIVERY_DATE',
+        'PLANT',
+        'ORGANIZATION',
+        'DIVISION',
+        'LR_NO',
+        'LR_DATE',
+        'VEHICLE_NO',
+        'CARRIER',
+        'VEHICLE_CAPACITY',
+        'FWD_AGENT',
+        'EWAYBILL_NO',
+        'EWAYBILL_DATE',
+        'FREIGHT_ORDER',
+        'FREIGHT_ORDER_DATE',
+        'PROPOSED_DELIVERY_DATE',
+        'ACTUAL_DELIVERY_DATE',
+        'TRANSIT_LEAD_TIME',
         'STATUS',
         'VEHICLE_REPORTED_DATE',
         'Action'
@@ -75,6 +81,7 @@ export class InvoiceDetailsComponent implements OnInit {
         private _dashboardService: DashboardService,
         private _shareParameterService: ShareParameterService,
         private _invoiceService: InvoiceService,
+        private _excelService: ExcelService,
         private _datePipe: DatePipe,
         public snackBar: MatSnackBar,
         private dialog: MatDialog,
@@ -250,18 +257,23 @@ export class InvoiceDetailsComponent implements OnInit {
             INV_NO: [asnItem.INV_NO],
             INV_DATE: [asnItem.INV_DATE],
             INV_TYPE: [asnItem.INV_TYPE],
+            OUTBOUND_DELIVERY: [asnItem.OUTBOUND_DELIVERY],
+            OUTBOUND_DELIVERY_DATE: [asnItem.OUTBOUND_DELIVERY_DATE],
             PLANT: [asnItem.PLANT],
+            ORGANIZATION: [asnItem.ORGANIZATION],
+            DIVISION: [asnItem.DIVISION],
             ODIN: [asnItem.ODIN],
             VEHICLE_NO: [asnItem.VEHICLE_NO],
             VEHICLE_CAPACITY: [asnItem.VEHICLE_CAPACITY],
             FWD_AGENT: [asnItem.FWD_AGENT],
             CARRIER: [asnItem.CARRIER],
-            FREIGHT_ORDER: [asnItem.FREIGHT_ORDER],
-            FREIGHT_ORDER_DATE: [asnItem.FREIGHT_ORDER_DATE],
             EWAYBILL_NO: [asnItem.EWAYBILL_NO],
             EWAYBILL_DATE: [asnItem.EWAYBILL_DATE],
-            OUTBOUND_DELIVERY: [asnItem.OUTBOUND_DELIVERY],
-            OUTBOUND_DELIVERY_DATE: [asnItem.OUTBOUND_DELIVERY_DATE],
+            FREIGHT_ORDER: [asnItem.FREIGHT_ORDER],
+            FREIGHT_ORDER_DATE: [asnItem.FREIGHT_ORDER_DATE],
+            PROPOSED_DELIVERY_DATE: [asnItem.PROPOSED_DELIVERY_DATE],
+            ACTUAL_DELIVERY_DATE: [asnItem.ACTUAL_DELIVERY_DATE],
+            TRANSIT_LEAD_TIME: [asnItem.TRANSIT_LEAD_TIME],
             STATUS: [asnItem.STATUS],
             VEHICLE_REPORTED_DATE: [asnItem.VEHICLE_REPORTED_DATE],
         });
@@ -514,5 +526,43 @@ export class InvoiceDetailsComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    exportAsXLSX(): void {
+        const currentPageIndex = this.dataSource.paginator.pageIndex;
+        const PageSize = this.dataSource.paginator.pageSize;
+        const startIndex = currentPageIndex * PageSize;
+        const endIndex = startIndex + PageSize;
+        const itemsShowed = this.allInvoiceDetails.slice(startIndex, endIndex);
+        const itemsShowedd = [];
+        itemsShowed.forEach(x => {
+            const item = {
+                'Invoice No': x.ODIN,
+                'Reference No': x.INV_NO,
+                'Invoice Date': x.INV_DATE ? this._datePipe.transform(x.INV_DATE, 'dd-MM-yyyy') : '',
+                'Invoice Type': x.INV_TYPE,
+                'Outbound delivery': x.OUTBOUND_DELIVERY,
+                'Outbound delivery date': x.OUTBOUND_DELIVERY_DATE ? this._datePipe.transform(x.OUTBOUND_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+                'Plant': x.PLANT,
+                'Organization': x.ORGANIZATION,
+                'Division': x.DIVISION,
+                'LR Number': x.LR_NO,
+                'LR date': x.LR_DATE ? this._datePipe.transform(x.LR_DATE, 'dd-MM-yyyy') : '',
+                'Vehicle No': x.VEHICLE_NO,
+                'Carrier': x.CARRIER,
+                'Vehicle Capacity': x.VEHICLE_CAPACITY,
+                'E-Way bill No': x.EWAYBILL_NO,
+                'E-Way bill date': x.EWAYBILL_DATE ? this._datePipe.transform(x.EWAYBILL_DATE, 'dd-MM-yyyy') : '',
+                'Freight order': x.FREIGHT_ORDER,
+                'Freight order date': x.FREIGHT_ORDER_DATE ? this._datePipe.transform(x.FREIGHT_ORDER_DATE, 'dd-MM-yyyy') : '',
+                'Proposed delivery date': x.PROPOSED_DELIVERY_DATE ? this._datePipe.transform(x.PROPOSED_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+                'Actual delivery date': x.ACTUAL_DELIVERY_DATE ? this._datePipe.transform(x.ACTUAL_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+                'Lead time': x.TRANSIT_LEAD_TIME,
+                'Status': x.STATUS,
+                'Vehicle reported date': x.VEHICLE_REPORTED_DATE ? this._datePipe.transform(x.ACTUAL_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+            };
+            itemsShowedd.push(item);
+        });
+        this._excelService.exportAsExcelFile(itemsShowedd, 'invoices');
     }
 }

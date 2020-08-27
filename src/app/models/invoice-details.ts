@@ -7,6 +7,8 @@ export class InvoiceDetails {
     INV_TYPE: string;
     CUSTOMER: string;
     CUSTOMER_NAME: string;
+    ORGANIZATION: string;
+    DIVISION: string;
     ODIN: string;
     VEHICLE_NO: string;
     VEHICLE_CAPACITY: string;
@@ -78,6 +80,8 @@ export class ReportInvoice {
     INV_TYPE: string;
     CUSTOMER: string;
     CUSTOMER_NAME: string;
+    ORGANIZATION: string;
+    DIVISION: string;
     ODIN: string;
     LR_NO: string;
     LR_DATE: Date | string | null;

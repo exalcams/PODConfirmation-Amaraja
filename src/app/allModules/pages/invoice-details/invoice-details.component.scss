@@ -222,4 +222,18 @@
       width: 133.33333%;
     }
   }
+  .excelBtn {
+    // margin-top: -16px;
+    min-width: 0px;
+    background-color: white;
+    color: rgb(46, 125, 50);
+    &.mat-stroked-button {
+      // border-radius: 5px;
+      padding: 0px 8px;
+    }
+  }
+  .excelImg {
+    // margin: 4px 6px 4px 4px;
+    height: 24px;
+  }
 }
