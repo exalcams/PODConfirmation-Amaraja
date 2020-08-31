@@ -133,6 +133,27 @@
         <div style="overflow-x:auto;overflow-y:hidden ;">
           <table class="table" mat-table [dataSource]="dataSource">
 
+            <ng-container matColumnDef="ORGANIZATION">
+              <th mat-header-cell *matHeaderCellDef> Organization </th>
+              <td mat-cell *matCellDef="let element;let index=index;">
+                {{element.ORGANIZATION}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="DIVISION">
+              <th mat-header-cell *matHeaderCellDef> Division </th>
+              <td mat-cell *matCellDef="let element;let index=index;">
+                {{element.DIVISION}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="PLANT">
+              <th mat-header-cell *matHeaderCellDef> Plant </th>
+              <td mat-cell *matCellDef="let element;let index=index;">
+                {{element.PLANT}}
+              </td>
+            </ng-container>
+
             <ng-container matColumnDef="ODIN">
               <th mat-header-cell *matHeaderCellDef> Invoice Number </th>
               <td mat-cell *matCellDef="let element;let index=index;">
@@ -158,13 +179,6 @@
               <th mat-header-cell *matHeaderCellDef> Invoice Type </th>
               <td mat-cell *matCellDef="let element;let index=index;">
                 {{element.INV_TYPE}}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="PLANT">
-              <th mat-header-cell *matHeaderCellDef> Plant </th>
-              <td mat-cell *matCellDef="let element;let index=index;">
-                {{element.PLANT}}
               </td>
             </ng-container>
 
@@ -207,7 +221,7 @@
             <ng-container matColumnDef="LR_DATE">
               <th mat-header-cell *matHeaderCellDef> LR Date </th>
               <td mat-cell *matCellDef="let element;let index=index;">
-                {{element.LR_NO | date: 'dd/MM/yyyy'}}
+                {{element.LR_DATE | date: 'dd/MM/yyyy'}}
               </td>
             </ng-container>
 

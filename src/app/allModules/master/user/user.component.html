@@ -134,7 +134,7 @@
                             </mat-form-field>
 
                         </div>
-                        <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
+                        <div fxLayout="row" fxLayoutAlign="start" fxFlex>
                             <!-- <mat-form-field class="pl-8" fxFlex="50" [style.display]="IsPlantDisplay?'inline-block':'none'">
                   <input matInput placeholder="Plant" formControlName="plant">
                   <mat-error *ngIf="userMainFormGroup.get('plant').touched &&  userMainFormGroup.get('plant').hasError('required')">
@@ -155,9 +155,23 @@
 
                             <mat-form-field class="pl-8" fxFlex="50"
                                 [style.display]="IsPlantDisplay?'inline-block':'none'">
+                                <mat-select placeholder="Organization" formControlName="OrganizationList" multiple>
+                                    <mat-option #allSelected1 (click)="toggleAllSelection1()" value="all">All
+                                    </mat-option>
+                                    <mat-option *ngFor="let mp of AllOrganizations" [value]="mp.OrganizationCode"
+                                        (click)="togglePerOne1()">{{mp.OrganizationCode}}</mat-option>
+                                </mat-select>
+                                <mat-error
+                                    *ngIf="userMainFormGroup.get('OrganizationList').touched && userMainFormGroup.get('OrganizationList').hasError('required')">
+                                    Organization is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
+                            <mat-form-field class="pl-8" fxFlex="50"
+                                [style.display]="IsPlantDisplay?'inline-block':'none'">
                                 <mat-select placeholder="Plant" formControlName="PlantList" multiple>
                                     <mat-option #allSelected (click)="toggleAllSelection()" value="all">All</mat-option>
-                                    <mat-option *ngFor="let mp of AllPlants" [value]="mp.PlantCode"
+                                    <mat-option *ngFor="let mp of FilteredPlants" [value]="mp.PlantCode"
                                         (click)="togglePerOne()">{{mp.PlantCode}}</mat-option>
                                 </mat-select>
                                 <mat-error
@@ -166,8 +180,8 @@
                             </mat-form-field>
                         </div>
                         <div fxLayout="row wrap" fxLayoutAlign="end">
-                            <button mat-raised-button type="button" (click)="ResetControl()" *ngIf="!SelectedUser.UserID"
-                                style="margin-right:10px">
+                            <button mat-raised-button type="button" (click)="ResetControl()"
+                                *ngIf="!SelectedUser.UserID" style="margin-right:10px">
                                 Clear
                             </button>
                             <button mat-raised-button color="warn" type="button" (click)="DeleteClicked()"

@@ -52,11 +52,13 @@ export class DashboardComponent implements OnInit {
     allInvoiceDetails: InvoiceDetails[] = [];
     allInvoiceHeaderDetails: InvoiceHeaderDetail[] = [];
     displayedColumns: string[] = [
+        'ORGANIZATION',
+        'DIVISION',
+        'PLANT',
         'ODIN',
         'INV_NO',
         'INV_DATE',
         'INV_TYPE',
-        'PLANT',
         'CUSTOMER',
         'CUSTOMER_NAME',
         'VEHICLE_NO',

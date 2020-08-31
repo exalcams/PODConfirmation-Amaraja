@@ -1,8 +1,8 @@
-<div id="plant" class="page-layout carded fullwidth inner-scroll">
+<div id="org" class="page-layout carded fullwidth inner-scroll">
   <div class="top-bg topBg"></div>
   <div class="center normal">
     <div class="m-12 p-0 content-card" fxLayout>
-      <div fxFlex="40" class="rightBorder plant-side-bar">
+      <div fxFlex="40" class="rightBorder organization-side-bar">
         <div class="sidenav-header">
           <mat-toolbar>
             <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
@@ -13,20 +13,20 @@
                 </div>
               </div>
               <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-                <button mat-mini-fab class="mr-8 btnBg" matTooltip="Add Plant" (click)="AddPlant()">
-                  <mat-icon aria-label="Add Plant" svgIcon="addIcon"></mat-icon>
+                <button mat-mini-fab class="mr-8 btnBg" matTooltip="Add Organization" (click)="AddOrganization()">
+                  <mat-icon aria-label="Add Organization" svgIcon="addIcon"></mat-icon>
                 </button>
               </div>
             </mat-toolbar-row>
           </mat-toolbar>
         </div>
         <div class="sidenav-content py-16" fusePerfectScrollbar fxFlex>
-          <div *ngFor="let ap of AllPlants | filter: searchText">
+          <div *ngFor="let ap of AllOrganizations | filter: searchText">
             <div [attr.aria-label]="ap.Type">
               <div fxLayout="row" fxLayoutAlign="start center" class="side-bar-items" matRipple
-                (click)="loadSelectedPlant(ap)" [ngClass]="{'active accent2':SelectedPlant==ap}">
+                (click)="loadSelectedOrganization(ap)" [ngClass]="{'active accent2':SelectedOrganization==ap}">
                 <div fxFlex fxLayoutAlign="start center">
-                  {{ap.PlantCode+' - '+ap.Description}}
+                  {{ap.OrganizationCode+' - '+ap.Description}}
                 </div>
                 <!-- <div fxFlex fxLayoutAlign="start center">
                   {{ap.Description}}
@@ -34,57 +34,45 @@
               </div>
             </div>
           </div>
-          <div *ngIf="(AllPlants | filter: searchText).length === 0" class="no-results-message">
+          <div *ngIf="(AllOrganizations | filter: searchText)?.length === 0" class="no-results-message">
             <span class="pl-12"> No results..</span>
           </div>
         </div>
       </div>
-      <div fxFlex="59" class="plant-side-bar">
+      <div fxFlex="59" class="organization-side-bar">
         <div class="sidenav-content" fusePerfectScrollbar fxFlex>
           <form class="p-24 normal" autocomplete="off" fxLayout="column" fxLayoutAlign="start" name="form"
-            [formGroup]="PlantFormGroup">
+            [formGroup]="OrganizationFormGroup">
             <div fxLayout="row" class="pt-8">
-              <div fxFlex class="h2 mb-24">{{SelectedPlant.CreatedBy?'Update':'Create'}} Plant</div>
+              <div fxFlex class="h2 mb-24">{{SelectedOrganization.CreatedBy?'Update':'Create'}} Organization</div>
             </div>
             <div fxLayout="row wrap" fxLayoutAlign="start">
               <mat-form-field fxFlex>
-                <input matInput placeholder="Plant code" formControlName="PlantCode">
+                <input matInput placeholder="Organization code" formControlName="OrganizationCode">
                 <mat-error
-                  *ngIf="PlantFormGroup.get('PlantCode').touched && PlantFormGroup.get('PlantCode').hasError('required')">
-                  Plant Code is required</mat-error>
-              </mat-form-field>
-            </div>
-            <div fxLayout="row wrap" fxLayoutAlign="start" fxFlex>
-              <mat-form-field fxFlex>
-                <input matInput placeholder="Plant Description" formControlName="Description">
-                <mat-error
-                  *ngIf="PlantFormGroup.get('Description').touched && PlantFormGroup.get('Description').hasError('required')">
-                  Description is required</mat-error>
+                  *ngIf="OrganizationFormGroup.get('OrganizationCode').touched && OrganizationFormGroup.get('OrganizationCode').hasError('required')">
+                  Organization Code is required</mat-error>
               </mat-form-field>
             </div>
             <div fxLayout="row wrap" fxLayoutAlign="start" fxFlex="1 0 auto">
               <mat-form-field fxFlex>
-                <mat-select placeholder="Organization" formControlName="OrganizationCode">
-                  <mat-option *ngFor="let mp of AllOrganizations" [value]="mp.OrganizationCode">
-                    {{mp.OrganizationCode}}
-                  </mat-option>
-                </mat-select>
+                <input matInput placeholder="Organization Description" formControlName="Description">
                 <mat-error
-                  *ngIf="PlantFormGroup.get('OrganizationCode').touched && PlantFormGroup.get('OrganizationCode').hasError('required')">
-                  Organization is required</mat-error>
+                  *ngIf="OrganizationFormGroup.get('Description').touched && OrganizationFormGroup.get('Description').hasError('required')">
+                  Description is required</mat-error>
               </mat-form-field>
             </div>
             <div fxLayout="row wrap" fxLayoutAlign="end">
-              <button mat-raised-button type="button" (click)="ResetControl()" *ngIf="!SelectedPlant.CreatedBy"
+              <button mat-raised-button type="button" (click)="ResetControl()" *ngIf="!SelectedOrganization.CreatedBy"
                 style="margin-right:10px">
                 Clear
               </button>
               <button mat-raised-button color="warn" type="button" (click)="DeleteClicked()"
-                *ngIf="SelectedPlant.CreatedBy" style="margin-right:10px">
+                *ngIf="SelectedOrganization.CreatedBy" style="margin-right:10px">
                 Delete
               </button>
               <button mat-raised-button class="btnBg" type="button" (click)="SaveClicked()">
-                {{SelectedPlant.CreatedBy?'Update':'Create'}}
+                {{SelectedOrganization.CreatedBy?'Update':'Create'}}
               </button>
             </div>
           </form>

@@ -21,6 +21,7 @@ import { ReasonComponent } from './reason/reason.component';
 import { PlantComponent } from './plant/plant.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { FormsModule } from '@angular/forms';
+import { OrganizationComponent } from './organization/organization.component';
 
 const menuRoutes: Routes = [
     // {
@@ -34,6 +35,10 @@ const menuRoutes: Routes = [
     {
         path: 'user',
         component: UserComponent,
+    },
+    {
+        path: 'organization',
+        component: OrganizationComponent,
     },
     {
         path: 'plant',
@@ -55,6 +60,7 @@ const menuRoutes: Routes = [
        MenuAppMainContentComponent,
        ReasonComponent,
        PlantComponent,
+       OrganizationComponent,
     ],
     imports: [
         RouterModule.forChild(menuRoutes),

@@ -22,9 +22,17 @@ export class ReportService {
     return throwError(error.error || error.message || 'Server Error');
   }
 
-  GetFilteredInvoiceDetails(UserID: Guid, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string, Plant: string, CustomerName: string): Observable<ReportInvoice[] | string> {
+  GetFilteredInvoiceDetails(UserID: Guid, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string,
+    Organization: string, Division: string, Plant: string, CustomerName: string): Observable<ReportInvoice[] | string> {
     return this._httpClient.get<ReportInvoice[]>(
-      `${this.baseAddress}api/Report/GetFilteredInvoiceDetails?UserID=${UserID}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Plant=${Plant}&CustomerName=${CustomerName}`
+      `${this.baseAddress}api/Report/GetFilteredInvoiceDetails?UserID=${UserID}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetDivisions(): Observable<string[] | string> {
+    return this._httpClient.get<string[]>(
+      `${this.baseAddress}api/Report/GetDivisions`
     )
       .pipe(catchError(this.errorHandler));
   }
