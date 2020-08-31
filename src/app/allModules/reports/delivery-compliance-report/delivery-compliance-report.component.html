@@ -11,8 +11,8 @@
     <div class="sidenav-content mt-4" style="background-color: white;">
       <div fxLayout="column" class="mt-10">
         <form autocomplete="off" name="form" [formGroup]="InvoiceFilterFormGroup" novalidate>
-          <div fxLayout class="mt-4">
-            <mat-form-field class="mx-8" fxFlex="20">
+          <div fxLayout="row wrap" class="mt-4">
+            <mat-form-field class="mx-8" fxFlex="18">
               <mat-select matInput formControlName="Status" placeholder="Status">
                 <mat-option [value]="rest.value" *ngFor="let rest of AllStatusTemplates">{{rest.key}}
                 </mat-option>
@@ -22,7 +22,7 @@
                 From date is required
               </mat-error>
             </mat-form-field>
-            <mat-form-field class="mx-8" fxFlex="10">
+            <mat-form-field class="mx-8" fxFlex="18">
               <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="StartDate"
                 (keydown)="onKeydown($event)" (dateChange)="DateSelected()">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -32,7 +32,7 @@
                 Start date is required
               </mat-error>
             </mat-form-field>
-            <div class="mx-8" fxFlex="10">
+            <div class="mx-8" fxFlex="18">
               <mat-form-field style="width:100%">
                 <input matInput [matDatepicker]="picker1" placeholder="End Date" formControlName="EndDate"
                   (keydown)="onKeydown($event)" (dateChange)="DateSelected()">
@@ -47,16 +47,25 @@
                 End date should not be less than from date
               </div>
             </div>
-            <mat-form-field class="mx-8" fxFlex="20">
+            <mat-form-field class="mx-8" fxFlex="18">
               <input matInput placeholder="Invoice number" formControlName="InvoiceNumber">
             </mat-form-field>
-            <mat-form-field class="mx-8" fxFlex="10">
-              <input matInput placeholder="Plant" formControlName="Plant">
-            </mat-form-field>
-            <mat-form-field class="mx-8" fxFlex="20">
+            <mat-form-field class="mx-8" fxFlex="18">
               <input matInput placeholder="Customer Name" formControlName="CustomerName">
             </mat-form-field>
-            <div fxFlex="10" class="mx-8 mt-16">
+            <mat-form-field class="mx-8" fxFlex="18">
+              <input matInput placeholder="Organization" formControlName="Organization">
+            </mat-form-field>
+            <mat-form-field class="mx-8" fxFlex="18">
+              <!-- <input matInput placeholder="Division" formControlName="Division"> -->
+              <mat-select placeholder="Division" formControlName="Division">
+                <mat-option [value]="div" *ngFor="let divi of Division">{{divi}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="mx-8" fxFlex="18">
+              <input matInput placeholder="Plant" formControlName="Plant">
+            </mat-form-field>
+            <div fxFlex="18" class="mx-8 mt-16">
               <button mat-raised-button class="btnBg" (click)="SearchInvoices()">Search</button>
             </div>
           </div>

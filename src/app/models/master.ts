@@ -8,6 +8,7 @@ export class UserWithRole {
     Email: string;
     Password: string;
     ContactNumber: string;
+    OrganizationList: string[];
     PlantList: string[];
     IsActive: boolean;
     CreatedOn: Date | string;
@@ -43,6 +44,8 @@ export class Reason {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
+
+
 export class AuthenticationDetails {
     isAuth: boolean;
     userID: Guid;
@@ -82,6 +85,16 @@ export class UserNotification {
     CreatedOn: Date;
     ModifiedOn?: Date;
 }
+export class Organization {
+    OrganizationCode: string;
+    Description: string;
+    IsActive: boolean;
+    CreatedOn: Date | string;
+    CreatedBy: string;
+    ModifiedOn: Date | string | null;
+    ModifiedBy: string;
+}
+
 export class Plant {
     PlantCode: string;
     Description: string;
@@ -91,9 +104,37 @@ export class Plant {
     ModifiedOn: Date | string | null;
     ModifiedBy: string;
 }
+export class PlantOrganizationMap {
+    OrganizationCode: string;
+    PlantCode: string;
+    IsActive: boolean;
+    CreatedOn: Date | string;
+    CreatedBy: string;
+    ModifiedOn: Date | string | null;
+    ModifiedBy: string;
+}
+export class UserOrganizationMap {
+    UserID: string;
+    OrganizationCode: string;
+    IsActive: boolean;
+    CreatedOn: Date | string;
+    CreatedBy: string;
+    ModifiedOn: Date | string | null;
+    ModifiedBy: string;
+}
 export class UserPlantMap {
     UserID: string;
     PlantCode: string;
+    IsActive: boolean;
+    CreatedOn: Date | string;
+    CreatedBy: string;
+    ModifiedOn: Date | string | null;
+    ModifiedBy: string;
+}
+export class PlantWithOrganization {
+    PlantCode: string;
+    Description: string;
+    OrganizationCode: string;
     IsActive: boolean;
     CreatedOn: Date | string;
     CreatedBy: string;

@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, Plant } from 'app/models/master';
+import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, Plant, PlantWithOrganization, Organization, PlantOrganizationMap } from 'app/models/master';
 
 @Injectable({
   providedIn: 'root'
@@ -71,8 +71,47 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
+  // Organization
+  CreateOrganization(organization: Organization): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateOrganization`,
+      organization,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllOrganizations(): Observable<Organization[] | string> {
+    return this._httpClient.get<Organization[]>(`${this.baseAddress}api/Master/GetAllOrganizations`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateOrganization(organization: Organization): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateOrganization`,
+      organization,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteOrganization(organization: Organization): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteOrganization`,
+      organization,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
   // Plant
-  CreatePlant(plant: Plant): Observable<any> {
+  CreatePlant(plant: PlantWithOrganization): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreatePlant`,
       plant,
       {
@@ -83,12 +122,12 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
-  GetAllPlants(): Observable<Plant[] | string> {
-    return this._httpClient.get<Plant[]>(`${this.baseAddress}api/Master/GetAllPlants`)
+  GetAllPlants(): Observable<PlantWithOrganization[] | string> {
+    return this._httpClient.get<PlantWithOrganization[]>(`${this.baseAddress}api/Master/GetAllPlants`)
       .pipe(catchError(this.errorHandler));
   }
 
-  UpdatePlant(plant: Plant): Observable<any> {
+  UpdatePlant(plant: PlantWithOrganization): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdatePlant`,
       plant,
       {
@@ -107,6 +146,11 @@ export class MasterService {
           'Content-Type': 'application/json'
         })
       })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllPlantOrganizationMaps(): Observable<PlantOrganizationMap[] | string> {
+    return this._httpClient.get<PlantOrganizationMap[]>(`${this.baseAddress}api/Master/GetAllPlantOrganizationMaps`)
       .pipe(catchError(this.errorHandler));
   }
 

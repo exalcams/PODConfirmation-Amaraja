@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { MatSnackBar, MatOption, MatDialog, MatDialogConfig } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { UserWithRole, AuthenticationDetails, Plant, RoleWithApp } from 'app/models/master';
+import { UserWithRole, AuthenticationDetails, Plant, RoleWithApp, Organization, PlantOrganizationMap, PlantWithOrganization } from 'app/models/master';
 import { FormGroup, Validators, FormBuilder, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -20,7 +20,10 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 export class UserComponent implements OnInit {
   MenuItems: string[];
   AllUsers: UserWithRole[] = [];
+  AllOrganizations: Organization[] = [];
   AllPlants: Plant[] = [];
+  FilteredPlants: Plant[] = [];
+  AllPlantOrganizationMaps: PlantOrganizationMap[] = [];
   SelectedUser: UserWithRole;
   authenticationDetails: AuthenticationDetails;
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -33,6 +36,7 @@ export class UserComponent implements OnInit {
   slectedProfile: Uint8Array;
   IsPlantDisplay: boolean;
   @ViewChild('allSelected') private allSelected: MatOption;
+  @ViewChild('allSelected1') private allSelected1: MatOption;
   searchText: string;
   selectID: Guid;
   constructor(
@@ -52,6 +56,7 @@ export class UserComponent implements OnInit {
       roleID: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       contactNumber: ['', [Validators.required, Validators.pattern]],
+      OrganizationList: [[]],
       PlantList: [[]],
       password: ['', [Validators.required,
       Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,15}$')]],
@@ -80,7 +85,9 @@ export class UserComponent implements OnInit {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
         this._router.navigate(['/auth/login']);
       }
+      this.GetAllOrganizations();
       this.GetAllPlants();
+      this.GetAllPlantOrganizationMaps();
       this.GetAllRoles();
       this.GetAllUsers();
     } else {
@@ -102,10 +109,21 @@ export class UserComponent implements OnInit {
   AddUser(): void {
     this.ResetControl();
   }
+  GetAllOrganizations(): void {
+    this._masterService.GetAllOrganizations().subscribe(
+      (data) => {
+        this.AllOrganizations = data as Organization[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   GetAllPlants(): void {
     this._masterService.GetAllPlants().subscribe(
       (data) => {
         this.AllPlants = data as Plant[];
+        this.FilteredPlants = data as Plant[];
         this.IsProgressBarVisibile = false;
         // console.log(this.AllUsers);
       },
@@ -113,6 +131,16 @@ export class UserComponent implements OnInit {
         console.error(err);
         this.IsProgressBarVisibile = false;
         // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+  GetAllPlantOrganizationMaps(): void {
+    this._masterService.GetAllPlantOrganizationMaps().subscribe(
+      (data) => {
+        this.AllPlantOrganizationMaps = data as PlantWithOrganization[];
+      },
+      (err) => {
+        console.error(err);
       }
     );
   }
@@ -154,8 +182,10 @@ export class UserComponent implements OnInit {
     this.selectID = selectedUser.UserID;
     this.userMainFormGroup.get('userCode').patchValue(this.SelectedUser.UserCode);
     this.userMainFormGroup.get('userName').patchValue(this.SelectedUser.UserName);
+    this.userMainFormGroup.get('OrganizationList').patchValue(this.SelectedUser.OrganizationList);
     this.userMainFormGroup.get('PlantList').patchValue(this.SelectedUser.PlantList);
-    this.togglePerOne();
+    this.togglePerOne1();
+    // this.togglePerOne();
     this.userMainFormGroup.get('roleID').patchValue(this.SelectedUser.RoleID);
     this.userMainFormGroup.get('email').patchValue(this.SelectedUser.Email);
     this.userMainFormGroup.get('contactNumber').patchValue(this.SelectedUser.ContactNumber);
@@ -172,10 +202,14 @@ export class UserComponent implements OnInit {
     const res = this.CheckIsAmarajaUser(roleID);
     if (res) {
       this.IsPlantDisplay = true;
+      this.userMainFormGroup.get('OrganizationList').setValidators(Validators.required);
+      this.userMainFormGroup.get('OrganizationList').updateValueAndValidity();
       this.userMainFormGroup.get('PlantList').setValidators(Validators.required);
       this.userMainFormGroup.get('PlantList').updateValueAndValidity();
     } else {
       this.IsPlantDisplay = false;
+      this.userMainFormGroup.get('OrganizationList').clearValidators();
+      this.userMainFormGroup.get('OrganizationList').updateValueAndValidity();
       this.userMainFormGroup.get('PlantList').clearValidators();
       this.userMainFormGroup.get('PlantList').updateValueAndValidity();
     }
@@ -196,18 +230,52 @@ export class UserComponent implements OnInit {
     return true;
   }
 
+  togglePerOne1(): boolean | void {
+    if (this.allSelected1.selected) {
+      this.allSelected1.deselect();
+      this.getFilteredPlants();
+      return false;
+    }
+    if (this.userMainFormGroup.get('OrganizationList').value.length === this.AllOrganizations.length) {
+      this.allSelected1.select();
+    }
+    this.getFilteredPlants();
+  }
+  toggleAllSelection1(): void {
+    if (this.allSelected1.selected) {
+      const pls = this.AllOrganizations.map(x => x.OrganizationCode);
+      pls.push("all");
+      this.userMainFormGroup.get('OrganizationList').patchValue(pls);
+    } else {
+      this.userMainFormGroup.get('OrganizationList').patchValue([]);
+    }
+    this.getFilteredPlants();
+  }
+
+  getFilteredPlants(): void {
+    const orgList = this.userMainFormGroup.get('OrganizationList').value as string[];
+    const plantOrgMap = this.AllPlantOrganizationMaps.filter(o => orgList.some(y => o.OrganizationCode === y));
+    this.FilteredPlants = this.AllPlants.filter(o => plantOrgMap.some(y => o.PlantCode === y.PlantCode));
+    const plList = this.userMainFormGroup.get('PlantList').value as string[];
+    const FilteredPlList = plList.filter(o => this.FilteredPlants.some(y => o === y.PlantCode));
+    this.userMainFormGroup.get('PlantList').patchValue(FilteredPlList);
+    this.togglePerOne();
+  }
+
   togglePerOne(): boolean | void {
     if (this.allSelected.selected) {
       this.allSelected.deselect();
       return false;
     }
-    if (this.userMainFormGroup.get('PlantList').value.length === this.AllPlants.length) {
-      this.allSelected.select();
+    if (this.userMainFormGroup.get('PlantList').value.length) {
+      if (this.userMainFormGroup.get('PlantList').value.length === this.FilteredPlants.length) {
+        this.allSelected.select();
+      }
     }
   }
   toggleAllSelection(): void {
     if (this.allSelected.selected) {
-      const pls = this.AllPlants.map(x => x.PlantCode);
+      const pls = this.FilteredPlants.map(x => x.PlantCode);
       pls.push("all");
       this.userMainFormGroup.get('PlantList').patchValue(pls);
     } else {
@@ -232,6 +300,14 @@ export class UserComponent implements OnInit {
             if (result) {
               this.SelectedUser.UserCode = this.userMainFormGroup.get('userCode').value;
               this.SelectedUser.UserName = this.userMainFormGroup.get('userName').value;
+              let orgList = this.userMainFormGroup.get('OrganizationList').value as string[];
+              if (orgList && orgList.length) {
+                const index = orgList.findIndex(x => x === "all");
+                if (index > -1) {
+                  orgList.splice(index, 1);
+                }
+              }
+              this.SelectedUser.OrganizationList = orgList;
               let plList = this.userMainFormGroup.get('PlantList').value as string[];
               if (plList && plList.length) {
                 const index = plList.findIndex(x => x === "all");
@@ -279,6 +355,14 @@ export class UserComponent implements OnInit {
               this.SelectedUser = new UserWithRole();
               this.SelectedUser.UserCode = this.userMainFormGroup.get('userCode').value;
               this.SelectedUser.UserName = this.userMainFormGroup.get('userName').value;
+              let orgList = this.userMainFormGroup.get('OrganizationList').value as string[];
+              if (orgList && orgList.length) {
+                const index = orgList.findIndex(x => x === "all");
+                if (index > -1) {
+                  orgList.splice(index, 1);
+                }
+              }
+              this.SelectedUser.OrganizationList = orgList;
               let plList = this.userMainFormGroup.get('PlantList').value as string[];
               if (plList && plList.length) {
                 const index = plList.findIndex(x => x === "all");

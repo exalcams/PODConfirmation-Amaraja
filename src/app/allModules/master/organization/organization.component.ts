@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { AuthenticationDetails, Plant, PlantOrganizationMap, PlantWithOrganization, Organization } from 'app/models/master';
+import { AuthenticationDetails, Organization } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
@@ -11,13 +11,13 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { fuseAnimations } from '@fuse/animations';
 
 @Component({
-  selector: 'app-plant',
-  templateUrl: './plant.component.html',
-  styleUrls: ['./plant.component.scss'],
+  selector: 'app-organization',
+  templateUrl: './organization.component.html',
+  styleUrls: ['./organization.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
-export class PlantComponent implements OnInit {
+export class OrganizationComponent implements OnInit {
 
   MenuItems: string[];
   authenticationDetails: AuthenticationDetails;
@@ -26,13 +26,12 @@ export class PlantComponent implements OnInit {
   CurrentUserRole: string;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
-  DistinctPlants: string[] = [];
+  DistinctOrganizations: string[] = [];
   AllOrganizations: Organization[] = [];
-  AllPlants: PlantWithOrganization[] = [];
-  SelectedPlant: PlantWithOrganization;
+  SelectedOrganization: Organization;
   searchText = '';
   selectID = '';
-  PlantFormGroup: FormGroup;
+  OrganizationFormGroup: FormGroup;
   KeysFormArray: FormArray = this._formBuilder.array([]);
   constructor(
     private _masterService: MasterService,
@@ -44,12 +43,11 @@ export class PlantComponent implements OnInit {
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = false;
-    this.PlantFormGroup = this._formBuilder.group({
-      PlantCode: ['', Validators.required],
+    this.OrganizationFormGroup = this._formBuilder.group({
+      OrganizationCode: ['', Validators.required],
       Description: ['', Validators.required],
-      OrganizationCode: ['', Validators.required]
     });
-    this.SelectedPlant = new PlantWithOrganization();
+    this.SelectedOrganization = new Organization();
   }
 
   ngOnInit(): void {
@@ -61,12 +59,11 @@ export class PlantComponent implements OnInit {
       this.CurrentUserID = this.authenticationDetails.userID;
       this.CurrentUserRole = this.authenticationDetails.userRole;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
-      if (this.MenuItems.indexOf('Plant') < 0) {
+      if (this.MenuItems.indexOf('Organization') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
         this._router.navigate(['/auth/login']);
       }
       this.GetAllOrganizations();
-      this.GetAllPlants();
     } else {
       this._router.navigate(['/auth/login']);
     }
@@ -74,38 +71,26 @@ export class PlantComponent implements OnInit {
 
   ResetControl(): void {
     this.selectID = '';
-    this.SelectedPlant = new PlantWithOrganization();
-    this.PlantFormGroup.reset();
-    Object.keys(this.PlantFormGroup.controls).forEach(key => {
-      this.PlantFormGroup.get(key).markAsUntouched();
+    this.SelectedOrganization = new Organization();
+    this.OrganizationFormGroup.reset();
+    Object.keys(this.OrganizationFormGroup.controls).forEach(key => {
+      this.OrganizationFormGroup.get(key).markAsUntouched();
     });
 
   }
 
-  AddPlant(): void {
+  AddOrganization(): void {
     this.ResetControl();
   }
+
   GetAllOrganizations(): void {
     this.IsProgressBarVisibile = true;
     this._masterService.GetAllOrganizations().subscribe(
       (data) => {
         if (data) {
           this.AllOrganizations = data as Organization[];
-        }
-      },
-      (err) => {
-        console.error(err);
-      }
-    );
-  }
-  GetAllPlants(): void {
-    this.IsProgressBarVisibile = true;
-    this._masterService.GetAllPlants().subscribe(
-      (data) => {
-        if (data) {
-          this.AllPlants = data as PlantWithOrganization[];
-          if (this.AllPlants.length && this.AllPlants.length > 0) {
-            this.loadSelectedPlant(this.AllPlants[0]);
+          if (this.AllOrganizations.length && this.AllOrganizations.length > 0) {
+            this.loadSelectedOrganization(this.AllOrganizations[0]);
           }
           this.IsProgressBarVisibile = false;
         }
@@ -117,19 +102,18 @@ export class PlantComponent implements OnInit {
     );
   }
 
-  loadSelectedPlant(plant: PlantWithOrganization): void {
+  loadSelectedOrganization(Organization: Organization): void {
     this.ResetControl();
-    this.SelectedPlant = plant;
-    this.selectID = plant.PlantCode;
-    this.PlantFormGroup.get('PlantCode').patchValue(plant.PlantCode);
-    this.PlantFormGroup.get('Description').patchValue(plant.Description);
-    this.PlantFormGroup.get('OrganizationCode').patchValue(plant.OrganizationCode);
+    this.SelectedOrganization = Organization;
+    this.selectID = Organization.OrganizationCode;
+    this.OrganizationFormGroup.get('OrganizationCode').patchValue(Organization.OrganizationCode);
+    this.OrganizationFormGroup.get('Description').patchValue(Organization.Description);
   }
 
   SaveClicked(): void {
-    if (this.PlantFormGroup.valid) {
-      this.GetPlantValues();
-      if (this.SelectedPlant.CreatedBy) {
+    if (this.OrganizationFormGroup.valid) {
+      this.GetOrganizationValues();
+      if (this.SelectedOrganization.CreatedBy) {
         const Actiontype = 'Update';
         this.OpenConfirmationDialog(Actiontype);
       } else {
@@ -137,16 +121,16 @@ export class PlantComponent implements OnInit {
         this.OpenConfirmationDialog(Actiontype);
       }
     } else {
-      this.ShowValidationErrors(this.PlantFormGroup);
+      this.ShowValidationErrors(this.OrganizationFormGroup);
     }
   }
 
   DeleteClicked(): void {
-    if (this.PlantFormGroup.valid) {
+    if (this.OrganizationFormGroup.valid) {
       const Actiontype = 'Delete';
       this.OpenConfirmationDialog(Actiontype);
     } else {
-      this.ShowValidationErrors(this.PlantFormGroup);
+      this.ShowValidationErrors(this.OrganizationFormGroup);
     }
   }
   ShowValidationErrors(formGroup: FormGroup): void {
@@ -181,7 +165,7 @@ export class PlantComponent implements OnInit {
     const dialogConfig: MatDialogConfig = {
       data: {
         Actiontype: Actiontype,
-        Catagory: 'Plant'
+        Catagory: 'Organization'
       },
       panelClass: 'confirmation-dialog'
     };
@@ -190,29 +174,28 @@ export class PlantComponent implements OnInit {
       result => {
         if (result) {
           if (Actiontype === 'Create') {
-            this.CreatePlant();
+            this.CreateOrganization();
           } else if (Actiontype === 'Update') {
-            this.UpdatePlant();
+            this.UpdateOrganization();
           } else if (Actiontype === 'Delete') {
-            this.DeletePlant();
+            this.DeleteOrganization();
           }
         }
       });
   }
 
-  GetPlantValues(): void {
-    this.SelectedPlant.PlantCode = this.PlantFormGroup.get('PlantCode').value;
-    this.SelectedPlant.Description = this.PlantFormGroup.get('Description').value;
-    this.SelectedPlant.OrganizationCode = this.PlantFormGroup.get('OrganizationCode').value;
+  GetOrganizationValues(): void {
+    this.SelectedOrganization.OrganizationCode = this.OrganizationFormGroup.get('OrganizationCode').value;
+    this.SelectedOrganization.Description = this.OrganizationFormGroup.get('Description').value;
   }
-  CreatePlant(): void {
-    this.SelectedPlant.CreatedBy = this.CurrentUserID.toString();
+  CreateOrganization(): void {
+    this.SelectedOrganization.CreatedBy = this.CurrentUserID.toString();
     this.IsProgressBarVisibile = true;
-    this._masterService.CreatePlant(this.SelectedPlant).subscribe(
+    this._masterService.CreateOrganization(this.SelectedOrganization).subscribe(
       (data) => {
         this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar('Plant created successfully', SnackBarStatus.success);
-        this.GetAllPlants();
+        this.notificationSnackBarComponent.openSnackBar('Organization created successfully', SnackBarStatus.success);
+        this.GetAllOrganizations();
       },
       (err) => {
         console.error(err);
@@ -222,14 +205,14 @@ export class PlantComponent implements OnInit {
     );
   }
 
-  UpdatePlant(): void {
-    this.SelectedPlant.ModifiedBy = this.CurrentUserID.toString();
+  UpdateOrganization(): void {
+    this.SelectedOrganization.ModifiedBy = this.CurrentUserID.toString();
     this.IsProgressBarVisibile = true;
-    this._masterService.UpdatePlant(this.SelectedPlant).subscribe(
+    this._masterService.UpdateOrganization(this.SelectedOrganization).subscribe(
       (data) => {
         this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar('Plant updated successfully', SnackBarStatus.success);
-        this.GetAllPlants();
+        this.notificationSnackBarComponent.openSnackBar('Organization updated successfully', SnackBarStatus.success);
+        this.GetAllOrganizations();
       },
       (err) => {
         console.error(err);
@@ -239,13 +222,13 @@ export class PlantComponent implements OnInit {
     );
   }
 
-  DeletePlant(): void {
+  DeleteOrganization(): void {
     this.IsProgressBarVisibile = true;
-    this._masterService.DeletePlant(this.SelectedPlant).subscribe(
+    this._masterService.DeleteOrganization(this.SelectedOrganization).subscribe(
       (data) => {
         this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar('Plant deleted successfully', SnackBarStatus.success);
-        this.GetAllPlants();
+        this.notificationSnackBarComponent.openSnackBar('Organization deleted successfully', SnackBarStatus.success);
+        this.GetAllOrganizations();
       },
       (err) => {
         console.error(err);

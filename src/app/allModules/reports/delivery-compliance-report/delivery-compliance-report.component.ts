@@ -29,10 +29,14 @@ export class DeliveryComplianceReportComponent implements OnInit {
   currentUserRole: string;
   MenuItems: string[];
   isProgressBarVisibile: boolean;
+  Divisions: string[] = [];
   allInvoicesCount: number;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   FilteredInvoiceDetails: ReportInvoice[] = [];
   displayedColumns: string[] = [
+    'ORGANIZATION',
+    'DIVISION',
+    'PLANT',
     'ODIN',
     'INV_NO',
     'ITEM_NO',
@@ -40,9 +44,6 @@ export class DeliveryComplianceReportComponent implements OnInit {
     'INV_TYPE',
     'OUTBOUND_DELIVERY',
     'OUTBOUND_DELIVERY_DATE',
-    'PLANT',
-    'ORGANIZATION',
-    'DIVISION',
     'CUSTOMER',
     'CUSTOMER_NAME',
     'LR_NO',
@@ -115,6 +116,8 @@ export class DeliveryComplianceReportComponent implements OnInit {
       StartDate: [],
       EndDate: [],
       InvoiceNumber: [''],
+      Organization: [''],
+      Division: [''],
       Plant: [''],
       CustomerName: ['']
     });
@@ -131,7 +134,17 @@ export class DeliveryComplianceReportComponent implements OnInit {
   applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-
+  GetDivisions(): void {
+    this._reportService.GetDivisions().subscribe(
+      data => {
+        this.Divisions = data as string[];
+        this.Divisions.unshift("All");
+      },
+      err => {
+        this.isProgressBarVisibile = false;
+      }
+    );
+  }
   SearchInvoices(): void {
     this.getFilteredInvoiceDetails();
   }
@@ -142,6 +155,8 @@ export class DeliveryComplianceReportComponent implements OnInit {
         this.isProgressBarVisibile = true;
         const Status = this.InvoiceFilterFormGroup.get('Status').value;
         const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
+        const Organization = this.InvoiceFilterFormGroup.get('Division').value;
+        const Division = this.InvoiceFilterFormGroup.get('Division').value;
         const Plant = this.InvoiceFilterFormGroup.get('Plant').value;
         const CustomerName = this.InvoiceFilterFormGroup.get('CustomerName').value;
         let StartDate = null;
@@ -155,11 +170,11 @@ export class DeliveryComplianceReportComponent implements OnInit {
           EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this._reportService
-          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, Plant, CustomerName)
+          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, Organization, Division, Plant, CustomerName)
           .subscribe(
             data => {
               this.FilteredInvoiceDetails = data as ReportInvoice[];
-              this.allInvoicesCount = this.FilteredInvoiceDetails.length;
+              // this.allInvoicesCount = this.FilteredInvoiceDetails.length;
               this.dataSource = new MatTableDataSource(
                 this.FilteredInvoiceDetails
               );
@@ -266,15 +281,15 @@ export class DeliveryComplianceReportComponent implements OnInit {
     const itemsShowedd = [];
     itemsShowed.forEach(x => {
       const item = {
+        'Organization': x.ORGANIZATION,
+        'Division': x.DIVISION,
+        'Plant': x.PLANT,
         'Invoice No': x.ODIN,
         'Reference No': x.INV_NO,
         'Invoice Date': x.INV_DATE ? this._datePipe.transform(x.INV_DATE, 'dd-MM-yyyy') : '',
         'Invoice Type': x.INV_TYPE,
         'Outbound delivery': x.OUTBOUND_DELIVERY,
         'Outbound delivery date': x.OUTBOUND_DELIVERY_DATE ? this._datePipe.transform(x.OUTBOUND_DELIVERY_DATE, 'dd-MM-yyyy') : '',
-        'Plant': x.PLANT,
-        'Organization': x.ORGANIZATION,
-        'Division': x.DIVISION,
         'LR Number': x.LR_NO,
         'LR date': x.LR_DATE ? this._datePipe.transform(x.LR_DATE, 'dd-MM-yyyy') : '',
         'Vehicle No': x.VEHICLE_NO,
