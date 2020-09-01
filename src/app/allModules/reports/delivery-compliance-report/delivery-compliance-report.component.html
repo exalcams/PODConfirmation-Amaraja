@@ -54,16 +54,27 @@
               <input matInput placeholder="Customer Name" formControlName="CustomerName">
             </mat-form-field>
             <mat-form-field class="mx-8" fxFlex="18">
-              <input matInput placeholder="Organization" formControlName="Organization">
+              <!-- <input matInput placeholder="Organization" formControlName="Organization"> -->
+              <mat-select placeholder="Organization" formControlName="Organization">
+                <mat-option value="all">All
+                </mat-option>
+                <mat-option *ngFor="let mp of AllOrganizations" [value]="mp.OrganizationCode" (click)="togglePerOne1()">
+                  {{mp.OrganizationCode}}</mat-option>
+              </mat-select>
             </mat-form-field>
             <mat-form-field class="mx-8" fxFlex="18">
               <!-- <input matInput placeholder="Division" formControlName="Division"> -->
               <mat-select placeholder="Division" formControlName="Division">
-                <mat-option [value]="div" *ngFor="let divi of Division">{{divi}}</mat-option>
+                <mat-option [value]="div" *ngFor="let divi of Divisions">{{divi}}</mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field class="mx-8" fxFlex="18">
-              <input matInput placeholder="Plant" formControlName="Plant">
+              <!-- <input matInput placeholder="Plant" formControlName="Plant"> -->
+              <mat-select placeholder="Plant" formControlName="Plant">
+                <mat-option value="all">All</mat-option>
+                <mat-option *ngFor="let mp of FilteredPlants" [value]="mp.PlantCode">
+                  {{mp.PlantCode}}</mat-option>
+              </mat-select>
             </mat-form-field>
             <div fxFlex="18" class="mx-8 mt-16">
               <button mat-raised-button class="btnBg" (click)="SearchInvoices()">Search</button>
@@ -79,7 +90,7 @@
               </button>
             </div>
           </div>
-          <div style="overflow-x:auto;overflow-y:hidden;">
+          <div class="example-container">
             <table class="tableBodyScroll" mat-table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}">
 
               <ng-container matColumnDef="ODIN">
