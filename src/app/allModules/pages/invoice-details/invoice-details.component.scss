@@ -236,4 +236,8 @@
     // margin: 4px 6px 4px 4px;
     height: 24px;
   }
+  .example-container {
+    max-height: 400px;
+    overflow: auto;
+  }
 }

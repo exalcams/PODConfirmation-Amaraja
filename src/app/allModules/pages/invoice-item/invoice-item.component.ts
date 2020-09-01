@@ -58,13 +58,13 @@ export class InvoiceItemComponent implements OnInit {
   InvoiceItemFormGroup: FormGroup;
   InvoiceItemFormArray: FormArray = this._formBuilder.array([]);
   displayedColumns: string[] = [
-      // 'SELECT',
-      'ITEM_NO',
-      'MATERIAL_CODE',
-      'QUANTITY',
-      'RECEIVED_QUANTITY',
-      'REASON',
-      'REMARKS',
+    // 'SELECT',
+    'ITEM_NO',
+    'MATERIAL_CODE',
+    'QUANTITY',
+    'RECEIVED_QUANTITY',
+    'REASON',
+    'REMARKS',
   ];
   dataSource: MatTableDataSource<AbstractControl>;
 
@@ -152,6 +152,14 @@ export class InvoiceItemComponent implements OnInit {
       (data) => {
         if (data) {
           this.AllReasons = data as Reason[];
+          if (this.AllReasons && this.AllReasons.length) {
+            const index = this.AllReasons.findIndex(x => x.Description.toLocaleLowerCase() === 'completely received')[0];
+            if (index < 0) {
+              const res = new Reason();
+              res.ReasonID = 100;
+              res.Description = 'Completely received';
+            }
+          }
           this.isProgressBarVisibile = false;
         }
       },
@@ -272,9 +280,15 @@ export class InvoiceItemComponent implements OnInit {
     const REASONControl = formGroup.get('REASON') as FormControl;
     const REMARKSControl = formGroup.get('REMARKS') as FormControl;
     if (receivedQty < orderedQty) {
+      REASONControl.enable();
+      REMARKSControl.enable();
       REASONControl.setValidators(Validators.required);
       REMARKSControl.setValidators(Validators.required);
     } else {
+      REASONControl.patchValue('Completely received');
+      REMARKSControl.patchValue('');
+      REASONControl.disable();
+      REMARKSControl.disable();
       REASONControl.clearValidators();
       REMARKSControl.clearValidators();
     }

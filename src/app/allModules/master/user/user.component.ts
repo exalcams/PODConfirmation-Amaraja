@@ -183,8 +183,8 @@ export class UserComponent implements OnInit {
     this.userMainFormGroup.get('userCode').patchValue(this.SelectedUser.UserCode);
     this.userMainFormGroup.get('userName').patchValue(this.SelectedUser.UserName);
     this.userMainFormGroup.get('OrganizationList').patchValue(this.SelectedUser.OrganizationList);
-    this.userMainFormGroup.get('PlantList').patchValue(this.SelectedUser.PlantList);
     this.togglePerOne1();
+    this.userMainFormGroup.get('PlantList').patchValue(this.SelectedUser.PlantList);
     // this.togglePerOne();
     this.userMainFormGroup.get('roleID').patchValue(this.SelectedUser.RoleID);
     this.userMainFormGroup.get('email').patchValue(this.SelectedUser.Email);
@@ -236,8 +236,10 @@ export class UserComponent implements OnInit {
       this.getFilteredPlants();
       return false;
     }
-    if (this.userMainFormGroup.get('OrganizationList').value.length === this.AllOrganizations.length) {
-      this.allSelected1.select();
+    if (this.userMainFormGroup.get('OrganizationList').value.length) {
+      if (this.userMainFormGroup.get('OrganizationList').value.length === this.AllOrganizations.length) {
+        this.allSelected1.select();
+      }
     }
     this.getFilteredPlants();
   }
@@ -254,12 +256,17 @@ export class UserComponent implements OnInit {
 
   getFilteredPlants(): void {
     const orgList = this.userMainFormGroup.get('OrganizationList').value as string[];
-    const plantOrgMap = this.AllPlantOrganizationMaps.filter(o => orgList.some(y => o.OrganizationCode === y));
-    this.FilteredPlants = this.AllPlants.filter(o => plantOrgMap.some(y => o.PlantCode === y.PlantCode));
-    const plList = this.userMainFormGroup.get('PlantList').value as string[];
-    const FilteredPlList = plList.filter(o => this.FilteredPlants.some(y => o === y.PlantCode));
-    this.userMainFormGroup.get('PlantList').patchValue(FilteredPlList);
-    this.togglePerOne();
+    if (orgList && orgList.length) {
+      const plantOrgMap = this.AllPlantOrganizationMaps.filter(o => orgList.some(y => o.OrganizationCode === y));
+      this.FilteredPlants = this.AllPlants.filter(o => plantOrgMap.some(y => o.PlantCode === y.PlantCode));
+      const plList = this.userMainFormGroup.get('PlantList').value as string[];
+      if (plList && plList.length) {
+        const FilteredPlList = plList.filter(o => this.FilteredPlants.some(y => o === y.PlantCode));
+        this.userMainFormGroup.get('PlantList').patchValue(FilteredPlList);
+        this.togglePerOne();
+      }
+    }
+
   }
 
   togglePerOne(): boolean | void {

@@ -193,10 +193,10 @@ export class DashboardService {
             .pipe(catchError(this.errorHandler));
     }
 
-    FilterDeliveryCount(userID: Guid, StartDate: string, EndDate: string): Observable<DeliveryCount | string> {
+    FilterDeliveryCount(userID: Guid, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string): Observable<DeliveryCount | string> {
         return this._httpClient
             .get<DeliveryCount>(
-                `${this.baseAddress}api/Dashboard/FilterDeliveryCount?UserID=${userID}&StartDate=${StartDate}&EndDate=${EndDate}`
+                `${this.baseAddress}api/Dashboard/FilterDeliveryCount?UserID=${userID}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&StartDate=${StartDate}&EndDate=${EndDate}`
             )
             .pipe(catchError(this.errorHandler));
     }
@@ -212,11 +212,11 @@ export class DashboardService {
     }
 
     FilterInvoiceStatusCount(
-        userID: Guid, StartDate: string, EndDate: string
+        userID: Guid, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceStatusCount | string> {
         return this._httpClient
             .get<InvoiceStatusCount>(
-                `${this.baseAddress}api/Dashboard/FilterInvoiceStatusCount?UserID=${userID}&StartDate=${StartDate}&EndDate=${EndDate}`
+                `${this.baseAddress}api/Dashboard/FilterInvoiceStatusCount?UserID=${userID}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&StartDate=${StartDate}&EndDate=${EndDate}`
             )
             .pipe(catchError(this.errorHandler));
     }
@@ -264,42 +264,52 @@ export class DashboardService {
 
 
     FilterConfirmedInvoices(
-        UserID: Guid, StartDate: string, EndDate: string
+        UserID: Guid, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceDetails[] | string> {
         return this._httpClient
             .get<InvoiceDetails[]>(
-                `${this.baseAddress}api/Dashboard/FilterConfirmedInvoices?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}`
+                `${this.baseAddress}api/Dashboard/FilterConfirmedInvoices?UserID=${UserID}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterPartiallyConfirmedInvoices(
+        UserID: Guid, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterPartiallyConfirmedInvoices?UserID=${UserID}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&StartDate=${StartDate}&EndDate=${EndDate}`
             )
             .pipe(catchError(this.errorHandler));
     }
 
     FilterPendingInvoices(
-        UserID: Guid, StartDate: string, EndDate: string
+        UserID: Guid, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceDetails[] | string> {
         return this._httpClient
             .get<InvoiceDetails[]>(
-                `${this.baseAddress}api/Dashboard/FilterPendingInvoices?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}`
+                `${this.baseAddress}api/Dashboard/FilterPendingInvoices?UserID=${UserID}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&StartDate=${StartDate}&EndDate=${EndDate}`
             )
             .pipe(catchError(this.errorHandler));
     }
 
     FilterOnTimeDeliveryInvoices(
-        UserID: Guid, StartDate: string, EndDate: string
+        UserID: Guid, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceDetails[] | string> {
         return this._httpClient
             .get<InvoiceDetails[]>(
-                `${this.baseAddress}api/Dashboard/FilterOnTimeDeliveryInvoices?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}`
+                `${this.baseAddress}api/Dashboard/FilterOnTimeDeliveryInvoices?UserID=${UserID}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&StartDate=${StartDate}&EndDate=${EndDate}`
             )
             .pipe(catchError(this.errorHandler));
     }
 
 
     FilterLateDeliveryInvoices(
-        UserID: Guid, StartDate: string, EndDate: string
+        UserID: Guid, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceDetails[] | string> {
         return this._httpClient
             .get<InvoiceDetails[]>(
-                `${this.baseAddress}api/Dashboard/FilterLateDeliveryInvoices?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}`
+                `${this.baseAddress}api/Dashboard/FilterLateDeliveryInvoices?UserID=${UserID}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&StartDate=${StartDate}&EndDate=${EndDate}`
             )
             .pipe(catchError(this.errorHandler));
     }
@@ -310,6 +320,16 @@ export class DashboardService {
         return this._httpClient
             .get<InvoiceDetails[]>(
                 `${this.baseAddress}api/Dashboard/FilterConfirmedInvoicesByUser?UserCode=${UserCode}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterPartiallyConfirmedInvoicesByUser(
+        UserCode: string, StartDate: string, EndDate: string
+    ): Observable<InvoiceDetails[] | string> {
+        return this._httpClient
+            .get<InvoiceDetails[]>(
+                `${this.baseAddress}api/Dashboard/FilterPartiallyConfirmedInvoicesByUser?UserCode=${UserCode}&StartDate=${StartDate}&EndDate=${EndDate}`
             )
             .pipe(catchError(this.errorHandler));
     }

@@ -5,6 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, Plant, PlantWithOrganization, Organization, PlantOrganizationMap } from 'app/models/master';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
@@ -88,6 +89,11 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetAllOrganizationsByUserID(UserID: Guid): Observable<Organization[] | string> {
+    return this._httpClient.get<Organization[]>(`${this.baseAddress}api/Master/GetAllOrganizationsByUserID?UserID=${UserID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
   UpdateOrganization(organization: Organization): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateOrganization`,
       organization,
@@ -124,6 +130,11 @@ export class MasterService {
 
   GetAllPlants(): Observable<PlantWithOrganization[] | string> {
     return this._httpClient.get<PlantWithOrganization[]>(`${this.baseAddress}api/Master/GetAllPlants`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllPlantsByUserID(UserID: Guid): Observable<PlantWithOrganization[] | string> {
+    return this._httpClient.get<PlantWithOrganization[]>(`${this.baseAddress}api/Master/GetAllPlantsByUserID?UserID=${UserID}`)
       .pipe(catchError(this.errorHandler));
   }
 

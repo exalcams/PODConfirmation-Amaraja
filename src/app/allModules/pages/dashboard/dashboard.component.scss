@@ -78,7 +78,7 @@
         line-height: 24px;
     }
 
-    .smallerFont{
+    .smallerFont {
         font-size: xx-small;
     }
 
@@ -207,5 +207,12 @@
     .btnBg {
         background-color: #efb577 !important;
         color: white;
+    }
+    .mat-form-field-wrapper {
+        width: 100%;
+    }
+    .example-container {
+        max-height: 400px;
+        overflow: auto;
     }
 }

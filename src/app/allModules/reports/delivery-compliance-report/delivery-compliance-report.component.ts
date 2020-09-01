@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, Organization, Plant, PlantOrganizationMap, PlantWithOrganization } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { InvoiceDetails, ApproverDetails, ReportInvoice, StatusTemplate } from 'app/models/invoice-details';
-import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatOption } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
@@ -15,6 +15,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 import { ExcelService } from 'app/services/excel.service';
+import { MasterService } from 'app/services/master.service';
 
 @Component({
   selector: 'app-delivery-compliance-report',
@@ -29,6 +30,12 @@ export class DeliveryComplianceReportComponent implements OnInit {
   currentUserRole: string;
   MenuItems: string[];
   isProgressBarVisibile: boolean;
+  AllOrganizations: Organization[] = [];
+  AllPlants: Plant[] = [];
+  FilteredPlants: Plant[] = [];
+  AllPlantOrganizationMaps: PlantOrganizationMap[] = [];
+  @ViewChild('allSelected') private allSelected: MatOption;
+  @ViewChild('allSelected1') private allSelected1: MatOption;
   Divisions: string[] = [];
   allInvoicesCount: number;
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -76,6 +83,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
   constructor(
     private _router: Router,
     private _reportService: ReportService,
+    private _masterService: MasterService,
     private _excelService: ExcelService,
     private _shareParameterService: ShareParameterService,
     public snackBar: MatSnackBar,
@@ -122,6 +130,9 @@ export class DeliveryComplianceReportComponent implements OnInit {
       CustomerName: ['']
     });
     this.isDateError = false;
+    this.GetAllOrganizations();
+    this.GetAllPlants();
+    this.GetAllPlantOrganizationMaps();
     if (this.currentUserRole.toLowerCase() === 'amararaja user') {
       this.getFilteredInvoiceDetails();
     } else {
@@ -133,6 +144,37 @@ export class DeliveryComplianceReportComponent implements OnInit {
 
   applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  GetAllOrganizations(): void {
+    this._masterService.GetAllOrganizationsByUserID(this.currentUserID).subscribe(
+      (data) => {
+        this.AllOrganizations = data as Organization[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetAllPlants(): void {
+    this._masterService.GetAllPlantsByUserID(this.currentUserID).subscribe(
+      (data) => {
+        this.AllPlants = data as Plant[];
+        this.FilteredPlants = data as Plant[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetAllPlantOrganizationMaps(): void {
+    this._masterService.GetAllPlantOrganizationMaps().subscribe(
+      (data) => {
+        this.AllPlantOrganizationMaps = data as PlantWithOrganization[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
   GetDivisions(): void {
     this._reportService.GetDivisions().subscribe(
@@ -155,9 +197,15 @@ export class DeliveryComplianceReportComponent implements OnInit {
         this.isProgressBarVisibile = true;
         const Status = this.InvoiceFilterFormGroup.get('Status').value;
         const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
-        const Organization = this.InvoiceFilterFormGroup.get('Division').value;
+        let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
+        if (Organization1 && Organization1.toLowerCase() === "all") {
+          Organization1 = '';
+        }
         const Division = this.InvoiceFilterFormGroup.get('Division').value;
-        const Plant = this.InvoiceFilterFormGroup.get('Plant').value;
+        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        if (Plant1 && Plant1.toLowerCase() === "all") {
+          Plant1 = '';
+        }
         const CustomerName = this.InvoiceFilterFormGroup.get('CustomerName').value;
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
@@ -170,7 +218,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
           EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this._reportService
-          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, Organization, Division, Plant, CustomerName)
+          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
           .subscribe(
             data => {
               this.FilteredInvoiceDetails = data as ReportInvoice[];
@@ -198,7 +246,65 @@ export class DeliveryComplianceReportComponent implements OnInit {
       });
     }
   }
+  togglePerOne1(): boolean | void {
+    // if (this.allSelected1.selected) {
+    //   this.allSelected1.deselect();
+    //   this.getFilteredPlants();
+    //   return false;
+    // }
+    // if (this.InvoiceFilterFormGroup.get('OrganizationList').value.length) {
+    //   if (this.InvoiceFilterFormGroup.get('OrganizationList').value.length === this.AllOrganizations.length) {
+    //     this.allSelected1.select();
+    //   }
+    // }
+    this.getFilteredPlants();
+  }
+  toggleAllSelection1(): void {
+    // if (this.allSelected1.selected) {
+    //   const pls = this.AllOrganizations.map(x => x.OrganizationCode);
+    //   pls.push("all");
+    //   this.InvoiceFilterFormGroup.get('OrganizationList').patchValue(pls);
+    // } else {
+    //   this.InvoiceFilterFormGroup.get('OrganizationList').patchValue([]);
+    // }
+    this.getFilteredPlants();
+  }
 
+  getFilteredPlants(): void {
+    const org = this.InvoiceFilterFormGroup.get('Organization').value as string;
+    if (org) {
+      const plantOrgMap = this.AllPlantOrganizationMaps.filter(o => o.OrganizationCode === org);
+      this.FilteredPlants = this.AllPlants.filter(o => plantOrgMap.some(y => o.PlantCode === y.PlantCode));
+      const pl = this.InvoiceFilterFormGroup.get('Plant').value as string;
+      if (pl) {
+        const index = this.FilteredPlants.findIndex(x => x.PlantCode === pl);
+        if (index < 0) {
+          this.InvoiceFilterFormGroup.get('Plant').patchValue('');
+        }
+      }
+    }
+  }
+
+  togglePerOne(): boolean | void {
+    // if (this.allSelected.selected) {
+    //   this.allSelected.deselect();
+    //   return false;
+    // }
+    // if (this.InvoiceFilterFormGroup.get('PlantList').value.length) {
+    //   if (this.InvoiceFilterFormGroup.get('PlantList').value.length === this.FilteredPlants.length) {
+    //     this.allSelected.select();
+    //   }
+    // }
+  }
+  toggleAllSelection(): void {
+    // if (this.allSelected.selected) {
+    //   const pls = this.FilteredPlants.map(x => x.PlantCode);
+    //   pls.push("all");
+    //   this.InvoiceFilterFormGroup.get('PlantList').patchValue(pls);
+    // } else {
+    //   this.InvoiceFilterFormGroup.get('PlantList').patchValue([]);
+    // }
+  }
   DateSelected(): void {
     const FROMDATEVAL = this.InvoiceFilterFormGroup.get('StartDate').value as Date;
     const TODATEVAL = this.InvoiceFilterFormGroup.get('EndDate').value as Date;

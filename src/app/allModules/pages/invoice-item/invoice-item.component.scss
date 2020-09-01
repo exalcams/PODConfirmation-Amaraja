@@ -220,4 +220,8 @@
   .orangeBorderBottom {
     border-bottom: 2px solid #fb7800;
   }
+  .example-container {
+    max-height: 400px;
+    overflow: auto;
+}
 }

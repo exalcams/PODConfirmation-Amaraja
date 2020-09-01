@@ -7,12 +7,13 @@ import {
     MatPaginator,
     MatSort,
     MatTabChangeEvent,
+    MatOption,
 } from "@angular/material";
 import { Router } from "@angular/router";
 import { ChartType } from "chart.js";
 import { NotificationSnackBarComponent } from "app/notifications/notification-snack-bar/notification-snack-bar.component";
 import { SnackBarStatus } from "app/notifications/notification-snack-bar/notification-snackbar-status-enum";
-import { AuthenticationDetails } from "app/models/master";
+import { AuthenticationDetails, Organization, Plant, PlantOrganizationMap, PlantWithOrganization } from "app/models/master";
 import { fuseAnimations } from "@fuse/animations";
 import {
     InvoiceDetails,
@@ -27,6 +28,8 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { Guid } from "guid-typescript";
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { MasterService } from 'app/services/master.service';
+import { ReportService } from 'app/services/report.service';
 
 @Component({
     selector: "app-dashboard",
@@ -43,6 +46,13 @@ export class DashboardComponent implements OnInit {
     currentUsername: string;
     MenuItems: string[];
     isProgressBarVisibile: boolean;
+    AllOrganizations: Organization[] = [];
+    AllPlants: Plant[] = [];
+    FilteredPlants: Plant[] = [];
+    AllPlantOrganizationMaps: PlantOrganizationMap[] = [];
+    @ViewChild('allSelected') private allSelected: MatOption;
+    @ViewChild('allSelected1') private allSelected1: MatOption;
+    Divisions: string[] = [];
     allInvoicesCount: number;
     notificationSnackBarComponent: NotificationSnackBarComponent;
     deliveryCount: DeliveryCount;
@@ -105,11 +115,12 @@ export class DashboardComponent implements OnInit {
     public doughnutChartType: ChartType = "doughnut";
     public doughnutChartLabels: any[] = [
         "CONFIRMED INVOICES",
+        "PARTIALLY CONFIRMED INVOICES",
         "PENDING INVOICES",
     ];
     public doughnutChartData: any[] = [[0, 0]];
     // public doughnutChartData: any[] = [];
-    public colors: any[] = [{ backgroundColor: ["#52de97", "#fb7800"] }];
+    public colors: any[] = [{ backgroundColor: ["#52de97", '#4452c6', "#fb7800"] }];
 
     public doughnutChartOptions1 = {
         responsive: true,
@@ -150,6 +161,8 @@ export class DashboardComponent implements OnInit {
     constructor(
         private _router: Router,
         private _dashboardService: DashboardService,
+        private _reportService: ReportService,
+        private _masterService: MasterService,
         private _shareParameterService: ShareParameterService,
         public snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
@@ -193,9 +206,16 @@ export class DashboardComponent implements OnInit {
             // Status: [''],
             StartDate: [],
             EndDate: [],
+            Organization: [''],
+            Division: [''],
+            Plant: [''],
             // InvoiceNumber: [''],
             // LRNumber: ['']
         });
+        this.GetAllOrganizations();
+        this.GetAllPlants();
+        this.GetAllPlantOrganizationMaps();
+        this.GetDivisions();
         this.GetInvoiceStatusCount();
         this.GetDeliveryCounts();
         this.GetInvoiceHeaderDetails();
@@ -206,6 +226,49 @@ export class DashboardComponent implements OnInit {
 
     applyFilter(filterValue: string): void {
         this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    GetAllOrganizations(): void {
+        this._masterService.GetAllOrganizationsByUserID(this.currentUserID).subscribe(
+            (data) => {
+                this.AllOrganizations = data as Organization[];
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+    GetAllPlants(): void {
+        this._masterService.GetAllPlantsByUserID(this.currentUserID).subscribe(
+            (data) => {
+                this.AllPlants = data as Plant[];
+                this.FilteredPlants = data as Plant[];
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+    GetAllPlantOrganizationMaps(): void {
+        this._masterService.GetAllPlantOrganizationMaps().subscribe(
+            (data) => {
+                this.AllPlantOrganizationMaps = data as PlantWithOrganization[];
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+    GetDivisions(): void {
+        this._reportService.GetDivisions().subscribe(
+            data => {
+                this.Divisions = data as string[];
+                this.Divisions.unshift("All");
+            },
+            err => {
+                this.isProgressBarVisibile = false;
+            }
+        );
     }
 
     GetDeliveryCount(): void {
@@ -275,6 +338,7 @@ export class DashboardComponent implements OnInit {
                         const chartData: number[] = [];
 
                         chartData.push(data.ConfirmedInvoices);
+                        chartData.push(data.PartiallyConfirmedInvoices);
                         chartData.push(data.PendingInvoices);
 
                         this.doughnutChartData = chartData;
@@ -299,6 +363,7 @@ export class DashboardComponent implements OnInit {
                         const chartData: number[] = [];
 
                         chartData.push(data.ConfirmedInvoices);
+                        chartData.push(data.PartiallyConfirmedInvoices);
                         chartData.push(data.PendingInvoices);
 
                         this.doughnutChartData = chartData;
@@ -437,6 +502,15 @@ export class DashboardComponent implements OnInit {
         // const Status = this.InvoiceFilterFormGroup.get('Status').value;
         // const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
         // const LRNumber = this.InvoiceFilterFormGroup.get('LRNumber').value;
+        let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
+        if (Organization1 && Organization1.toLowerCase() === "all") {
+            Organization1 = '';
+        }
+        const Division = this.InvoiceFilterFormGroup.get('Division').value;
+        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        if (Plant1 && Plant1.toLowerCase() === "all") {
+            Plant1 = '';
+        }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
         if (staDate) {
@@ -449,12 +523,13 @@ export class DashboardComponent implements OnInit {
         }
         if (this.currentUserRole === "Amararaja User") {
             this._dashboardService
-                .FilterInvoiceStatusCount(this.currentUserID, StartDate, EndDate)
+                .FilterInvoiceStatusCount(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate)
                 .subscribe(
                     (data: InvoiceStatusCount) => {
                         const chartData: number[] = [];
 
                         chartData.push(data.ConfirmedInvoices);
+                        chartData.push(data.PartiallyConfirmedInvoices);
                         chartData.push(data.PendingInvoices);
 
                         this.doughnutChartData = chartData;
@@ -479,6 +554,7 @@ export class DashboardComponent implements OnInit {
                         const chartData: number[] = [];
 
                         chartData.push(data.ConfirmedInvoices);
+                        chartData.push(data.PartiallyConfirmedInvoices);
                         chartData.push(data.PendingInvoices);
 
                         this.doughnutChartData = chartData;
@@ -499,9 +575,15 @@ export class DashboardComponent implements OnInit {
     }
 
     FilterDeliveryCount(): void {
-        // const Status = this.InvoiceFilterFormGroup.get('Status').value;
-        // const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
-        // const LRNumber = this.InvoiceFilterFormGroup.get('LRNumber').value;
+        let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
+        if (Organization1 && Organization1.toLowerCase() === "all") {
+            Organization1 = '';
+        }
+        const Division = this.InvoiceFilterFormGroup.get('Division').value;
+        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        if (Plant1 && Plant1.toLowerCase() === "all") {
+            Plant1 = '';
+        }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
         if (staDate) {
@@ -514,7 +596,7 @@ export class DashboardComponent implements OnInit {
         }
         if (this.currentUserRole === "Amararaja User") {
             this._dashboardService
-                .FilterDeliveryCount(this.currentUserID, StartDate, EndDate)
+                .FilterDeliveryCount(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate)
                 .subscribe(
                     (data: DeliveryCount) => {
                         const chartData: number[] = [];
@@ -628,6 +710,14 @@ export class DashboardComponent implements OnInit {
                             this.FilterConfirmedInvoicesByUser();
                         }
                     }
+                    else if (label.toLowerCase() === "partially confirmed invoices") {
+                        this.currentLabel = 'PARTIALLY CONFIRMED INVOICES';
+                        if (this.currentUserRole === "Amararaja User") {
+                            this.FilterPartiallyConfirmedInvoices();
+                        } else if (this.currentUserRole === "Customer") {
+                            this.FilterPartiallyConfirmedInvoicesByUser();
+                        }
+                    }
                 }
             }
         }
@@ -665,6 +755,15 @@ export class DashboardComponent implements OnInit {
     }
 
     FilterConfirmedInvoices(): void {
+        let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
+        if (Organization1 && Organization1.toLowerCase() === "all") {
+            Organization1 = '';
+        }
+        const Division = this.InvoiceFilterFormGroup.get('Division').value;
+        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        if (Plant1 && Plant1.toLowerCase() === "all") {
+            Plant1 = '';
+        }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
         if (staDate) {
@@ -676,7 +775,43 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterConfirmedInvoices(this.currentUserID, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterConfirmedInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+    }
+
+    FilterPartiallyConfirmedInvoices(): void {
+        let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
+        if (Organization1 && Organization1.toLowerCase() === "all") {
+            Organization1 = '';
+        }
+        const Division = this.InvoiceFilterFormGroup.get('Division').value;
+        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        if (Plant1 && Plant1.toLowerCase() === "all") {
+            Plant1 = '';
+        }
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterPartiallyConfirmedInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
                 this.allInvoiceDetails = data as InvoiceDetails[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
@@ -692,6 +827,15 @@ export class DashboardComponent implements OnInit {
     }
 
     FilterPendingInvoices(): void {
+        let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
+        if (Organization1 && Organization1.toLowerCase() === "all") {
+            Organization1 = '';
+        }
+        const Division = this.InvoiceFilterFormGroup.get('Division').value;
+        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        if (Plant1 && Plant1.toLowerCase() === "all") {
+            Plant1 = '';
+        }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
         if (staDate) {
@@ -703,7 +847,7 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterPendingInvoices(this.currentUserID, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterPendingInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
                 this.allInvoiceDetails = data as InvoiceDetails[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
@@ -719,6 +863,15 @@ export class DashboardComponent implements OnInit {
     }
 
     FilterOnTimeDeliveryInvoices(): void {
+        let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
+        if (Organization1 && Organization1.toLowerCase() === "all") {
+            Organization1 = '';
+        }
+        const Division = this.InvoiceFilterFormGroup.get('Division').value;
+        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        if (Plant1 && Plant1.toLowerCase() === "all") {
+            Plant1 = '';
+        }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
         if (staDate) {
@@ -730,7 +883,7 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterOnTimeDeliveryInvoices(this.currentUserID, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterOnTimeDeliveryInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
                 this.allInvoiceDetails = data as InvoiceDetails[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
@@ -746,6 +899,15 @@ export class DashboardComponent implements OnInit {
     }
 
     FilterLateDeliveryInvoices(): void {
+        let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
+        if (Organization1 && Organization1.toLowerCase() === "all") {
+            Organization1 = '';
+        }
+        const Division = this.InvoiceFilterFormGroup.get('Division').value;
+        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        if (Plant1 && Plant1.toLowerCase() === "all") {
+            Plant1 = '';
+        }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
         if (staDate) {
@@ -757,7 +919,7 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterLateDeliveryInvoices(this.currentUserID, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterLateDeliveryInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
                 this.allInvoiceDetails = data as InvoiceDetails[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
@@ -798,7 +960,32 @@ export class DashboardComponent implements OnInit {
             }
         );
     }
-
+    FilterPartiallyConfirmedInvoicesByUser(): void {
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+            StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+            EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        this.isProgressBarVisibile = true;
+        this._dashboardService.FilterPartiallyConfirmedInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+            (data) => {
+                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
+                this.dataSource.paginator = this.paginator;
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+    }
     FilterPendingInvoicesByUser(): void {
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;

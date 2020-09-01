@@ -39,15 +39,15 @@ export class InvoiceDetailsComponent implements OnInit {
     InvoiceDetailsFormArray: FormArray = this._formBuilder.array([]);
     displayedColumns: string[] = [
         // 'SELECT',
+        'ORGANIZATION',
+        'DIVISION',
+        'PLANT',
         'ODIN',
         'INV_NO',
         'INV_DATE',
         'INV_TYPE',
         'OUTBOUND_DELIVERY',
         'OUTBOUND_DELIVERY_DATE',
-        'PLANT',
-        'ORGANIZATION',
-        'DIVISION',
         'LR_NO',
         'LR_DATE',
         'VEHICLE_NO',
@@ -130,6 +130,7 @@ export class InvoiceDetailsComponent implements OnInit {
             { key: 'All Invoices', value: 'All' },
             { key: 'Pending', value: 'Open' },
             { key: 'Saved', value: 'Saved' },
+            { key: 'Partially Confirmed', value: 'PartiallyConfirmed' },
             { key: 'Confirmed', value: 'Confirmed' },
             // { key: 'Approved (AR User)', value: 'Approved' }
         ];
@@ -537,15 +538,15 @@ export class InvoiceDetailsComponent implements OnInit {
         const itemsShowedd = [];
         itemsShowed.forEach(x => {
             const item = {
+                'Organization': x.ORGANIZATION,
+                'Division': x.DIVISION,
+                'Plant': x.PLANT,
                 'Invoice No': x.ODIN,
                 'Reference No': x.INV_NO,
                 'Invoice Date': x.INV_DATE ? this._datePipe.transform(x.INV_DATE, 'dd-MM-yyyy') : '',
                 'Invoice Type': x.INV_TYPE,
                 'Outbound delivery': x.OUTBOUND_DELIVERY,
                 'Outbound delivery date': x.OUTBOUND_DELIVERY_DATE ? this._datePipe.transform(x.OUTBOUND_DELIVERY_DATE, 'dd-MM-yyyy') : '',
-                'Plant': x.PLANT,
-                'Organization': x.ORGANIZATION,
-                'Division': x.DIVISION,
                 'LR Number': x.LR_NO,
                 'LR date': x.LR_DATE ? this._datePipe.transform(x.LR_DATE, 'dd-MM-yyyy') : '',
                 'Vehicle No': x.VEHICLE_NO,
