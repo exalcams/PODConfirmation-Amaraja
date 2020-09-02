@@ -117,11 +117,7 @@ export class InvoiceItemComponent implements OnInit {
       InvoiceItems: this.InvoiceItemFormArray
     });
     this.GetAllReasons();
-    if (this.currentUserRole === "Amararaja User") {
-      this.GetInvoiceItemDetailsByID();
-    } else if (this.currentUserRole === "Customer") {
-      this.GetInvoiceItemDetailsByUserAndID();
-    }
+    this.GetInvoiceItemDetails();
   }
 
   ResetControl(): void {
@@ -169,7 +165,40 @@ export class InvoiceItemComponent implements OnInit {
       }
     );
   }
-
+  GetInvoiceItemDetails(): void {
+    if (this.currentUserRole === "Administrator") {
+      this.GetInvoiceItemDetailsByHeaderID();
+    }
+    if (this.currentUserRole === "Amararaja User") {
+      this.GetInvoiceItemDetailsByID();
+    } else if (this.currentUserRole === "Customer") {
+      this.GetInvoiceItemDetailsByUserAndID();
+    }
+  }
+  GetInvoiceItemDetailsByHeaderID(): void {
+    this.isProgressBarVisibile = true;
+    this._invoiceService.GetInvoiceItemDetailsByHeaderID
+      (this.SelectedInvoiceDetail.HEADER_ID).subscribe(
+        data => {
+          this.isProgressBarVisibile = false;
+          this.InvoiceItemFormGroup.controls.VehicleReportedDate.patchValue(this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE);
+          this.InvoiceItemDetailsList = data as InvoiceItemDetails[];
+          // this.InvoiceItemDetailsDataSource = new MatTableDataSource(this.InvoiceItemDetailsList);
+          // this.InvoiceItemDetailsDataSource.paginator = this.InvoiceItemDetailsPaginator;
+          // this.InvoiceItemDetailsDataSource.sort = this.InvoiceItemDetailsSort;
+          // console.log(this.InvoiceItemDetailsList);
+          this.InvoiceItemDetailsList.forEach(x => {
+            this.SetInvoiceItemValues(x);
+          });
+        },
+        err => {
+          this.isProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar(
+            err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger
+          );
+        }
+      );
+  }
   GetInvoiceItemDetailsByID(): void {
     this.isProgressBarVisibile = true;
     this._invoiceService.GetInvoiceItemDetailsByID
@@ -298,7 +327,7 @@ export class InvoiceItemComponent implements OnInit {
 
   SaveAndUploadInvoiceItem(): void {
     if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'approved') {
-      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'confirmed') {
+      if (this.SelectedInvoiceDetail.STATUS && !this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase().includes('confirmed')) {
         if (this.InvoiceItemFormGroup.valid) {
           const el: HTMLElement = this.fileInput.nativeElement;
           el.click();
@@ -333,7 +362,7 @@ export class InvoiceItemComponent implements OnInit {
 
   SaveInvoiceItem(): void {
     if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'approved') {
-      if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() !== 'confirmed') {
+      if (this.SelectedInvoiceDetail.STATUS && !this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase().includes('confirmed')) {
 
         if (this.InvoiceItemFormGroup.valid) {
           const Actiontype = 'Save';
@@ -350,6 +379,22 @@ export class InvoiceItemComponent implements OnInit {
     } else {
       this.notificationSnackBarComponent.openSnackBar(
         'Invoice has already been approved ', SnackBarStatus.danger
+      );
+    }
+  }
+
+  UpdateInvoiceStatus(): void {
+    if (this.SelectedInvoiceDetail.STATUS && this.SelectedInvoiceDetail.STATUS.toLocaleLowerCase() === 'partiallyconfirmed') {
+      if (this.InvoiceItemFormGroup.valid) {
+        const Actiontype = 'Change';
+        const Catagory = 'Status to save';
+        this.OpenConfirmationDialog(Actiontype, Catagory);
+      } else {
+        this.ShowValidationErrors(this.InvoiceItemFormGroup);
+      }
+    } else {
+      this.notificationSnackBarComponent.openSnackBar(
+        'Invoice has to Partially Confirmed to update the status to save', SnackBarStatus.danger
       );
     }
   }
@@ -416,9 +461,31 @@ export class InvoiceItemComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          this.UpdateInvoiceItems(Actiontype);
+          if (Actiontype === 'Change') {
+            this.UpdatePartiallyConfirmedInvoiceStatus();
+          } else {
+            this.UpdateInvoiceItems(Actiontype);
+          }
         }
       });
+  }
+
+  UpdatePartiallyConfirmedInvoiceStatus(): void {
+    this._invoiceService.UpdatePartiallyConfirmedInvoiceStatus(this.SelectedInvoiceDetail.HEADER_ID,
+      'Saved', this.currentUserID.toString()).subscribe(
+        (dat) => {
+          this.isProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar(`Invoice status changed to save`, SnackBarStatus.success);
+          this.ResetControl();
+          // this.GetInvoiceItemDetails();
+          this._router.navigate(['/pages/partialinvoice']);
+        },
+        (err) => {
+          console.error(err);
+          this.isProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        }
+      );
   }
 
   GetInvoiceItemValues(Actiontype: string): InvoiceItemDetails[] {
@@ -457,7 +524,7 @@ export class InvoiceItemComponent implements OnInit {
                 this.ResetControl();
                 this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE = new Date(VehReportedDate);
                 this.SelectedInvoiceDetail.STATUS = Ststs;
-                this.GetInvoiceItemDetailsByUserAndID();
+                this.GetInvoiceItemDetails();
               },
               (err) => {
                 console.error(err);
@@ -472,7 +539,7 @@ export class InvoiceItemComponent implements OnInit {
           this.ResetControl();
           this.SelectedInvoiceDetail.VEHICLE_REPORTED_DATE = new Date(VehReportedDate);
           this.SelectedInvoiceDetail.STATUS = Ststs;
-          this.GetInvoiceItemDetailsByUserAndID();
+          this.GetInvoiceItemDetails();
         }
       },
       err => {

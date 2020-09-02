@@ -1,4 +1,4 @@
-<div id="delivery-compliance-report" class="page-layout carded" fusePerfectScrollbar>
+<div id="partial-confirmed" class="page-layout carded" fusePerfectScrollbar>
   <div class="center" fxLayout="column" fxLayoutGap="10px">
 
     <mat-card class="cardHeader p-8 pt-4 pb-0 m-0">
@@ -12,16 +12,6 @@
       <div fxLayout="column" class="mt-10">
         <form autocomplete="off" name="form" [formGroup]="InvoiceFilterFormGroup" novalidate>
           <div fxLayout="row wrap" class="mt-4">
-            <mat-form-field class="mx-8" fxFlex="18">
-              <mat-select matInput formControlName="Status" placeholder="Status">
-                <mat-option [value]="rest.value" *ngFor="let rest of AllStatusTemplates">{{rest.key}}
-                </mat-option>
-              </mat-select>
-              <mat-error class="pl-4 errorClass" *ngIf="InvoiceFilterFormGroup.get('Status').touched &&
-              InvoiceFilterFormGroup.get('Status').hasError('required')">
-                Status is required
-              </mat-error>
-            </mat-form-field>
             <mat-form-field class="mx-8" fxFlex="18">
               <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="StartDate"
                 (keydown)="onKeydown($event)" (dateChange)="DateSelected()">
@@ -227,49 +217,16 @@
                   {{element.TRANSIT_LEAD_TIME}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="MATERIAL_CODE">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Code </th>
-                <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.MATERIAL_CODE}}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="MATERIAL_DESCRIPTION">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Description </th>
-                <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)">
-                  {{element.MATERIAL_DESCRIPTION}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="QUANTITY">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
-                <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.QUANTITY}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="RECEIVED_QUANTITY">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Received Quantity </th>
-                <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.RECEIVED_QUANTITY}}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="QUANTITY_UOM">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity Unit </th>
-                <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.QUANTITY_UOM}}
-                </td>
-              </ng-container>
-
-
-
               <ng-container matColumnDef="STATUS">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
                 <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.STATUS}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="DOWNLOAD">
-                <th mat-header-cell *matHeaderCellDef> Download</th>
+              <ng-container matColumnDef="CHANGESTATUS">
+                <th mat-header-cell *matHeaderCellDef> Change</th>
                 <td mat-cell *matCellDef="let element">
-                  <mat-icon *ngIf="(element.STATUS | lowercase)==='confirmed'" aria-label="file_download"
-                    (click)="DowloandPODDocument(element.HEADER_ID,element.ATTACHMENT_ID,element.ATTACHMENT_NAME)">
-                    file_download
-                  </mat-icon>
+                  <button *ngIf="(currentUserRole | lowercase)==='administrator'" mat-raised-button class="mr-4 btnBg"
+                    (click)="UpdateInvoiceStatus(element.STATUS,element.HEADER_ID)">Change to save</button>
                 </td>
               </ng-container>
 

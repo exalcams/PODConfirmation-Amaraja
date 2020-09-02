@@ -60,6 +60,8 @@ import { AcademyCourseService } from 'app/services/course.service';
 import { InvoiceItemComponent } from './invoice-item/invoice-item.component';
 import { DecimalPipe } from '@angular/common';
 import { InvoiceDetailsComponent } from './invoice-details/invoice-details.component';
+import { SavedInvoiceComponent } from './saved-invoice/saved-invoice.component';
+import { PartiallyConfirmedInvoiceComponent } from './partially-confirmed-invoice/partially-confirmed-invoice.component';
 
 const routes = [
     {
@@ -73,6 +75,14 @@ const routes = [
     {
         path: 'invItem',
         component: InvoiceItemComponent
+    },
+    {
+        path: 'savedinvoice',
+        component: SavedInvoiceComponent
+    },
+    {
+        path: 'partialinvoice',
+        component: PartiallyConfirmedInvoiceComponent
     },
     // {
     //     path     : 'courses',
@@ -148,7 +158,7 @@ const routes = [
         ChartsModule,
         FormsModule
     ],
-    declarations: [DashboardComponent, InvoiceItemComponent, InvoiceDetailsComponent],
+    declarations: [DashboardComponent, InvoiceItemComponent, InvoiceDetailsComponent, SavedInvoiceComponent, PartiallyConfirmedInvoiceComponent],
     providers: [
         AcademyCoursesService,
         AcademyCourseService,

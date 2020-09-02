@@ -218,6 +218,34 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('SavedInvoice') >= 0) {
+      this.children.push(
+        {
+          id: 'savedinvoice',
+          title: 'Saved Invoices',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'receiptIcon',
+          isSvgIcon: true,
+          // icon: 'receipt',
+          url: '/pages/savedinvoice',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('PartiallyConfirmedInvoice') >= 0) {
+      this.children.push(
+        {
+          id: 'partialinvoice',
+          title: 'Partial Confirmed Invoices',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'receiptlongIcon',
+          isSvgIcon: true,
+          // icon: 'receipt',
+          url: '/pages/partialinvoice',
+        }
+      );
+    }
     if (this.MenuItems.indexOf('DeliveryComplianceReport') >= 0) {
       this.children.push(
         {
