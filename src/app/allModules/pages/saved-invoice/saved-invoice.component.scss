@@ -1,0 +1,243 @@
+@import "src/@fuse/scss/fuse";
+#saved-invoice {
+  .progressBarPostion {
+    position: absolute !important;
+    top: 350px;
+    z-index: 1;
+    left: 55%;
+  }
+  .center {
+    padding: 5px !important;
+    .content-card1 {
+      display: flex;
+      flex: 1;
+      position: relative;
+      border-radius: 10px;
+
+      //   .mat-sidenav-container {
+      //     display: flex;
+      //     flex: 1;
+      //     width: 100%;
+
+      //     > .mat-sidenav-content,
+      //     > .mat-drawer-content {
+      //       display: flex;
+      //       flex: 1 1 auto;
+      //       min-height: 100%;
+      //       height: auto;
+      //     }
+
+      //     > .mat-drawer-content {
+      //       max-width: 100%;
+      //     }
+
+      //     mat-sidenav {
+      //       display: flex;
+      //       flex-direction: column;
+      //       width: 400px;
+      //       max-width: 90%;
+      //       box-shadow: 0 0 1px rgba(0, 0, 0, 0.37);
+      //       overflow: hidden;
+      //     }
+      //   }
+    }
+  }
+  .cardHeader {
+    background-color: #fffdf9;
+    height: 45px;
+  }
+  .boldClass {
+    font-weight: bold;
+  }
+
+  .boldItalicClass {
+    @extend .boldClass;
+    font-style: italic;
+  }
+
+  .semiBoldClass {
+    font-weight: 500;
+  }
+
+  .subTitle {
+    @extend .semiBoldClass;
+    font-size: 14px;
+    text-decoration: var(--textDec);
+  }
+
+  // .tableData {
+  //   overflow: auto;
+  //   height: 60vh !important;
+  //   min-height: 60vh !important;
+  //   // max-height: 33vh !important;
+  //   .table {
+  //     width: 150vw;
+  //     max-width: 100%;
+  //     overflow: auto;
+  //     margin-bottom: 10px;
+  //     display: table;
+  //     border-collapse: collapse;
+  //     margin: 0px;
+  //     // background-color: rgb(238, 238, 238);
+  //   }
+  //   .row,
+  //   .header-row {
+  //     display: table-row;
+  //     min-height: 36px !important;
+  //   }
+  //   .mat-row:hover {
+  //     background-color: lightgrey;
+  //   }
+  //   .cell,
+  //   .header-cell {
+  //     word-wrap: initial;
+  //     display: table-cell;
+  //     padding: 0px 5px;
+  //     line-break: unset;
+  //     width: fit-content;
+  //     white-space: nowrap;
+  //     overflow: hidden;
+  //     vertical-align: middle;
+  //     text-align: center;
+  //   }
+  //   .header-row,
+  //   .header-cell {
+  //     margin: 0 auto;
+  //     min-height: 100px !important;
+  //     text-align: center;
+  //     vertical-align: middle;
+  //     align-self: center;
+  //   }
+  //   .mat-card {
+  //     min-width: max-content;
+  //     max-width: max-content;
+  //   }
+  //   .sort-header {
+  //     display: flex;
+  //     align-content: center;
+  //     text-align: center;
+  //     justify-content: center;
+  //     font-size: 12pt;
+  //   }
+  //   .header-cell {
+  //     font-weight: bold;
+  //   }
+  // }
+
+  .side-bar {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    .sidenav-content {
+      overflow: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  @mixin TableBorderRight($color) {
+    border-right: 1px solid $color;
+  }
+
+  .TablePadFont {
+    padding: 5px;
+    font-size: 12px;
+    min-width: 100px !important;
+  }
+
+  table {
+    width: 100%;
+
+    th {
+      @include TableBorderRight(#e0e0e0);
+      @extend .TablePadFont;
+      color: white;
+      background-color: #121214;
+    }
+
+    td {
+      @include TableBorderRight(#ffffff);
+      @extend .TablePadFont;
+      font-size: 12px;
+      min-width: max-content !important;
+    }
+
+    tr {
+      height: 40px;
+    }
+
+    .mat-input-element:disabled {
+      color: gray !important;
+      background: whitesmoke !important;
+      cursor: not-allowed !important;
+    }
+  }
+
+  // td.mat-cell {
+  //   /* row padding */
+  //   padding: 16px 0;
+  //   /* row border */
+  //   border-bottom: 1px solid #ffa600;
+  //   border-top: 1px solid #ffa600;
+  //  }
+
+  //  td.mat-cell:first-child {
+  //    /* row border */
+  //    border-left: 1px solid #ffa600;
+  //  }
+
+  //  td.mat-cell:last-child {
+  //    /* row border */
+  //    border-right: 1px solid #ffa600;
+  //  }
+
+  //  table {
+  //    /* row spacing / margin */
+  //    border-spacing: 0 8px !important;
+  //  }
+  .whiteBg {
+    background-color: white !important;
+  }
+  .btnBg {
+    background-color: #efb577 !important;
+    color: white;
+  }
+  .abnormal {
+    .mat-form-field-flex > .mat-form-field-infix {
+      padding: 0.3em 0px !important;
+    }
+    .mat-form-field-label-wrapper {
+      top: -1.5em;
+    }
+    .mat-form-field-wrapper {
+      margin: 0 !important;
+      padding-bottom: 4px !important;
+      padding-top: 4px !important;
+    }
+    .mat-form-field-appearance-outline .mat-form-field-flex {
+      padding: 0 0.4em 0 0.4em;
+    }
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+      transform: translateY(-1.1em) scale(0.75);
+      width: 133.33333%;
+    }
+  }
+  .excelBtn {
+    // margin-top: -16px;
+    min-width: 0px;
+    background-color: white;
+    color: rgb(46, 125, 50);
+    &.mat-stroked-button {
+      // border-radius: 5px;
+      padding: 0px 8px;
+    }
+  }
+  .excelImg {
+    // margin: 4px 6px 4px 4px;
+    height: 24px;
+  }
+  .example-container {
+    max-height: 400px;
+    overflow: auto;
+  }
+}

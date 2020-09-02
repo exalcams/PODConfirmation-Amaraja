@@ -49,6 +49,12 @@ export class InvoiceService {
   //         )
   //         .pipe(catchError(this.errorHandler));
   // }
+  GetInvoiceItemDetailsByHeaderID(HeaderID: number): Observable<InvoiceItemDetails[] | string> {
+    return this._httpClient.get<InvoiceItemDetails[]>(
+      `${this.baseAddress}api/PODConfirmation/GetInvoiceItemDetailsByHeaderID?HeaderID=${HeaderID}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
 
   GetInvoiceItemDetailsByID(UserID: Guid, ID: number): Observable<InvoiceItemDetails[] | string> {
     return this._httpClient.get<InvoiceItemDetails[]>(
@@ -119,5 +125,41 @@ export class InvoiceService {
   //         )
   //         .pipe(catchError(this.errorHandler));
   // }
+
+  GetAllSavedInvoices(): Observable<InvoiceDetails[] | string> {
+    return this._httpClient
+      .get<InvoiceDetails[]>(
+        `${this.baseAddress}api/PODConfirmation/GetAllSavedInvoices`
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+  FilterSavedInvoices(StartDate: string, EndDate: string, InvoiceNumber: string,
+    Organization: string, Division: string, Plant: string, CustomerName: string): Observable<InvoiceDetails[] | string> {
+    return this._httpClient.get<InvoiceDetails[]>(
+      `${this.baseAddress}api/PODConfirmation/FilterSavedInvoices?StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
+  GetAllPartiallyConfirmedInvoices(): Observable<InvoiceDetails[] | string> {
+    return this._httpClient
+      .get<InvoiceDetails[]>(
+        `${this.baseAddress}api/PODConfirmation/GetAllPartiallyConfirmedInvoices`
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+  FilterPartiallyConfirmedInvoices(StartDate: string, EndDate: string, InvoiceNumber: string,
+    Organization: string, Division: string, Plant: string, CustomerName: string): Observable<InvoiceDetails[] | string> {
+    return this._httpClient.get<InvoiceDetails[]>(
+      `${this.baseAddress}api/PODConfirmation/FilterPartiallyConfirmedInvoices?StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
+  UpdatePartiallyConfirmedInvoiceStatus(HeaderID: number, Status: string, ModifiedBy: string): Observable<InvoiceDetails[] | string> {
+    return this._httpClient
+      .get<InvoiceDetails[]>(
+        `${this.baseAddress}api/PODConfirmation/UpdatePartiallyConfirmedInvoiceStatus?HeaderID=${HeaderID}&Status=${Status}`
+      )
+      .pipe(catchError(this.errorHandler));
+  }
 }
 
