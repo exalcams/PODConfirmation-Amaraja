@@ -12,6 +12,29 @@
             From date is required
           </mat-error>
         </mat-form-field> -->
+        <mat-form-field class="mx-8" fxFlex [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
+          <!-- <input matInput placeholder="Organization" formControlName="Organization"> -->
+          <mat-select placeholder="Organization" formControlName="Organization">
+            <mat-option value="all">All
+            </mat-option>
+            <mat-option *ngFor="let mp of AllOrganizations" [value]="mp.OrganizationCode" (click)="togglePerOne1()">
+              {{mp.OrganizationCode}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="mx-8" fxFlex [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
+          <!-- <input matInput placeholder="Division" formControlName="Division"> -->
+          <mat-select placeholder="Division" formControlName="Division">
+            <mat-option [value]="divi" *ngFor="let divi of Divisions">{{divi}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="mx-8" fxFlex [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
+          <!-- <input matInput placeholder="Plant" formControlName="Plant"> -->
+          <mat-select placeholder="Plant" formControlName="Plant">
+            <mat-option value="all">All</mat-option>
+            <mat-option *ngFor="let mp of FilteredPlants" [value]="mp.PlantCode">
+              {{mp.PlantCode}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <mat-form-field class="mx-8" fxFlex>
           <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="StartDate"
             (keydown)="onKeydown($event)" (dateChange)="DateSelected()">
@@ -37,29 +60,6 @@
             End date should not be less than from date
           </div>
         </div>
-        <mat-form-field class="mx-8" fxFlex [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
-          <!-- <input matInput placeholder="Organization" formControlName="Organization"> -->
-          <mat-select placeholder="Organization" formControlName="Organization">
-            <mat-option value="all">All
-            </mat-option>
-            <mat-option *ngFor="let mp of AllOrganizations" [value]="mp.OrganizationCode" (click)="togglePerOne1()">
-              {{mp.OrganizationCode}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="mx-8" fxFlex [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
-          <!-- <input matInput placeholder="Division" formControlName="Division"> -->
-          <mat-select placeholder="Division" formControlName="Division">
-            <mat-option [value]="div" *ngFor="let divi of Divisions">{{divi}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="mx-8" fxFlex [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
-          <!-- <input matInput placeholder="Plant" formControlName="Plant"> -->
-          <mat-select placeholder="Plant" formControlName="Plant">
-            <mat-option value="all">All</mat-option>
-            <mat-option *ngFor="let mp of FilteredPlants" [value]="mp.PlantCode">
-              {{mp.PlantCode}}</mat-option>
-          </mat-select>
-        </mat-form-field>
         <!-- <mat-form-field class="mx-8" fxFlex>
           <input matInput placeholder="Invoice number" formControlName="InvoiceNumber">
         </mat-form-field>

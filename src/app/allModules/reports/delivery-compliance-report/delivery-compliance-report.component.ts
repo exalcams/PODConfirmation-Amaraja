@@ -133,6 +133,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
     this.GetAllOrganizations();
     this.GetAllPlants();
     this.GetAllPlantOrganizationMaps();
+    this.GetDivisions();
     if (this.currentUserRole.toLowerCase() === 'amararaja user') {
       this.getFilteredInvoiceDetails();
     } else {
