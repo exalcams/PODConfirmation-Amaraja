@@ -141,6 +141,7 @@ export class SavedInvoiceComponent implements OnInit {
       this.GetAllOrganizations();
       this.GetAllPlants();
       this.GetAllPlantOrganizationMaps();
+      this.GetDivisions();
       this.FilterSavedInvoices();
     } else {
       this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
