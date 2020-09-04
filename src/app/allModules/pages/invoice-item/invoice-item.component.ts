@@ -504,6 +504,7 @@ export class InvoiceItemComponent implements OnInit {
 
   UpdateInvoiceItems(Actiontype: string): void {
     this.isProgressBarVisibile = true;
+    let Ststs = '';
     const invoiceUpdation = new InvoiceUpdation();
     let VehReportedDate = this.InvoiceItemFormGroup.controls.VehicleReportedDate.value;
     if (VehReportedDate) {
@@ -513,8 +514,13 @@ export class InvoiceItemComponent implements OnInit {
     invoiceUpdation.InvoiceItems = this.GetInvoiceItemValues(Actiontype);
     this._invoiceService.UpdateInvoiceItems(invoiceUpdation).subscribe(
       data => {
-        const Ststs = Actiontype === 'Save' ? 'Saved' : Actiontype === 'Approve' ? 'Approved' :
-          Actiontype === 'Confirm' ? 'confirmed' : '';
+        const InvDetail = data as InvoiceDetails;
+        if (InvDetail) {
+          Ststs = InvDetail.STATUS;
+        } else {
+          Ststs = Actiontype === 'Save' ? 'Saved' : Actiontype === 'Approve' ? 'Approved' :
+            Actiontype === 'Confirm' ? 'confirmed' : '';
+        }
         if (Actiontype === 'Confirm' && this.fileToUploadList && this.fileToUploadList.length) {
           this._invoiceService.AddInvoiceAttachment(this.SelectedInvoiceDetail.HEADER_ID,
             this.currentUserID.toString(), this.fileToUploadList).subscribe(

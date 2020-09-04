@@ -125,7 +125,13 @@ export class InvoiceService {
   //         )
   //         .pipe(catchError(this.errorHandler));
   // }
-
+  GetAllSavedInvoicesByUserID(UserID: Guid): Observable<InvoiceDetails[] | string> {
+    return this._httpClient
+      .get<InvoiceDetails[]>(
+        `${this.baseAddress}api/PODConfirmation/GetAllSavedInvoicesByUserID?UserID=${UserID}`
+      )
+      .pipe(catchError(this.errorHandler));
+  }
   GetAllSavedInvoices(): Observable<InvoiceDetails[] | string> {
     return this._httpClient
       .get<InvoiceDetails[]>(
@@ -137,6 +143,13 @@ export class InvoiceService {
     Organization: string, Division: string, Plant: string, CustomerName: string): Observable<InvoiceDetails[] | string> {
     return this._httpClient.get<InvoiceDetails[]>(
       `${this.baseAddress}api/PODConfirmation/FilterSavedInvoices?StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
+  FilterSavedInvoicesByUserID(UserID: Guid, StartDate: string, EndDate: string, InvoiceNumber: string,
+    Organization: string, Division: string, Plant: string, CustomerName: string): Observable<InvoiceDetails[] | string> {
+    return this._httpClient.get<InvoiceDetails[]>(
+      `${this.baseAddress}api/PODConfirmation/FilterSavedInvoicesByUserID?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
     )
       .pipe(catchError(this.errorHandler));
   }

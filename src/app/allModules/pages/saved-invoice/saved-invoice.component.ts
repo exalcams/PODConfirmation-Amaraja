@@ -137,7 +137,7 @@ export class SavedInvoiceComponent implements OnInit {
       Plant: [''],
       CustomerName: ['']
     });
-    if (this.currentUserRole.toLowerCase() === 'administrator') {
+    if (this.currentUserRole.toLowerCase() === 'amararaja user') {
       this.GetAllOrganizations();
       this.GetAllPlants();
       this.GetAllPlantOrganizationMaps();
@@ -169,7 +169,7 @@ export class SavedInvoiceComponent implements OnInit {
   // }
 
   GetAllOrganizations(): void {
-    this._masterService.GetAllOrganizations().subscribe(
+    this._masterService.GetAllOrganizationsByUserID(this.currentUserID).subscribe(
       (data) => {
         this.AllOrganizations = data as Organization[];
       },
@@ -179,7 +179,7 @@ export class SavedInvoiceComponent implements OnInit {
     );
   }
   GetAllPlants(): void {
-    this._masterService.GetAllPlants().subscribe(
+    this._masterService.GetAllPlantsByUserID(this.currentUserID).subscribe(
       (data) => {
         this.AllPlants = data as Plant[];
         this.FilteredPlants = data as Plant[];
@@ -214,41 +214,7 @@ export class SavedInvoiceComponent implements OnInit {
   GetAllSavedInvoices(): void {
     this.isProgressBarVisibile = true;
     this._invoiceService
-      .GetAllSavedInvoices()
-      .subscribe(
-        data => {
-          this.allInvoiceDetails = data as InvoiceDetails[];
-          this.allInvoicesCount = this.allInvoiceDetails.length;
-          // this.dataSource = new MatTableDataSource(
-          //     this.allInvoiceDetails
-          // );
-          // this.dataSource.paginator = this.paginator;
-          // this.dataSource.sort = this.sort;
-          this.ClearFormArray(this.InvoiceDetailsFormArray);
-          this.dataSource = new MatTableDataSource(this.InvoiceDetailsFormArray.controls);
-          this.allInvoiceDetails.forEach(x => {
-            this.InsertInvoiceDetailsFormGroup(x);
-          });
-          if (this.allInvoicesCount > 0) {
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          }
-          this.isProgressBarVisibile = false;
-        },
-        err => {
-          this.isProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar(
-            err instanceof Object ? 'Something went wrong' : err,
-            SnackBarStatus.danger
-          );
-        }
-      );
-  }
-
-  GetOpenAndSavedInvoiceDetailByUser(): void {
-    this.isProgressBarVisibile = true;
-    this._dashboardService
-      .GetOpenAndSavedInvoiceDetailByUser(this.currentUserCode)
+      .GetAllSavedInvoicesByUserID(this.currentUserID)
       .subscribe(
         data => {
           this.allInvoiceDetails = data as InvoiceDetails[];
@@ -485,30 +451,7 @@ export class SavedInvoiceComponent implements OnInit {
       }
     );
   }
-
-  ApproveInvoices(): void {
-    const approverDetails = new ApproverDetails();
-    approverDetails.ApprovedBy = this.currentUserID.toString();
-    approverDetails.HEADERIDs = this.selection.selected.map(a => a.HEADER_ID);
-    this.isProgressBarVisibile = true;
-    this._dashboardService
-      .ApproveSelectedInvoices(approverDetails)
-      .subscribe(
-        data => {
-          this.notificationSnackBarComponent.openSnackBar(`Selected Invoice(s) approved successfully`, SnackBarStatus.success);
-          this.selection = new SelectionModel<InvoiceDetails>(true, []);
-          this.getConfirmedInvoiceDetails();
-          this.isProgressBarVisibile = false;
-        },
-        err => {
-          this.isProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar(
-            err instanceof Object ? 'Something went wrong' : err,
-            SnackBarStatus.danger
-          );
-        }
-      );
-  }
+  
   SearchInvoices(): void {
     this.FilterSavedInvoices();
   }
@@ -538,7 +481,7 @@ export class SavedInvoiceComponent implements OnInit {
           EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this._invoiceService
-          .FilterSavedInvoices(StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
+          .FilterSavedInvoicesByUserID(this.currentUserID, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
           .subscribe(
             data => {
               this.allInvoiceDetails = data as InvoiceDetails[];
