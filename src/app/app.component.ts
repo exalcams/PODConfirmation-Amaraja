@@ -165,7 +165,7 @@ export class AppComponent implements OnInit, OnDestroy {
             });
 
         // Retrive menu items from Local Storage    
-        const menuItems = localStorage.getItem('menuItemsData');
+        const menuItems = sessionStorage.getItem('menuItemsData');
         if (menuItems) {
             this.navigation = JSON.parse(menuItems);
             this._fuseNavigationService.unregister('main');

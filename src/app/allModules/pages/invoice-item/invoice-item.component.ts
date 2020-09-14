@@ -31,6 +31,8 @@ export class InvoiceItemComponent implements OnInit {
   MenuItems: string[];
   isProgressBarVisibile: boolean;
   allInvoicesCount: number;
+  minDate: Date;
+  // maxDate: Date;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   SelectedInvoiceDetail: InvoiceDetails;
   InvoiceItemDetailsList: InvoiceItemDetails[] = [];
@@ -89,13 +91,20 @@ export class InvoiceItemComponent implements OnInit {
       this._router.navigate(['/pages/dashboard']);
     }
     this.isProgressBarVisibile = true;
+    this.minDate = new Date();
+    if (this.SelectedInvoiceDetail.LR_DATE) {
+      this.minDate = this.SelectedInvoiceDetail.LR_DATE as Date;
+    } else if (this.SelectedInvoiceDetail.INV_DATE) {
+      this.minDate = this.SelectedInvoiceDetail.INV_DATE as Date;
+    }
+    // this.maxDate = new Date();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     // this.ReasonTemplates = ['Completely Received', 'Partially Received', 'Damaged'];
   }
 
   ngOnInit(): void {
     // Retrive authorizationData
-    const retrievedObject = localStorage.getItem('authorizationData');
+    const retrievedObject = sessionStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.userID;
@@ -312,7 +321,8 @@ export class InvoiceItemComponent implements OnInit {
       REASONControl.enable();
       REMARKSControl.enable();
       REASONControl.setValidators(Validators.required);
-      REMARKSControl.setValidators(Validators.required);
+      // REMARKSControl.setValidators(Validators.required);
+      REMARKSControl.clearValidators();
     } else {
       REASONControl.patchValue('Completely received');
       REMARKSControl.patchValue('');

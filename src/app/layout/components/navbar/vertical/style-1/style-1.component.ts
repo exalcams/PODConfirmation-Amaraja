@@ -130,7 +130,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
             });
 
         // Retrive authorizationData
-        const retrievedObject = localStorage.getItem('authorizationData');
+        const retrievedObject = sessionStorage.getItem('authorizationData');
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.CurrentLoggedInUser = this.authenticationDetails.displayName;

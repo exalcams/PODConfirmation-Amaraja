@@ -113,7 +113,7 @@ export class LoginComponent implements OnInit {
   }
 
   saveUserDetails(data: AuthenticationDetails): void {
-    localStorage.setItem('authorizationData', JSON.stringify(data));
+    sessionStorage.setItem('authorizationData', JSON.stringify(data));
     this.UpdateMenu();
     this.notificationSnackBarComponent.openSnackBar('Logged in successfully', SnackBarStatus.success);
     if (data.userRole === 'Administrator') {
@@ -183,7 +183,7 @@ export class LoginComponent implements OnInit {
   }
 
   UpdateMenu(): void {
-    const retrievedObject = localStorage.getItem('authorizationData');
+    const retrievedObject = sessionStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
@@ -355,7 +355,7 @@ export class LoginComponent implements OnInit {
       children: this.children
     });
     // Saving local Storage
-    localStorage.setItem('menuItemsData', JSON.stringify(this.navigation));
+    sessionStorage.setItem('menuItemsData', JSON.stringify(this.navigation));
     // Update the service in order to update menu
     this._menuUpdationService.PushNewMenus(this.navigation);
   }
