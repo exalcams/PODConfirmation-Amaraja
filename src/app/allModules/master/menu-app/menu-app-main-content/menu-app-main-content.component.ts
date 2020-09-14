@@ -42,7 +42,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     // console.log(this.currentSelectedMenuApp);
     // Retrive authorizationData
-    const retrievedObject = localStorage.getItem('authorizationData');
+    const retrievedObject = sessionStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
     } else {

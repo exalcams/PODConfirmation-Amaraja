@@ -33,6 +33,8 @@ export class InvoiceDetailsComponent implements OnInit {
     MenuItems: string[];
     isProgressBarVisibile: boolean;
     allInvoicesCount: number;
+    minDate: Date;
+    // maxDate: Date;
     notificationSnackBarComponent: NotificationSnackBarComponent;
     allInvoiceDetails: InvoiceDetails[] = [];
     InvoiceDetailsFormGroup: FormGroup;
@@ -91,11 +93,13 @@ export class InvoiceDetailsComponent implements OnInit {
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.SelectedInvoiceDetail = new InvoiceDetails();
         this.isDateError = false;
+        this.minDate = new Date();
+        // this.maxDate = new Date();
     }
 
     ngOnInit(): void {
         // Retrive authorizationData
-        const retrievedObject = localStorage.getItem('authorizationData');
+        const retrievedObject = sessionStorage.getItem('authorizationData');
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.currentUserID = this.authenticationDetails.userID;
@@ -279,6 +283,13 @@ export class InvoiceDetailsComponent implements OnInit {
             VEHICLE_REPORTED_DATE: [asnItem.VEHICLE_REPORTED_DATE],
         });
         row.disable();
+        // let minDate = new Date();
+        // if (asnItem.LR_DATE) {
+        //     minDate = asnItem.LR_DATE as Date;
+        // } else if (asnItem.INV_DATE) {
+        //     minDate = asnItem.INV_DATE as Date;
+        // }
+        // row.get('VEHICLE_REPORTED_DATE').setValidators(Validators.min(minDate));
         row.get('VEHICLE_REPORTED_DATE').enable();
         this.InvoiceDetailsFormArray.push(row);
         this.dataSource = new MatTableDataSource(this.InvoiceDetailsFormArray.controls);

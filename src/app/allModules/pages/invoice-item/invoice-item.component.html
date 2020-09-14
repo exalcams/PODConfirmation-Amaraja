@@ -37,6 +37,7 @@
                 <th [style.display]="(currentUserRole | lowercase)!=='customer'?'table-cell':'none'">Customer</th>
                 <th [style.display]="(currentUserRole | lowercase)!=='customer'?'table-cell':'none'">Customer name</th>
                 <th>Vehicle No</th>
+                <th>LR Date</th>
                 <th>Vehicle Reported Date</th>
                 <th>Status</th>
               </tr>
@@ -53,11 +54,12 @@
                 <td [style.display]="(currentUserRole | lowercase)!=='customer'?'table-cell':'none'">
                   {{SelectedInvoiceDetail?.CUSTOMER_NAME}}</td>
                 <td>{{SelectedInvoiceDetail?.VEHICLE_NO}}</td>
+                <td>{{SelectedInvoiceDetail?.LR_DATE | date :'dd/MM/yyyy'}}</td>
                 <td>
                   <mat-form-field appearance="outline" class="m-4"
                     *ngIf="(currentUserRole | lowercase)==='customer'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS==='Saved')">
                     <input matInput [matDatepicker]="picker" placeholder="Vehicle Reported Date"
-                      formControlName="VehicleReportedDate" (keydown)="onKeydown($event)">
+                      formControlName="VehicleReportedDate" (keydown)="onKeydown($event)" [min]="minDate">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('VehicleReportedDate').touched &&
@@ -96,7 +98,7 @@
           </div> -->
 
         </div>
-        <div fxFlex>
+        <div fxFlex class="mr-16">
           <div fxLayoutAlign="start center" class="pt-8 mb-8">
             <span class="orangeBorderBottom h2"> ITEM DETAILS </span>
           </div>

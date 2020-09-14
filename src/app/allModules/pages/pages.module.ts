@@ -55,8 +55,6 @@ import "chartjs-plugin-annotation";
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { AcademyCoursesService } from 'app/services/courses.service';
-import { AcademyCourseService } from 'app/services/course.service';
 import { InvoiceItemComponent } from './invoice-item/invoice-item.component';
 import { DecimalPipe } from '@angular/common';
 import { InvoiceDetailsComponent } from './invoice-details/invoice-details.component';
@@ -160,8 +158,6 @@ const routes = [
     ],
     declarations: [DashboardComponent, InvoiceItemComponent, InvoiceDetailsComponent, SavedInvoiceComponent, PartiallyConfirmedInvoiceComponent],
     providers: [
-        AcademyCoursesService,
-        AcademyCourseService,
         DecimalPipe
     ],
     entryComponents: []

@@ -132,7 +132,7 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
         this.selectedLanguage = _.find(this.languages, { 'id': this._translateService.currentLang });
 
         // Retrive authorizationData
-        const retrievedObject = localStorage.getItem('authorizationData');
+        const retrievedObject = sessionStorage.getItem('authorizationData');
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.CurrentLoggedInUser = this.authenticationDetails.displayName;
@@ -202,7 +202,7 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        const retrievedObject = localStorage.getItem('authorizationData');
+        const retrievedObject = sessionStorage.getItem('authorizationData');
         this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
         this.CurrentLoggedInUser = this.authenticationDetails.displayName;
         console.log(this.authenticationDetails);
@@ -239,8 +239,8 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
     logOutClick(): void {
         this._authService.SignOut(this.authenticationDetails.userID).subscribe(
             (data) => {
-                localStorage.removeItem('authorizationData');
-                localStorage.removeItem('menuItemsData');
+                sessionStorage.removeItem('authorizationData');
+                sessionStorage.removeItem('menuItemsData');
                 this._compiler.clearCache();
                 this._router.navigate(['auth/login']);
                 this.notificationSnackBarComponent.openSnackBar('Signed out successfully', SnackBarStatus.success);
@@ -271,8 +271,8 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
                         (res) => {
                             console.log(res);
                             this.notificationSnackBarComponent.openSnackBar('Password updated successfully, please log with new password', SnackBarStatus.success);
-                            localStorage.removeItem('authorizationData');
-                            localStorage.removeItem('menuItemsData');
+                            sessionStorage.removeItem('authorizationData');
+                            sessionStorage.removeItem('menuItemsData');
                             this._compiler.clearCache();
                             this._router.navigate(['auth/login']);
                         }, (err) => {
