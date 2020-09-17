@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AuthenticationDetails, Organization, Plant, PlantOrganizationMap, PlantWithOrganization } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { InvoiceDetails, ApproverDetails, ReportInvoice, StatusTemplate } from 'app/models/invoice-details';
-import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatOption } from '@angular/material';
+import { InvoiceDetails, ApproverDetails, ReportInvoice, StatusTemplate, AttachmentDetails } from 'app/models/invoice-details';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatOption, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
@@ -16,6 +16,7 @@ import { DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
+import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
 
 @Component({
   selector: 'app-delivery-compliance-report',
@@ -88,7 +89,8 @@ export class DeliveryComplianceReportComponent implements OnInit {
     private _shareParameterService: ShareParameterService,
     public snackBar: MatSnackBar,
     private _formBuilder: FormBuilder,
-    private _datePipe: DatePipe
+    private _datePipe: DatePipe,
+    private dialog: MatDialog,
   ) {
     this.isProgressBarVisibile = true;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
@@ -366,17 +368,41 @@ export class DeliveryComplianceReportComponent implements OnInit {
     this.isProgressBarVisibile = true;
     this._reportService.DowloandPODDocument(HeaderID, AttachmentID).subscribe(
       data => {
-        if (data) {
-          const BlobFile = data as Blob;
-          saveAs(BlobFile, fileName);
-        }
         this.isProgressBarVisibile = false;
+        if (data) {
+          // const BlobFile = data as Blob;
+          // saveAs(BlobFile, fileName);
+          let fileType = 'image/jpg';
+          fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+            fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+              fileName.toLowerCase().includes('.png') ? 'image/png' :
+                fileName.toLowerCase().includes('.gif') ? 'image/gif' :
+                  fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+          const blob = new Blob([data], { type: fileType });
+          this.OpenAttachmentDialog(fileName, blob);
+        }
       },
       error => {
         console.error(error);
         this.isProgressBarVisibile = false;
       }
     );
+  }
+
+  OpenAttachmentDialog(FileName: string, blob: Blob): void {
+    const attachmentDetails: AttachmentDetails = {
+      FileName: FileName,
+      blob: blob
+    };
+    const dialogConfig: MatDialogConfig = {
+      data: attachmentDetails,
+      panelClass: 'attachment-dialog'
+    };
+    const dialogRef = this.dialog.open(AttachmentDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+      }
+    });
   }
 
   exportAsXLSX(): void {

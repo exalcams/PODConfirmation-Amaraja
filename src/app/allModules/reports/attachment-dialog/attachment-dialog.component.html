@@ -1,0 +1,30 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="toolBg m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">{{attachmentDetails?.FileName}}</span>
+      <div>
+        <button mat-icon-button (click)="downloadFile()">
+          <mat-icon svgIcon="arrowDownwardIcon"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+          <mat-icon svgIcon="closeIcon"></mat-icon>
+        </button>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content>
+    <div fxLayout style="height: 80vh">
+      <div fxFlex="99.9" class="role-side-bar">
+        <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
+          <iframe *ngIf="AttachmentData" style="width:100%;height:100%;" [src]="AttachmentData"></iframe>
+        </div>
+      </div>
+      <div fxFlex="0.01"></div>
+    </div>
+  </div>
+
+  <mat-dialog-actions class="m-0 p-16" align="end">
+    <button mat-button type="button" class="closeBtn" (click)="CloseClicked()">Close</button>
+  </mat-dialog-actions>
+</div>

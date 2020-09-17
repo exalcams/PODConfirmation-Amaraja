@@ -64,8 +64,8 @@
         </form>
 
         <div flex class="mt-10 mr-16">
-          <form autocomplete="off" class="abnormal" fxLayout="column" fxLayoutAlign="start" 
-            name="form" novalidate [formGroup]="InvoiceDetailsFormGroup">
+          <form autocomplete="off" class="abnormal" fxLayout="column" fxLayoutAlign="start" name="form" novalidate
+            [formGroup]="InvoiceDetailsFormGroup">
             <div fxLayout fxLayoutAlign="end center">
               <div fxFlex align="end">
                 <button (click)="exportAsXLSX()" class="excelBtn mb-8" mat-stroked-button>
@@ -286,9 +286,9 @@
                   </th>
                   <td mat-cell *matCellDef="let element;let index=index;" style="width: 180px;" [formGroupName]="index">
                     <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 150px;">
-                      <input matInput [matDatepicker]="picker30" formControlName="VEHICLE_REPORTED_DATE" 
-                      [min]="InvoiceDetailsFormGroup.get('InvoiceDetails').controls[index]?.get('LR_DATE')?.value?InvoiceDetailsFormGroup.get('InvoiceDetails').controls[index]?.get('LR_DATE')?.value:InvoiceDetailsFormGroup.get('InvoiceDetails').controls[index]?.get('INV_DATE')?.value?InvoiceDetailsFormGroup.get('InvoiceDetails').controls[index]?.get('INV_DATE')?.value:minDate"
-                      >
+                      <input matInput [matDatepicker]="picker30" formControlName="VEHICLE_REPORTED_DATE"
+                        [min]="InvoiceDetailsFormGroup.get('InvoiceDetails').controls[index]?.get('LR_DATE')?.value?InvoiceDetailsFormGroup.get('InvoiceDetails').controls[index]?.get('LR_DATE')?.value:InvoiceDetailsFormGroup.get('InvoiceDetails').controls[index]?.get('INV_DATE')?.value?InvoiceDetailsFormGroup.get('InvoiceDetails').controls[index]?.get('INV_DATE')?.value:minDate"
+                        [max]="maxDate" (keydown)="onKeydown($event)">
                       <mat-datepicker-toggle matSuffix [for]="picker30"> </mat-datepicker-toggle>
                       <mat-datepicker #picker30></mat-datepicker>
                       <mat-error
@@ -305,7 +305,7 @@
                   <td mat-cell *matCellDef="let element;let index=index;">
                     <button *ngIf="(currentUserRole | lowercase)==='customer'" mat-raised-button class="mr-4 btnBg"
                       (click)="SaveAndUploadInvoiceItem(index)">Confirm</button>
-                    <input hidden type="file" accept="application/pdf,image/jpg,image/jpeg" #fileInput id="file"
+                    <input hidden type="file" accept="application/pdf,image/jpg,image/jpeg,.png" #fileInput id="file"
                       (change)="handleFileInput($event)" />
                   </td>
                 </ng-container>
@@ -323,7 +323,7 @@
         </div>
         <div flex>
           <mat-paginator [style.display]="allInvoiceDetails?.length?'inherit':'none'"
-            [pageSizeOptions]="[5,10, 20, 30, 50, 75, 100]" showFirstLastButtons>
+            [pageSizeOptions]="[5,10,25,50,100,200,500,1000]" showFirstLastButtons>
           </mat-paginator>
         </div>
       </div>

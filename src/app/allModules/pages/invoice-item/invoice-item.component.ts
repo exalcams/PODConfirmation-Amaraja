@@ -32,7 +32,7 @@ export class InvoiceItemComponent implements OnInit {
   isProgressBarVisibile: boolean;
   allInvoicesCount: number;
   minDate: Date;
-  // maxDate: Date;
+  maxDate: Date;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   SelectedInvoiceDetail: InvoiceDetails;
   InvoiceItemDetailsList: InvoiceItemDetails[] = [];
@@ -97,7 +97,7 @@ export class InvoiceItemComponent implements OnInit {
     } else if (this.SelectedInvoiceDetail.INV_DATE) {
       this.minDate = this.SelectedInvoiceDetail.INV_DATE as Date;
     }
-    // this.maxDate = new Date();
+    this.maxDate = new Date();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     // this.ReasonTemplates = ['Completely Received', 'Partially Received', 'Damaged'];
   }

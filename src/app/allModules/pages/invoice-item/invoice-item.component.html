@@ -14,7 +14,7 @@
           <button
             *ngIf="(currentUserRole | lowercase)==='customer'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS==='Saved')"
             mat-raised-button class="mr-4 confirmBtn" (click)="SaveAndUploadInvoiceItem()">Confirm</button>
-          <input hidden type="file" accept="application/pdf,image/jpg,image/jpeg" #fileInput id="file"
+          <input hidden type="file" accept="application/pdf,image/jpg,image/jpeg,.png" #fileInput id="file"
             (change)="handleFileInput($event)" />
           <!-- <button *ngIf="(currentUserRole | lowercase)==='amararaja user'" mat-raised-button class="btnBg"
             (click)="ApproveInvoiceItem()">Approve</button> -->
@@ -59,7 +59,7 @@
                   <mat-form-field appearance="outline" class="m-4"
                     *ngIf="(currentUserRole | lowercase)==='customer'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS==='Saved')">
                     <input matInput [matDatepicker]="picker" placeholder="Vehicle Reported Date"
-                      formControlName="VehicleReportedDate" (keydown)="onKeydown($event)" [min]="minDate">
+                      formControlName="VehicleReportedDate" (keydown)="onKeydown($event)" [min]="minDate" [max]="maxDate">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('VehicleReportedDate').touched &&

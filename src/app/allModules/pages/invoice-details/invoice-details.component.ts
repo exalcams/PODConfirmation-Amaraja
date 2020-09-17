@@ -34,7 +34,7 @@ export class InvoiceDetailsComponent implements OnInit {
     isProgressBarVisibile: boolean;
     allInvoicesCount: number;
     minDate: Date;
-    // maxDate: Date;
+    maxDate: Date;
     notificationSnackBarComponent: NotificationSnackBarComponent;
     allInvoiceDetails: InvoiceDetails[] = [];
     InvoiceDetailsFormGroup: FormGroup;
@@ -94,7 +94,7 @@ export class InvoiceDetailsComponent implements OnInit {
         this.SelectedInvoiceDetail = new InvoiceDetails();
         this.isDateError = false;
         this.minDate = new Date();
-        // this.maxDate = new Date();
+        this.maxDate = new Date();
     }
 
     ngOnInit(): void {
@@ -267,6 +267,8 @@ export class InvoiceDetailsComponent implements OnInit {
             PLANT: [asnItem.PLANT],
             ORGANIZATION: [asnItem.ORGANIZATION],
             DIVISION: [asnItem.DIVISION],
+            LR_NO: [asnItem.LR_NO],
+            LR_DATE: [asnItem.LR_DATE],
             ODIN: [asnItem.ODIN],
             VEHICLE_NO: [asnItem.VEHICLE_NO],
             VEHICLE_CAPACITY: [asnItem.VEHICLE_CAPACITY],
@@ -308,9 +310,12 @@ export class InvoiceDetailsComponent implements OnInit {
         const invNo = ivoiceDetailsFormArray.controls[index].get('INV_NO').value;
         const row1 = this.allInvoiceDetails.filter(x => x.INV_NO === invNo)[0];
         if (row1) {
-            row1.VEHICLE_REPORTED_DATE = ivoiceDetailsFormArray.controls[index].get('VEHICLE_REPORTED_DATE').value;
+            if (ivoiceDetailsFormArray.controls[index].get('VEHICLE_REPORTED_DATE').valid) {
+                row1.VEHICLE_REPORTED_DATE = ivoiceDetailsFormArray.controls[index].get('VEHICLE_REPORTED_DATE').value;
+            }
             return row1;
         }
+
         return new InvoiceDetails();
     }
 
@@ -327,7 +332,7 @@ export class InvoiceDetailsComponent implements OnInit {
                     //   this.fileInput.nativeElement, 'dispatchEvent', [event]);
                 } else {
                     this.notificationSnackBarComponent.openSnackBar(
-                        'Please fill out Vehicle reported date', SnackBarStatus.danger
+                        'Please fill out valid Vehicle reported date', SnackBarStatus.danger
                     );
                 }
             } else {
