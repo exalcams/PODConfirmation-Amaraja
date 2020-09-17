@@ -12,7 +12,8 @@
             From date is required
           </mat-error>
         </mat-form-field> -->
-        <mat-form-field class="mx-8" fxFlex [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
+        <mat-form-field class="mx-8" fxFlex
+          [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
           <!-- <input matInput placeholder="Organization" formControlName="Organization"> -->
           <mat-select placeholder="Organization" formControlName="Organization">
             <mat-option value="all">All
@@ -21,13 +22,15 @@
               {{mp.OrganizationCode}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field class="mx-8" fxFlex [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
+        <mat-form-field class="mx-8" fxFlex
+          [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
           <!-- <input matInput placeholder="Division" formControlName="Division"> -->
           <mat-select placeholder="Division" formControlName="Division">
             <mat-option [value]="divi" *ngFor="let divi of Divisions">{{divi}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field class="mx-8" fxFlex [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
+        <mat-form-field class="mx-8" fxFlex
+          [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
           <!-- <input matInput placeholder="Plant" formControlName="Plant"> -->
           <mat-select placeholder="Plant" formControlName="Plant">
             <mat-option value="all">All</mat-option>
@@ -206,17 +209,17 @@
             </ng-container>
 
             <ng-container matColumnDef="CUSTOMER">
-              <th [style.display]="(currentUserRole | lowercase)==='amararaja user'?'table-cell':'none'"
-              mat-header-cell *matHeaderCellDef> Customer </th>
-              <td [style.display]="(currentUserRole | lowercase)==='amararaja user'?'table-cell':'none'"
-              mat-cell *matCellDef="let element;let index=index;"> {{element.CUSTOMER}} </td>
+              <th [style.display]="(currentUserRole | lowercase)==='amararaja user'?'table-cell':'none'" mat-header-cell
+                *matHeaderCellDef> Customer </th>
+              <td [style.display]="(currentUserRole | lowercase)==='amararaja user'?'table-cell':'none'" mat-cell
+                *matCellDef="let element;let index=index;"> {{element.CUSTOMER}} </td>
             </ng-container>
 
             <ng-container matColumnDef="CUSTOMER_NAME">
-              <th [style.display]="(currentUserRole | lowercase)==='amararaja user'?'table-cell':'none'"
-              mat-header-cell *matHeaderCellDef> Customer Name </th>
-              <td [style.display]="(currentUserRole | lowercase)==='amararaja user'?'table-cell':'none'"
-              mat-cell *matCellDef="let element;let index=index;"> {{element.CUSTOMER_NAME}}
+              <th [style.display]="(currentUserRole | lowercase)==='amararaja user'?'table-cell':'none'" mat-header-cell
+                *matHeaderCellDef> Customer Name </th>
+              <td [style.display]="(currentUserRole | lowercase)==='amararaja user'?'table-cell':'none'" mat-cell
+                *matCellDef="let element;let index=index;"> {{element.CUSTOMER_NAME}}
               </td>
             </ng-container>
 
@@ -263,7 +266,8 @@
             <mat-icon svgIcon="infoIcon" style="color: #1b56ca;margin-top: 10px;margin-left: 70px"></mat-icon>
             <span style="margin-left: 10px;">The table does not contain any data</span>
           </div>
-          <mat-paginator [style.display]="allInvoiceDetails?.length?'inherit':'none'" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+          <mat-paginator [style.display]="allInvoiceDetails?.length?'inherit':'none'"
+            [pageSizeOptions]="[5,10,25,50,100,200,500,1000]" showFirstLastButtons></mat-paginator>
         </div>
       </div>
     </div>
