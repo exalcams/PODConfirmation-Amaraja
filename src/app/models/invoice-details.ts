@@ -144,3 +144,7 @@ export class InvoiceHeaderDetail {
     VEHICLE_REPORTED_DATE: Date | string | null;
     STATUS: string;
 }
+export class AttachmentDetails {
+    FileName: string;
+    blob: Blob;
+}

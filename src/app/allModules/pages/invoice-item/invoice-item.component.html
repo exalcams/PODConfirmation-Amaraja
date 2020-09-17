@@ -14,7 +14,7 @@
           <button
             *ngIf="(currentUserRole | lowercase)==='customer'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS==='Saved')"
             mat-raised-button class="mr-4 confirmBtn" (click)="SaveAndUploadInvoiceItem()">Confirm</button>
-          <input hidden type="file" accept="application/pdf,image/jpg,image/jpeg" #fileInput id="file"
+          <input hidden type="file" accept="application/pdf,image/jpg,image/jpeg,.png" #fileInput id="file"
             (change)="handleFileInput($event)" />
           <!-- <button *ngIf="(currentUserRole | lowercase)==='amararaja user'" mat-raised-button class="btnBg"
             (click)="ApproveInvoiceItem()">Approve</button> -->

@@ -267,6 +267,8 @@ export class InvoiceDetailsComponent implements OnInit {
             PLANT: [asnItem.PLANT],
             ORGANIZATION: [asnItem.ORGANIZATION],
             DIVISION: [asnItem.DIVISION],
+            LR_NO: [asnItem.LR_NO],
+            LR_DATE: [asnItem.LR_DATE],
             ODIN: [asnItem.ODIN],
             VEHICLE_NO: [asnItem.VEHICLE_NO],
             VEHICLE_CAPACITY: [asnItem.VEHICLE_CAPACITY],
