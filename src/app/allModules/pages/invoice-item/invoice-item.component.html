@@ -59,7 +59,7 @@
                   <mat-form-field appearance="outline" class="m-4"
                     *ngIf="(currentUserRole | lowercase)==='customer'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS==='Saved')">
                     <input matInput [matDatepicker]="picker" placeholder="Vehicle Reported Date"
-                      formControlName="VehicleReportedDate" (keydown)="onKeydown($event)" [min]="minDate">
+                      formControlName="VehicleReportedDate" (keydown)="onKeydown($event)" [min]="minDate" [max]="maxDate">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     <mat-error class="pl-4 errorClass" *ngIf="InvoiceItemFormGroup.get('VehicleReportedDate').touched &&
