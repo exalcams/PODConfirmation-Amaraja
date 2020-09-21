@@ -14,6 +14,7 @@ import { MasterService } from 'app/services/master.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { AuthenticationDetails, UserNotification, ChangePassword } from 'app/models/master';
 import { ChangePassDialogComponent } from './change-pass-dialog/change-pass-dialog.component';
+import { ShareParameterService } from 'app/services/share-parameters.service';
 
 @Component({
     selector: 'toolbar',
@@ -57,7 +58,8 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
         private _compiler: Compiler,
         public dialog: MatDialog,
         public snackBar: MatSnackBar,
-        private _masterService: MasterService
+        private _masterService: MasterService,
+        private _shareParameterService: ShareParameterService
     ) {
         // Set the defaults
         this.userStatusOptions = [
@@ -241,6 +243,7 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
             (data) => {
                 sessionStorage.removeItem('authorizationData');
                 sessionStorage.removeItem('menuItemsData');
+                this.ClearSharedParameterValues();
                 this._compiler.clearCache();
                 this._router.navigate(['auth/login']);
                 this.notificationSnackBarComponent.openSnackBar('Signed out successfully', SnackBarStatus.success);
@@ -252,6 +255,14 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
         );
         // this._router.navigate(['auth/login']);
         // this.notificationSnackBarComponent.openSnackBar('Signed out successfully', SnackBarStatus.success);
+    }
+
+    ClearSharedParameterValues(): void {
+        this._shareParameterService.SetDashboardFilterClass(null);
+        this._shareParameterService.SetInvoiceFilterClass(null);
+        this._shareParameterService.SetReportFilterClass(null);
+        this._shareParameterService.SetSavedInvoiceFilterClass(null);
+        this._shareParameterService.SetPartialInvoiceFilterClass(null);
     }
 
     ChangePasswordClick(): void {

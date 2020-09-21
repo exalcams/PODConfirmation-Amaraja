@@ -3,7 +3,7 @@ import { AuthenticationDetails, Organization, Plant, PlantOrganizationMap, Plant
 import { Guid } from 'guid-typescript';
 import { MatOption, MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { InvoiceDetails, StatusTemplate } from 'app/models/invoice-details';
+import { FilterClass, InvoiceDetails, StatusTemplate } from 'app/models/invoice-details';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -73,6 +73,7 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
   InvoiceFilterFormGroup: FormGroup;
   AllStatusTemplates: StatusTemplate[] = [];
   isDateError: boolean;
+  CurrentFilterClass: FilterClass = new FilterClass();
   constructor(
     private _router: Router,
     private _reportService: ReportService,
@@ -87,6 +88,7 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
   ) {
     this.isProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.CurrentFilterClass = this._shareParameterService.GetPartialInvoiceFilterClass();
   }
 
   ngOnInit(): void {
@@ -105,16 +107,27 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
-
-    this.InvoiceFilterFormGroup = this._formBuilder.group({
-      StartDate: [],
-      EndDate: [],
-      InvoiceNumber: [''],
-      Organization: [''],
-      Division: [''],
-      Plant: [''],
-      CustomerName: ['']
-    });
+    if (this.CurrentFilterClass) {
+      this.InvoiceFilterFormGroup = this._formBuilder.group({
+        StartDate: [this.CurrentFilterClass.StartDate],
+        EndDate: [this.CurrentFilterClass.EndDate],
+        InvoiceNumber: [this.CurrentFilterClass.InvoiceNumber ? this.CurrentFilterClass.InvoiceNumber : ''],
+        Organization: [this.CurrentFilterClass.Organization ? this.CurrentFilterClass.Organization : ''],
+        Division: [this.CurrentFilterClass.Division ? this.CurrentFilterClass.Division : ''],
+        Plant: [this.CurrentFilterClass.Plant ? this.CurrentFilterClass.Plant : ''],
+        CustomerName: [this.CurrentFilterClass.CustomerName ? this.CurrentFilterClass.CustomerName : '']
+      });
+    } else {
+      this.InvoiceFilterFormGroup = this._formBuilder.group({
+        StartDate: [],
+        EndDate: [],
+        InvoiceNumber: [''],
+        Organization: [''],
+        Division: [''],
+        Plant: [''],
+        CustomerName: ['']
+      });
+    }
     this.isDateError = false;
     this.GetAllOrganizations();
     this.GetAllPlants();
@@ -203,6 +216,16 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
         if (enDate) {
           EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
+        if (!this.CurrentFilterClass) {
+          this.CurrentFilterClass = new FilterClass();
+        }
+        this.CurrentFilterClass.StartDate = StartDate;
+        this.CurrentFilterClass.EndDate = EndDate;
+        this.CurrentFilterClass.Organization = Organization1;
+        this.CurrentFilterClass.Division = Division;
+        this.CurrentFilterClass.Plant = Plant1;
+        this.CurrentFilterClass.CustomerName = CustomerName;
+        this._shareParameterService.SetPartialInvoiceFilterClass(this.CurrentFilterClass);
         this._invoiceService
           .FilterPartiallyConfirmedInvoices(StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
           .subscribe(

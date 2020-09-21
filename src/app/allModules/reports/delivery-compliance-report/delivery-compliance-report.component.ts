@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AuthenticationDetails, Organization, Plant, PlantOrganizationMap, PlantWithOrganization } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { InvoiceDetails, ApproverDetails, ReportInvoice, StatusTemplate, AttachmentDetails } from 'app/models/invoice-details';
+import { InvoiceDetails, ApproverDetails, ReportInvoice, StatusTemplate, AttachmentDetails, FilterClass } from 'app/models/invoice-details';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatOption, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
@@ -81,6 +81,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
   InvoiceFilterFormGroup: FormGroup;
   AllStatusTemplates: StatusTemplate[] = [];
   isDateError: boolean;
+  CurrentFilterClass: FilterClass = new FilterClass();
   constructor(
     private _router: Router,
     private _reportService: ReportService,
@@ -100,8 +101,8 @@ export class DeliveryComplianceReportComponent implements OnInit {
       { key: 'Saved (customer)', value: 'Saved' },
       { key: 'Partially Confirmed (customer)', value: 'PartiallyConfirmed' },
       { key: 'Confirmed (customer)', value: 'Confirmed' },
-
     ];
+    this.CurrentFilterClass = this._shareParameterService.GetReportFilterClass();
   }
 
   ngOnInit(): void {
@@ -120,17 +121,29 @@ export class DeliveryComplianceReportComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
-
-    this.InvoiceFilterFormGroup = this._formBuilder.group({
-      Status: ['Open', Validators.required],
-      StartDate: [],
-      EndDate: [],
-      InvoiceNumber: [''],
-      Organization: [''],
-      Division: [''],
-      Plant: [''],
-      CustomerName: ['']
-    });
+    if (this.CurrentFilterClass) {
+      this.InvoiceFilterFormGroup = this._formBuilder.group({
+        Status: [this.CurrentFilterClass.Status ? this.CurrentFilterClass.Status : 'Open', Validators.required],
+        StartDate: [this.CurrentFilterClass.StartDate],
+        EndDate: [this.CurrentFilterClass.EndDate],
+        InvoiceNumber: [this.CurrentFilterClass.InvoiceNumber ? this.CurrentFilterClass.InvoiceNumber : ''],
+        Organization: [this.CurrentFilterClass.Organization ? this.CurrentFilterClass.Organization : ''],
+        Division: [this.CurrentFilterClass.Division ? this.CurrentFilterClass.Division : ''],
+        Plant: [this.CurrentFilterClass.Plant ? this.CurrentFilterClass.Plant : ''],
+        CustomerName: [this.CurrentFilterClass.CustomerName ? this.CurrentFilterClass.CustomerName : '']
+      });
+    } else {
+      this.InvoiceFilterFormGroup = this._formBuilder.group({
+        Status: ['Open', Validators.required],
+        StartDate: [],
+        EndDate: [],
+        InvoiceNumber: [''],
+        Organization: [''],
+        Division: [''],
+        Plant: [''],
+        CustomerName: ['']
+      });
+    }
     this.isDateError = false;
     this.GetAllOrganizations();
     this.GetAllPlants();
@@ -220,6 +233,17 @@ export class DeliveryComplianceReportComponent implements OnInit {
         if (enDate) {
           EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
+        if (!this.CurrentFilterClass) {
+          this.CurrentFilterClass = new FilterClass();
+        }
+        this.CurrentFilterClass.Status = Status;
+        this.CurrentFilterClass.StartDate = StartDate;
+        this.CurrentFilterClass.EndDate = EndDate;
+        this.CurrentFilterClass.Organization = Organization1;
+        this.CurrentFilterClass.Division = Division;
+        this.CurrentFilterClass.Plant = Plant1;
+        this.CurrentFilterClass.CustomerName = CustomerName;
+        this._shareParameterService.SetReportFilterClass(this.CurrentFilterClass);
         this._reportService
           .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
           .subscribe(

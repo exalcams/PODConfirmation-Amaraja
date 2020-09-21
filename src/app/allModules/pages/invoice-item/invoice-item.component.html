@@ -57,7 +57,7 @@
                 <td>{{SelectedInvoiceDetail?.LR_DATE | date :'dd/MM/yyyy'}}</td>
                 <td>
                   <mat-form-field appearance="outline" class="m-4"
-                    *ngIf="(currentUserRole | lowercase)==='customer'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS==='Saved')">
+                    *ngIf="(currentUserRole | lowercase)==='customer'">
                     <input matInput [matDatepicker]="picker" placeholder="Vehicle Reported Date"
                       formControlName="VehicleReportedDate" (keydown)="onKeydown($event)" [min]="minDate" [max]="maxDate">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -69,7 +69,7 @@
                   </mat-form-field>
 
                   <div class="m-4" fxLayoutAlign="start center"
-                    *ngIf="(currentUserRole | lowercase)==='administrator'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS!=='Saved')">
+                    *ngIf="(currentUserRole | lowercase)==='administrator'|| ((currentUserRole | lowercase)==='amararaja user')">
                     {{InvoiceItemFormGroup.get('VehicleReportedDate')?.value | date: 'dd/MM/yyyy'}}
                   </div>
                 </td>
@@ -134,7 +134,7 @@
                 <th mat-header-cell *matHeaderCellDef style="width: 150px;"> Received Qty </th>
                 <td mat-cell style="width: 150px;" *matCellDef="let element;let index=index;" [formGroupName]="index">
                   <mat-form-field
-                    *ngIf="(currentUserRole | lowercase)==='customer' || ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS==='Saved')"
+                    *ngIf="(currentUserRole | lowercase)==='customer'"
                     appearance="outline" class="pl-8 pr-16" style="width: 120px;">
                     <input matInput formControlName="RECEIVED_QUANTITY" pattern="^[0-9]\d*$"
                       (keyup)="valueChanges(InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('QUANTITY')?.value, 
@@ -160,7 +160,7 @@
                     </span> -->
                   </mat-form-field>
                   <div style="width:120px" fxLayoutAlign="start center"
-                    *ngIf="(currentUserRole | lowercase)==='administrator' || ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS!=='Saved')">
+                    *ngIf="(currentUserRole | lowercase)==='administrator' || ((currentUserRole | lowercase)==='amararaja user')">
                     {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('RECEIVED_QUANTITY')?.value}}
                     <span class="ml-4">
                       {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('QUANTITY_UOM')?.value}}
@@ -173,7 +173,7 @@
                 <th mat-header-cell style="width: 220px;" *matHeaderCellDef> Reason </th>
                 <td mat-cell style="width: 220px;" *matCellDef="let element;let index=index;" [formGroupName]="index">
                   <mat-form-field style="min-width: 80%;"
-                    *ngIf="(currentUserRole | lowercase)==='customer'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS==='Saved')"
+                    *ngIf="(currentUserRole | lowercase)==='customer'"
                     appearance="outline" class="pl-8">
                     <mat-select matInput formControlName="REASON">
                       <mat-option [value]="rest.Description" *ngFor="let rest of AllReasons">{{rest.Description}}
@@ -185,7 +185,7 @@
                     </mat-error>
                   </mat-form-field>
                   <div style="min-width: 80%;" fxLayoutAlign="start center"
-                    *ngIf="(currentUserRole | lowercase)==='administrator'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS!=='Saved')">
+                    *ngIf="(currentUserRole | lowercase)==='administrator'|| ((currentUserRole | lowercase)==='amararaja user')">
                     {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('REASON')?.value}}
                   </div>
                 </td>
@@ -195,7 +195,7 @@
                 <th mat-header-cell *matHeaderCellDef> Remarks </th>
                 <td mat-cell *matCellDef="let element;let index=index;" [formGroupName]="index">
                   <mat-form-field
-                    *ngIf="(currentUserRole | lowercase)==='customer'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS==='Saved')"
+                    *ngIf="(currentUserRole | lowercase)==='customer'"
                     appearance="outline" style="width: 100%;" class="pl-8">
                     <textarea cdkTextAreaAutosize cdkAutosizeMinRows="1" matInput formControlName="REMARKS"></textarea>
                     <mat-error class="pl-4 mt-8 errorClass" *ngIf="InvoiceItemFormGroup.get('InvoiceItems')['controls'][index].get('REMARKS').touched &&
@@ -204,7 +204,7 @@
                     </mat-error>
                   </mat-form-field>
                   <div fxLayoutAlign="start center"
-                    *ngIf="(currentUserRole | lowercase)==='administrator'|| ((currentUserRole | lowercase)==='amararaja user'&&SelectedInvoiceDetail?.STATUS!=='Saved')">
+                    *ngIf="(currentUserRole | lowercase)==='administrator'|| ((currentUserRole | lowercase)==='amararaja user')">
                     <span class="ml-4">
                       {{InvoiceItemFormGroup.get('InvoiceItems')['controls'][index]?.get('REMARKS')?.value}}
                     </span>
