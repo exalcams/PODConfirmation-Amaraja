@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@an
 import { AuthenticationDetails, Organization, Plant, PlantOrganizationMap, PlantWithOrganization } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { InvoiceDetails, StatusTemplate, InvoiceUpdation1, ApproverDetails } from 'app/models/invoice-details';
+import { InvoiceDetails, StatusTemplate, InvoiceUpdation1, ApproverDetails, FilterClass } from 'app/models/invoice-details';
 import { FormGroup, FormArray, AbstractControl, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogConfig, MatOption } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -88,7 +88,7 @@ export class SavedInvoiceComponent implements OnInit {
   @ViewChild('allSelected') private allSelected: MatOption;
   @ViewChild('allSelected1') private allSelected1: MatOption;
   Divisions: string[] = [];
-
+  CurrentFilterClass: FilterClass = new FilterClass();
   constructor(
     private _router: Router,
     private _dashboardService: DashboardService,
@@ -106,6 +106,7 @@ export class SavedInvoiceComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.SelectedInvoiceDetail = new InvoiceDetails();
     this.isDateError = false;
+    this.CurrentFilterClass = this._shareParameterService.GetSavedInvoiceFilterClass();
   }
 
   ngOnInit(): void {
@@ -128,15 +129,27 @@ export class SavedInvoiceComponent implements OnInit {
     this.InvoiceDetailsFormGroup = this._formBuilder.group({
       InvoiceDetails: this.InvoiceDetailsFormArray
     });
-    this.InvoiceFilterFormGroup = this._formBuilder.group({
-      StartDate: [],
-      EndDate: [],
-      InvoiceNumber: [''],
-      Organization: [''],
-      Division: [''],
-      Plant: [''],
-      CustomerName: ['']
-    });
+    if (this.CurrentFilterClass) {
+      this.InvoiceFilterFormGroup = this._formBuilder.group({
+        StartDate: [this.CurrentFilterClass.StartDate],
+        EndDate: [this.CurrentFilterClass.EndDate],
+        InvoiceNumber: [this.CurrentFilterClass.InvoiceNumber ? this.CurrentFilterClass.InvoiceNumber : ''],
+        Organization: [this.CurrentFilterClass.Organization ? this.CurrentFilterClass.Organization : ''],
+        Division: [this.CurrentFilterClass.Division ? this.CurrentFilterClass.Division : ''],
+        Plant: [this.CurrentFilterClass.Plant ? this.CurrentFilterClass.Plant : ''],
+        CustomerName: [this.CurrentFilterClass.CustomerName ? this.CurrentFilterClass.CustomerName : '']
+      });
+    } else {
+      this.InvoiceFilterFormGroup = this._formBuilder.group({
+        StartDate: [],
+        EndDate: [],
+        InvoiceNumber: [''],
+        Organization: [''],
+        Division: [''],
+        Plant: [''],
+        CustomerName: ['']
+      });
+    }
     if (this.currentUserRole.toLowerCase() === 'amararaja user') {
       this.GetAllOrganizations();
       this.GetAllPlants();
@@ -451,7 +464,7 @@ export class SavedInvoiceComponent implements OnInit {
       }
     );
   }
-  
+
   SearchInvoices(): void {
     this.FilterSavedInvoices();
   }
@@ -480,6 +493,16 @@ export class SavedInvoiceComponent implements OnInit {
         if (enDate) {
           EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
+        if (!this.CurrentFilterClass) {
+          this.CurrentFilterClass = new FilterClass();
+        }
+        this.CurrentFilterClass.StartDate = StartDate;
+        this.CurrentFilterClass.EndDate = EndDate;
+        this.CurrentFilterClass.Organization = Organization1;
+        this.CurrentFilterClass.Division = Division;
+        this.CurrentFilterClass.Plant = Plant1;
+        this.CurrentFilterClass.CustomerName = CustomerName;
+        this._shareParameterService.SetSavedInvoiceFilterClass(this.CurrentFilterClass);
         this._invoiceService
           .FilterSavedInvoicesByUserID(this.currentUserID, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
           .subscribe(

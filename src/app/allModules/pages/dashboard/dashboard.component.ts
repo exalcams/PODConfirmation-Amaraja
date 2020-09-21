@@ -20,7 +20,7 @@ import {
     ApproverDetails,
     DeliveryCount,
     InvoiceStatusCount,
-    InvoiceHeaderDetail,
+    InvoiceHeaderDetail, FilterClass
 } from "app/models/invoice-details";
 import { DashboardService } from "app/services/dashboard.service";
 import { ShareParameterService } from "app/services/share-parameters.service";
@@ -158,6 +158,7 @@ export class DashboardComponent implements OnInit {
     // public doughnutChartData: any[] = [];
     public colors1: any[] = [{ backgroundColor: ["#52de97", "#eff54f"] }];
 
+    CurrentFilterClass: FilterClass = new FilterClass();
     constructor(
         private _router: Router,
         private _dashboardService: DashboardService,
@@ -176,6 +177,7 @@ export class DashboardComponent implements OnInit {
         this.condition = "InLineDelivery";
         this.isDateError = false;
         this.currentLabel = 'PENDING INVOICES';
+        this.CurrentFilterClass = this._shareParameterService.GetDashboardFilterClass();
     }
 
     ngOnInit(): void {
@@ -202,22 +204,32 @@ export class DashboardComponent implements OnInit {
         } else {
             this._router.navigate(["/auth/login"]);
         }
-        this.InvoiceFilterFormGroup = this._formBuilder.group({
-            // Status: [''],
-            StartDate: [],
-            EndDate: [],
-            Organization: [''],
-            Division: [''],
-            Plant: [''],
-            // InvoiceNumber: [''],
-            // LRNumber: ['']
-        });
+        if (this.CurrentFilterClass) {
+            this.InvoiceFilterFormGroup = this._formBuilder.group({
+                StartDate: [this.CurrentFilterClass.StartDate],
+                EndDate: [this.CurrentFilterClass.EndDate],
+                Organization: [this.CurrentFilterClass.Organization ? this.CurrentFilterClass.Organization : ''],
+                Division: [this.CurrentFilterClass.Division ? this.CurrentFilterClass.Division : ''],
+                Plant: [this.CurrentFilterClass.Plant ? this.CurrentFilterClass.Plant : ''],
+            });
+        } else {
+            this.InvoiceFilterFormGroup = this._formBuilder.group({
+                // Status: [''],
+                StartDate: [],
+                EndDate: [],
+                Organization: [''],
+                Division: [''],
+                Plant: [''],
+                // InvoiceNumber: [''],
+                // LRNumber: ['']
+            });
+        }
         this.GetAllOrganizations();
         this.GetAllPlants();
         this.GetAllPlantOrganizationMaps();
         this.GetDivisions();
         this.GetInvoiceStatusCount();
-        this.GetDeliveryCounts();
+        this.getFilteredInvoiceDetails();
         this.GetInvoiceHeaderDetails();
         this.LoadInitialData();
         // this.GetDeliveryCount();
@@ -521,6 +533,16 @@ export class DashboardComponent implements OnInit {
         if (enDate) {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
+        if (!this.CurrentFilterClass) {
+            this.CurrentFilterClass = new FilterClass();
+        }
+        this.CurrentFilterClass.StartDate = StartDate;
+        this.CurrentFilterClass.EndDate = EndDate;
+        this.CurrentFilterClass.Organization = Organization1;
+        this.CurrentFilterClass.Division = Division;
+        this.CurrentFilterClass.Plant = Plant1;
+        this._shareParameterService.SetDashboardFilterClass(this.CurrentFilterClass);
+        this.isProgressBarVisibile = true;
         if (this.currentUserRole === "Amararaja User") {
             this._dashboardService
                 .FilterInvoiceStatusCount(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate)
@@ -846,7 +868,7 @@ export class DashboardComponent implements OnInit {
         if (enDate) {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
-        this.isProgressBarVisibile = true;
+
         this._dashboardService.FilterPendingInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
                 this.allInvoiceDetails = data as InvoiceDetails[];

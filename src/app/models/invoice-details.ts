@@ -148,3 +148,15 @@ export class AttachmentDetails {
     FileName: string;
     blob: Blob;
 }
+
+export class FilterClass {
+    Status: string;
+    StartDate: string;
+    EndDate: string;
+    InvoiceNumber: string;
+    Organization: string;
+    Division: string;
+    Plant: string;
+    CustomerName: string;
+    LRNumber: string;
+}

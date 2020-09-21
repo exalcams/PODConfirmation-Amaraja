@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation, ElementRef } from '@an
 import { AuthenticationDetails } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { InvoiceDetails, ApproverDetails, InvoiceUpdation, InvoiceUpdation1, StatusTemplate } from 'app/models/invoice-details';
+import { InvoiceDetails, ApproverDetails, InvoiceUpdation, InvoiceUpdation1, StatusTemplate, FilterClass } from 'app/models/invoice-details';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
@@ -78,6 +78,7 @@ export class InvoiceDetailsComponent implements OnInit {
     InvoiceFilterFormGroup: FormGroup;
     AllStatusTemplates: StatusTemplate[] = [];
     isDateError: boolean;
+    CurrentFilterClass: FilterClass = new FilterClass();
     constructor(
         private _router: Router,
         private _dashboardService: DashboardService,
@@ -95,6 +96,7 @@ export class InvoiceDetailsComponent implements OnInit {
         this.isDateError = false;
         this.minDate = new Date();
         this.maxDate = new Date();
+        this.CurrentFilterClass = this._shareParameterService.GetInvoiceFilterClass();
     }
 
     ngOnInit(): void {
@@ -118,13 +120,24 @@ export class InvoiceDetailsComponent implements OnInit {
         this.InvoiceDetailsFormGroup = this._formBuilder.group({
             InvoiceDetails: this.InvoiceDetailsFormArray
         });
-        this.InvoiceFilterFormGroup = this._formBuilder.group({
-            Status: ['Open'],
-            StartDate: [],
-            EndDate: [],
-            InvoiceNumber: [''],
-            LRNumber: ['']
-        });
+        if (this.CurrentFilterClass) {
+            this.InvoiceFilterFormGroup = this._formBuilder.group({
+                Status: [this.CurrentFilterClass.Status ? this.CurrentFilterClass.Status : 'Open', Validators.required],
+                StartDate: [this.CurrentFilterClass.StartDate],
+                EndDate: [this.CurrentFilterClass.EndDate],
+                InvoiceNumber: [this.CurrentFilterClass.InvoiceNumber ? this.CurrentFilterClass.InvoiceNumber : ''],
+                LRNumber: [this.CurrentFilterClass.LRNumber ? this.CurrentFilterClass.LRNumber : ''],
+            });
+        } else {
+            this.InvoiceFilterFormGroup = this._formBuilder.group({
+                Status: ['Open'],
+                StartDate: [],
+                EndDate: [],
+                InvoiceNumber: [''],
+                LRNumber: ['']
+            });
+        }
+
         // if (this.currentUserRole.toLowerCase() === 'amararaja user') {
         //     this.getConfirmedInvoiceDetails();
         // } else {
@@ -488,6 +501,14 @@ export class InvoiceDetailsComponent implements OnInit {
                 if (enDate) {
                     EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
                 }
+                if (!this.CurrentFilterClass) {
+                    this.CurrentFilterClass = new FilterClass();
+                }
+                this.CurrentFilterClass.Status = Status;
+                this.CurrentFilterClass.StartDate = StartDate;
+                this.CurrentFilterClass.EndDate = EndDate;
+                this.CurrentFilterClass.LRNumber = LRNumber;
+                this._shareParameterService.SetInvoiceFilterClass(this.CurrentFilterClass);
                 this._dashboardService
                     .FilterInvoiceDetailByUser(this.currentUserCode, Status, StartDate, EndDate, InvoiceNumber, LRNumber)
                     .subscribe(
