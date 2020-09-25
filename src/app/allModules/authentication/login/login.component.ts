@@ -332,7 +332,16 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-
+    if (this.MenuItems.indexOf('DataMigration') >= 0) {
+      this.subChildren.push(
+        {
+          id: 'dataMigration',
+          title: 'Data Migration',
+          type: 'item',
+          url: '/master/dataMigration'
+        }
+      );
+    }
     if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 ||
       this.MenuItems.indexOf('User') >= 0 || this.MenuItems.indexOf('Reason') >= 0) {
       this.children.push({

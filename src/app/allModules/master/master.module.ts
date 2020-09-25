@@ -22,6 +22,7 @@ import { PlantComponent } from './plant/plant.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { FormsModule } from '@angular/forms';
 import { OrganizationComponent } from './organization/organization.component';
+import { DataMigrationComponent } from './data-migration/data-migration.component';
 
 const menuRoutes: Routes = [
     // {
@@ -48,6 +49,10 @@ const menuRoutes: Routes = [
         path: 'reason',
         component: ReasonComponent,
     },
+    {
+        path: 'dataMigration',
+        component: DataMigrationComponent,
+    },
 ];
 @NgModule({
     declarations: [
@@ -61,6 +66,7 @@ const menuRoutes: Routes = [
        ReasonComponent,
        PlantComponent,
        OrganizationComponent,
+       DataMigrationComponent,
     ],
     imports: [
         RouterModule.forChild(menuRoutes),
