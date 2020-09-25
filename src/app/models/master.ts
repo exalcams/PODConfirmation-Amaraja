@@ -1,5 +1,12 @@
 import { Guid } from 'guid-typescript';
 
+export class CustomerData {
+    UserCode: string;
+    UserName: string;
+    Email: string;
+    Password: string;
+    ContactNumber: string;
+}
 export class UserWithRole {
     UserID: Guid;
     RoleID: Guid;

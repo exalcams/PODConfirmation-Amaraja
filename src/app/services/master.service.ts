@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, Plant, PlantWithOrganization, Organization, PlantOrganizationMap } from 'app/models/master';
+import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, Plant, PlantWithOrganization, Organization, PlantOrganizationMap, CustomerData } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -342,7 +342,16 @@ export class MasterService {
       })
       .pipe(catchError(this.errorHandler));
   }
-
+  CreateCustomers(custData: CustomerData[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateCustomers`,
+      custData,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
   GetAllNotificationByUserID(UserID: string): Observable<UserNotification[] | string> {
     return this._httpClient.get<UserNotification[]>(`${this.baseAddress}api/Notification/GetAllNotificationByUserID?UserID=${UserID}`)
       .pipe(catchError(this.errorHandler));

@@ -1,0 +1,147 @@
+@import "src/@fuse/scss/fuse";
+#dataMigrationPage {
+    background-color: white;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .progressBarPostion {
+        position: absolute !important;
+        top: 280px;
+        z-index: 1;
+        left: 55%;
+    }
+    .center {
+        padding: 5px !important;
+    }
+    .cardHeader {
+        background-color: #fffdf9;
+        height: 45px;
+    }
+    .content {
+        padding: 30px;
+        background-color: white;
+    }
+
+    .rightFlexHr {
+        margin: 0px;
+        width: 6%;
+        height: 3px;
+        background-color: #efb577;
+        border: none;
+    }
+
+    .tableCellBorder {
+        height: 20px;
+        vertical-align: middle;
+        width: 10px;
+        background-color: #d87e39;
+        opacity: 0.7;
+    }
+
+    @mixin TableBorderRight($color) {
+        border-right: 1px solid $color;
+    }
+
+    .TablePadFont {
+        padding: 5px;
+        font-size: 12px;
+        min-width: 100px !important;
+    }
+
+    table {
+        width: 100%;
+
+        th {
+            @include TableBorderRight(gray);
+            @extend .TablePadFont;
+            text-align: left;
+            color: white;
+            background-color: #121214;
+        }
+
+        td {
+            @include TableBorderRight(rgba(0, 0, 0, 0.12));
+            @extend .TablePadFont;
+            font-size: 12px;
+            // text-align: center;
+            min-width: max-content !important;
+        }
+
+        tr {
+            height: 40px;
+        }
+
+        .tableLeftBorder {
+            border-left: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        .mat-sort-header-container {
+            padding-left: 5px;
+            display: flex;
+            justify-content: flex-start;
+        }
+    }
+
+    // .mat-header {
+    //     display: flex;
+    //     justify-content: center !important;
+    // }
+
+    .rectangle {
+        border: solid 1px #cccccc;
+        border-radius: 5px;
+        margin: 2px 10px 2px 10px;
+        min-height: 40px;
+        cursor: pointer;
+    }
+
+    .rectangle-106 {
+        width: 35px;
+        height: 30px;
+        padding: 3px;
+        opacity: 0.2;
+        border-radius: 2px;
+        background-color: #f9d2a8;
+    }
+    .SaveBtn {
+        background-color: #efb577;
+        padding: 0px 40px;
+        color: white;
+    }
+    .DateError {
+        color: #f44336;
+        font-size: 12px;
+        margin-top: -16px;
+    }
+    .addIcon {
+        height: 20px;
+        margin-top: 16px;
+        padding-left: 4px;
+        cursor: pointer !important;
+    }
+    .addAttachmentClass {
+        margin-top: 25px;
+        color: #4784f7;
+        cursor: pointer !important;
+    }
+    .addBlueIcon {
+        @extend .addIcon;
+        margin-top: 0px;
+        height: 22px;
+    }
+    .attachClass {
+        // margin-top: 25px;
+        padding-left: 8px;
+        cursor: pointer !important;
+        color: #4784f7;
+        font-size: 22px;
+    }
+}

@@ -1,0 +1,46 @@
+<div id="dataMigrationPage" class="page-layout carded" fusePerfectScrollbar>
+  <div class="center" fxLayout="column" fxLayoutGap="10px">
+
+    <mat-card class="cardHeader p-8 pt-4 pb-0 m-0">
+      <div fxLayout>
+        <div fxFlex fxLayoutAlign="start center" class="h2">
+          <b>Customer Data migration</b>
+        </div>
+      </div>
+    </mat-card>
+
+    <div class="content">
+      <div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+        <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
+          <div fxFlex="40%" fxLayout="row" fxLayoutAlign="start center">
+            <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput1.click()">
+            <span class="attachClass" (click)="fileInput1.click()">
+              Browse
+            </span>
+            <input hidden type="file" #fileInput1 id="file" (change)="onSelectFile($event)"
+              accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+            <div fxFlex class="m-8 ml-16" fxLayout="column" *ngIf="fileToUpload">
+              <div fxFlex style="font-size: 10px;">{{fileToUpload?.name}}</div>
+              <div fxFlex style="font-size: 10px;" *ngIf="fileToUpload.size">
+                {{math.round(fileToUpload.size / 1024) + ' KB'}}</div>
+            </div>
+          </div>
+          <div fxFlex="60%" fxAlign="end">
+            <button mat-raised-button class="SaveBtn" (click)="UploadDataMigrationClicked()">Upload</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div fxFlex class="content mt-8">
+      <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
+      </div>
+    </div>
+
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile " class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile">
+    </div>
+
+  </div>
+</div>
