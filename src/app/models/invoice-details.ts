@@ -133,15 +133,25 @@ export class InvoiceStatusCount {
 
 export class InvoiceHeaderDetail {
     HEADER_ID: number;
+    ORGANIZATION: string;
+    DIVISION: string;
+    PLANT: string;
+    PLANT_NAME: string;
     INV_NO: string;
     ODIN: string;
     INV_DATE: Date | string | null;
     INV_TYPE: string;
-    PLANT: string;
+    CUSTOMER: string;
+    CUSTOMER_NAME: string;
     VEHICLE_NO: string;
+    VEHICLE_CAPACITY: string;
+    LR_NO: string;
+    LR_DATE: Date | string | null;
     EWAYBILL_NO: string;
     OUTBOUND_DELIVERY: string;
+    PROPOSED_DELIVERY_DATE: Date | string | null;
     VEHICLE_REPORTED_DATE: Date | string | null;
+    ACTUAL_DELIVERY_DATE: Date | string | null;
     STATUS: string;
 }
 export class AttachmentDetails {
