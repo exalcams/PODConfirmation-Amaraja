@@ -46,6 +46,8 @@ export class DashboardComponent implements OnInit {
     currentUsername: string;
     MenuItems: string[];
     isProgressBarVisibile: boolean;
+    isProgressBarVisibile1: boolean;
+    isProgressBarVisibile2: boolean;
     AllOrganizations: Organization[] = [];
     AllPlants: Plant[] = [];
     FilteredPlants: Plant[] = [];
@@ -59,8 +61,8 @@ export class DashboardComponent implements OnInit {
     condition: string;
     InvoiceFilterFormGroup: FormGroup;
     isDateError: boolean;
-    allInvoiceDetails: InvoiceDetails[] = [];
-    allInvoiceHeaderDetails: InvoiceHeaderDetail[] = [];
+    allInvoiceDetails: InvoiceHeaderDetail[] = [];
+    // allInvoiceHeaderDetails: InvoiceHeaderDetail[] = [];
     displayedColumns: string[] = [
         'ORGANIZATION',
         'DIVISION',
@@ -77,7 +79,7 @@ export class DashboardComponent implements OnInit {
         'LR_DATE',
         'STATUS'
     ];
-    dataSource = new MatTableDataSource<InvoiceDetails>();
+    dataSource = new MatTableDataSource<InvoiceHeaderDetail>();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     currentLabel: string;
@@ -169,7 +171,9 @@ export class DashboardComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _datePipe: DatePipe,
     ) {
-        this.isProgressBarVisibile = true;
+        this.isProgressBarVisibile = false;
+        this.isProgressBarVisibile1 = false;
+        this.isProgressBarVisibile2 = false;
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(
             this.snackBar
         );
@@ -228,9 +232,9 @@ export class DashboardComponent implements OnInit {
         this.GetAllPlants();
         this.GetAllPlantOrganizationMaps();
         this.GetDivisions();
-        this.GetInvoiceStatusCount();
+        // this.GetInvoiceStatusCount();
         this.getFilteredInvoiceDetails();
-        this.GetInvoiceHeaderDetails();
+        // this.GetInvoiceHeaderDetails();
         this.LoadInitialData();
         // this.GetDeliveryCount();
         // this.GetDeliveredInvoices();
@@ -278,7 +282,8 @@ export class DashboardComponent implements OnInit {
                 this.Divisions.unshift("All");
             },
             err => {
-                this.isProgressBarVisibile = false;
+                console.error(err);
+                // this.isProgressBarVisibile = false;
             }
         );
     }
@@ -302,44 +307,44 @@ export class DashboardComponent implements OnInit {
             );
     }
 
-    tabChanged(event: MatTabChangeEvent): void {
-        this.condition =
-            event.index === 0 ? "InLineDelivery" : "DelayedDelivery";
-        this.GetDeliveredInvoices();
-    }
+    // tabChanged(event: MatTabChangeEvent): void {
+    //     this.condition =
+    //         event.index === 0 ? "InLineDelivery" : "DelayedDelivery";
+    //     this.GetDeliveredInvoices();
+    // }
 
-    GetDeliveredInvoices(): void {
-        this.isProgressBarVisibile = true;
-        this._dashboardService
-            .GetDeliveredInvoices(
-                this.authenticationDetails.userID,
-                this.condition
-            )
-            .subscribe(
-                (data) => {
-                    this.allInvoiceDetails = data as InvoiceDetails[];
-                    this.allInvoicesCount = this.allInvoiceDetails.length;
-                    if (this.condition === "InLineDelivery") {
-                        this.deliveryCount.InLineDelivery = this.allInvoiceDetails.length;
-                    } else {
-                        this.deliveryCount.DelayedDelivery = this.allInvoiceDetails.length;
-                    }
-                    this.dataSource = new MatTableDataSource(
-                        this.allInvoiceDetails
-                    );
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                    this.isProgressBarVisibile = false;
-                },
-                (err) => {
-                    this.isProgressBarVisibile = false;
-                    this.notificationSnackBarComponent.openSnackBar(
-                        err instanceof Object ? "Something went wrong" : err,
-                        SnackBarStatus.danger
-                    );
-                }
-            );
-    }
+    // GetDeliveredInvoices(): void {
+    //     this.isProgressBarVisibile = true;
+    //     this._dashboardService
+    //         .GetDeliveredInvoices(
+    //             this.authenticationDetails.userID,
+    //             this.condition
+    //         )
+    //         .subscribe(
+    //             (data) => {
+    //                 this.allInvoiceDetails = data as InvoiceDetails[];
+    //                 this.allInvoicesCount = this.allInvoiceDetails.length;
+    //                 if (this.condition === "InLineDelivery") {
+    //                     this.deliveryCount.InLineDelivery = this.allInvoiceDetails.length;
+    //                 } else {
+    //                     this.deliveryCount.DelayedDelivery = this.allInvoiceDetails.length;
+    //                 }
+    //                 this.dataSource = new MatTableDataSource(
+    //                     this.allInvoiceDetails
+    //                 );
+    //                 this.dataSource.paginator = this.paginator;
+    //                 this.dataSource.sort = this.sort;
+    //                 this.isProgressBarVisibile = false;
+    //             },
+    //             (err) => {
+    //                 this.isProgressBarVisibile = false;
+    //                 this.notificationSnackBarComponent.openSnackBar(
+    //                     err instanceof Object ? "Something went wrong" : err,
+    //                     SnackBarStatus.danger
+    //                 );
+    //             }
+    //         );
+    // }
 
     GetInvoiceStatusCount(): void {
         if (this.currentUserRole === "Amararaja User") {
@@ -355,10 +360,10 @@ export class DashboardComponent implements OnInit {
 
                         this.doughnutChartData = chartData;
 
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile1 = false;
                     },
                     (err) => {
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile1 = false;
                         this.notificationSnackBarComponent.openSnackBar(
                             err instanceof Object
                                 ? "Something went wrong"
@@ -380,10 +385,10 @@ export class DashboardComponent implements OnInit {
 
                         this.doughnutChartData = chartData;
 
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile1 = false;
                     },
                     (err) => {
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile1 = false;
                         this.notificationSnackBarComponent.openSnackBar(
                             err instanceof Object
                                 ? "Something went wrong"
@@ -408,10 +413,10 @@ export class DashboardComponent implements OnInit {
 
                         this.doughnutChartData1 = chartData;
 
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile2 = false;
                     },
                     (err) => {
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile2 = false;
                         this.notificationSnackBarComponent.openSnackBar(
                             err instanceof Object
                                 ? "Something went wrong"
@@ -432,10 +437,10 @@ export class DashboardComponent implements OnInit {
 
                         this.doughnutChartData1 = chartData;
 
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile2 = false;
                     },
                     (err) => {
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile2 = false;
                         this.notificationSnackBarComponent.openSnackBar(
                             err instanceof Object
                                 ? "Something went wrong"
@@ -447,45 +452,45 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    GetInvoiceHeaderDetails(): void {
-        if (this.currentUserRole === "Amararaja User") {
-            this._dashboardService
-                .GetInvoiceHeaderDetailByUserID(this.currentUserID)
-                .subscribe(
-                    (data: InvoiceHeaderDetail[]) => {
-                        this.allInvoiceHeaderDetails = data;
-                        this.isProgressBarVisibile = false;
-                    },
-                    (err) => {
-                        this.isProgressBarVisibile = false;
-                        this.notificationSnackBarComponent.openSnackBar(
-                            err instanceof Object
-                                ? "Something went wrong"
-                                : err,
-                            SnackBarStatus.danger
-                        );
-                    }
-                );
-        } else if (this.currentUserRole === "Customer") {
-            this._dashboardService
-                .GetInvoiceHeaderDetailByUsername(this.currentUserCode)
-                .subscribe(
-                    (data: InvoiceHeaderDetail[]) => {
-                        this.allInvoiceHeaderDetails = data;
-                        this.isProgressBarVisibile = false;
-                    },
-                    (err) => {
-                        this.isProgressBarVisibile = false;
-                        this.notificationSnackBarComponent.openSnackBar(
-                            err instanceof Object
-                                ? "Something went wrong"
-                                : err,
-                            SnackBarStatus.danger
-                        );
-                    }
-                );
-        }
-    }
+    // GetInvoiceHeaderDetails(): void {
+    //     if (this.currentUserRole === "Amararaja User") {
+    //         this._dashboardService
+    //             .GetInvoiceHeaderDetailByUserID(this.currentUserID)
+    //             .subscribe(
+    //                 (data: InvoiceHeaderDetail[]) => {
+    //                     this.allInvoiceHeaderDetails = data;
+    //                     this.isProgressBarVisibile = false;
+    //                 },
+    //                 (err) => {
+    //                     this.isProgressBarVisibile = false;
+    //                     this.notificationSnackBarComponent.openSnackBar(
+    //                         err instanceof Object
+    //                             ? "Something went wrong"
+    //                             : err,
+    //                         SnackBarStatus.danger
+    //                     );
+    //                 }
+    //             );
+    //     } else if (this.currentUserRole === "Customer") {
+    //         this._dashboardService
+    //             .GetInvoiceHeaderDetailByUsername(this.currentUserCode)
+    //             .subscribe(
+    //                 (data: InvoiceHeaderDetail[]) => {
+    //                     this.allInvoiceHeaderDetails = data;
+    //                     this.isProgressBarVisibile = false;
+    //                 },
+    //                 (err) => {
+    //                     this.isProgressBarVisibile = false;
+    //                     this.notificationSnackBarComponent.openSnackBar(
+    //                         err instanceof Object
+    //                             ? "Something went wrong"
+    //                             : err,
+    //                         SnackBarStatus.danger
+    //                     );
+    //                 }
+    //             );
+    //     }
+    // }
     LoadInitialData(): void {
         if (this.currentUserRole === "Amararaja User") {
             this.FilterPendingInvoices();
@@ -542,7 +547,7 @@ export class DashboardComponent implements OnInit {
         this.CurrentFilterClass.Division = Division;
         this.CurrentFilterClass.Plant = Plant1;
         this._shareParameterService.SetDashboardFilterClass(this.CurrentFilterClass);
-        this.isProgressBarVisibile = true;
+        this.isProgressBarVisibile1 = true;
         if (this.currentUserRole === "Amararaja User") {
             this._dashboardService
                 .FilterInvoiceStatusCount(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate)
@@ -556,10 +561,10 @@ export class DashboardComponent implements OnInit {
 
                         this.doughnutChartData = chartData;
 
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile1 = false;
                     },
                     (err) => {
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile1 = false;
                         this.notificationSnackBarComponent.openSnackBar(
                             err instanceof Object
                                 ? "Something went wrong"
@@ -581,10 +586,10 @@ export class DashboardComponent implements OnInit {
 
                         this.doughnutChartData = chartData;
 
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile1 = false;
                     },
                     (err) => {
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile1 = false;
                         this.notificationSnackBarComponent.openSnackBar(
                             err instanceof Object
                                 ? "Something went wrong"
@@ -616,6 +621,7 @@ export class DashboardComponent implements OnInit {
         if (enDate) {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
+        this.isProgressBarVisibile2 = true;
         if (this.currentUserRole === "Amararaja User") {
             this._dashboardService
                 .FilterDeliveryCount(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate)
@@ -628,10 +634,10 @@ export class DashboardComponent implements OnInit {
 
                         this.doughnutChartData1 = chartData;
 
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile2 = false;
                     },
                     (err) => {
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile2 = false;
                         this.notificationSnackBarComponent.openSnackBar(
                             err instanceof Object
                                 ? "Something went wrong"
@@ -652,10 +658,10 @@ export class DashboardComponent implements OnInit {
 
                         this.doughnutChartData1 = chartData;
 
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile2 = false;
                     },
                     (err) => {
-                        this.isProgressBarVisibile = false;
+                        this.isProgressBarVisibile2 = false;
                         this.notificationSnackBarComponent.openSnackBar(
                             err instanceof Object
                                 ? "Something went wrong"
@@ -799,7 +805,7 @@ export class DashboardComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.FilterConfirmedInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -835,7 +841,7 @@ export class DashboardComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.FilterPartiallyConfirmedInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -871,7 +877,7 @@ export class DashboardComponent implements OnInit {
 
         this._dashboardService.FilterPendingInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -907,7 +913,7 @@ export class DashboardComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.FilterOnTimeDeliveryInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -943,7 +949,7 @@ export class DashboardComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.FilterLateDeliveryInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -970,7 +976,7 @@ export class DashboardComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.FilterConfirmedInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -996,7 +1002,7 @@ export class DashboardComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.FilterPartiallyConfirmedInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -1022,7 +1028,7 @@ export class DashboardComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.FilterPendingInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -1049,7 +1055,7 @@ export class DashboardComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.FilterOnTimeDeliveryInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -1076,7 +1082,7 @@ export class DashboardComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.FilterLateDeliveryInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceDetails[];
+                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;

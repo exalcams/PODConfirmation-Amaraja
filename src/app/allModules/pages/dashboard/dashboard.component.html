@@ -273,7 +273,7 @@
     </div>
   </div>
 
-  <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+  <mat-progress-spinner *ngIf="isProgressBarVisibile || isProgressBarVisibile1 || isProgressBarVisibile2" class="progressBarPostion" color="accent" mode="indeterminate">
   </mat-progress-spinner>
-  <div id="overlay" *ngIf="isProgressBarVisibile"></div>
+  <div id="overlay" *ngIf="isProgressBarVisibile || isProgressBarVisibile1 || isProgressBarVisibile2"></div>
 </div>
