@@ -710,7 +710,7 @@ export class DashboardComponent implements OnInit {
 
 
     doughnutChartClicked(e: any): void {
-        console.log(e);
+        // console.log(e);
         if (e.active.length > 0) {
             const chart = e.active[0]._chart;
             const activePoints = chart.getElementAtEvent(e.event);
@@ -720,7 +720,7 @@ export class DashboardComponent implements OnInit {
                 const label = chart.data.labels[clickedElementIndex] as String;
                 // get value by index
                 const value = chart.data.datasets[0].data[clickedElementIndex];
-                console.log(clickedElementIndex, label, value);
+                // console.log(clickedElementIndex, label, value);
                 if (label) {
                     if (label.toLowerCase() === "pending invoices") {
                         this.currentLabel = 'PENDING INVOICES';
@@ -751,7 +751,7 @@ export class DashboardComponent implements OnInit {
         }
     }
     doughnutChart1Clicked(e: any): void {
-        console.log(e);
+        // console.log(e);
         if (e.active.length > 0) {
             const chart = e.active[0]._chart;
             const activePoints = chart.getElementAtEvent(e.event);
@@ -761,7 +761,7 @@ export class DashboardComponent implements OnInit {
                 const label = chart.data.labels[clickedElementIndex] as String;
                 // get value by index
                 const value = chart.data.datasets[0].data[clickedElementIndex];
-                console.log(clickedElementIndex, label, value);
+                // console.log(clickedElementIndex, label, value);
                 if (label.toLowerCase() === "on time delivery") {
                     this.currentLabel = 'ON TIME DELIVERY';
                     if (this.currentUserRole === "Amararaja User") {
@@ -874,7 +874,7 @@ export class DashboardComponent implements OnInit {
         if (enDate) {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
-
+        this.isProgressBarVisibile = true;
         this._dashboardService.FilterPendingInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
                 this.allInvoiceDetails = data as InvoiceHeaderDetail[];
