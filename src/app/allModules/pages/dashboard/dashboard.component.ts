@@ -554,14 +554,13 @@ export class DashboardComponent implements OnInit {
                 .subscribe(
                     (data: InvoiceStatusCount) => {
                         const chartData: number[] = [];
-
                         chartData.push(data.ConfirmedInvoices);
                         chartData.push(data.PartiallyConfirmedInvoices);
                         chartData.push(data.PendingInvoices);
-
                         this.doughnutChartData = chartData;
-
                         this.isProgressBarVisibile1 = false;
+
+                        this.FilterPendingInvoices();
                     },
                     (err) => {
                         this.isProgressBarVisibile1 = false;
@@ -579,14 +578,13 @@ export class DashboardComponent implements OnInit {
                 .subscribe(
                     (data: InvoiceStatusCount) => {
                         const chartData: number[] = [];
-
                         chartData.push(data.ConfirmedInvoices);
                         chartData.push(data.PartiallyConfirmedInvoices);
                         chartData.push(data.PendingInvoices);
-
                         this.doughnutChartData = chartData;
-
                         this.isProgressBarVisibile1 = false;
+
+                        this.FilterPendingInvoicesByUser();
                     },
                     (err) => {
                         this.isProgressBarVisibile1 = false;

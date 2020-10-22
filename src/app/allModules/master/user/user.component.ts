@@ -124,12 +124,10 @@ export class UserComponent implements OnInit {
       (data) => {
         this.AllPlants = data as Plant[];
         this.FilteredPlants = data as Plant[];
-        this.IsProgressBarVisibile = false;
         // console.log(this.AllUsers);
       },
       (err) => {
         console.error(err);
-        this.IsProgressBarVisibile = false;
         // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
       }
     );
@@ -159,6 +157,7 @@ export class UserComponent implements OnInit {
     );
   }
   GetAllUsers(): void {
+    this.IsProgressBarVisibile = true;
     this._masterService.GetAllUsers().subscribe(
       (data) => {
         this.AllUsers = <UserWithRole[]>data;
