@@ -21,7 +21,12 @@ export class ReportService {
   errorHandler(error: HttpErrorResponse): Observable<string> {
     return throwError(error.error || error.message || 'Server Error');
   }
-
+  GetPendingInvoiceDetails(UserID: Guid): Observable<ReportInvoice[] | string> {
+    return this._httpClient.get<ReportInvoice[]>(
+      `${this.baseAddress}api/Report/GetPendingInvoiceDetails?UserID=${UserID}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
   GetFilteredInvoiceDetails(UserID: Guid, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string,
     Organization: string, Division: string, Plant: string, CustomerName: string): Observable<ReportInvoice[] | string> {
     return this._httpClient.get<ReportInvoice[]>(

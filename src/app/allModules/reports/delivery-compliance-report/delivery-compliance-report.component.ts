@@ -150,7 +150,8 @@ export class DeliveryComplianceReportComponent implements OnInit {
     this.GetAllPlantOrganizationMaps();
     this.GetDivisions();
     if (this.currentUserRole.toLowerCase() === 'amararaja user') {
-      this.getFilteredInvoiceDetails();
+      // this.getFilteredInvoiceDetails();
+      this.GetPendingInvoiceDetails();
     } else {
       this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
       );
@@ -206,7 +207,30 @@ export class DeliveryComplianceReportComponent implements OnInit {
   SearchInvoices(): void {
     this.getFilteredInvoiceDetails();
   }
-
+  GetPendingInvoiceDetails(): void {
+    this.isProgressBarVisibile = true;
+    this._reportService
+      .GetPendingInvoiceDetails(this.authenticationDetails.userID)
+      .subscribe(
+        data => {
+          this.FilteredInvoiceDetails = data as ReportInvoice[];
+          // this.allInvoicesCount = this.FilteredInvoiceDetails.length;
+          this.dataSource = new MatTableDataSource(
+            this.FilteredInvoiceDetails
+          );
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.isProgressBarVisibile = false;
+        },
+        err => {
+          this.isProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar(
+            err instanceof Object ? 'Something went wrong' : err,
+            SnackBarStatus.danger
+          );
+        }
+      );
+  }
   getFilteredInvoiceDetails(): void {
     if (this.InvoiceFilterFormGroup.valid) {
       if (!this.isDateError) {
