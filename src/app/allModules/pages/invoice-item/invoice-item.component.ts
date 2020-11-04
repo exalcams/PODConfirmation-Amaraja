@@ -262,12 +262,15 @@ export class InvoiceItemComponent implements OnInit {
     if (invItem.QUANTITY) {
       QTYVal = this._decimalPipe.transform(invItem.QUANTITY, '1.2-2');
     }
-    const QTYValue = Number(QTYVal);
+    const QTYValue = parseFloat(QTYVal.replace(/,/g, ''));
     let REQTYVal = '0';
     if (invItem.RECEIVED_QUANTITY) {
       REQTYVal = this._decimalPipe.transform(invItem.RECEIVED_QUANTITY, '1.2-2');
     }
-    const REQTYValue = (Number(REQTYVal)) > 0 ? Number(REQTYVal) : QTYValue;
+    let REQTYValue = parseFloat(REQTYVal.replace(/,/g, ''));
+    if (this.currentUserRole === "Customer") {
+      REQTYValue = REQTYValue > 0 ? REQTYValue : QTYValue;
+    }
     const row = this._formBuilder.group({
       ITEM_NO: [invItem.ITEM_NO],
       ITEM_ID: [invItem.ITEM_ID],
@@ -324,8 +327,10 @@ export class InvoiceItemComponent implements OnInit {
       // REMARKSControl.setValidators(Validators.required);
       REMARKSControl.clearValidators();
     } else {
-      REASONControl.patchValue('Completely received');
-      REMARKSControl.patchValue('');
+      if (this.currentUserRole === "Customer") {
+        REASONControl.patchValue('Completely received');
+        REMARKSControl.patchValue('');
+      }
       REASONControl.disable();
       REMARKSControl.disable();
       REASONControl.clearValidators();
