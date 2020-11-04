@@ -494,5 +494,42 @@ export class DeliveryComplianceReportComponent implements OnInit {
     });
     this._excelService.exportAsExcelFile(itemsShowedd, 'report');
   }
+  exportAllAsXLSX():void{
+    const itemsShowed = this.FilteredInvoiceDetails;
+    const itemsShowedd = [];
+    itemsShowed.forEach(x => {
+      const item = {
+        'Organization': x.ORGANIZATION,
+        'Division': x.DIVISION,
+        'Plant': x.PLANT,
+        'Invoice No': x.ODIN,
+        'Reference No': x.INV_NO,
+        'Invoice Date': x.INV_DATE ? this._datePipe.transform(x.INV_DATE, 'dd-MM-yyyy') : '',
+        'Invoice Type': x.INV_TYPE,
+        'Outbound delivery': x.OUTBOUND_DELIVERY,
+        'Outbound delivery date': x.OUTBOUND_DELIVERY_DATE ? this._datePipe.transform(x.OUTBOUND_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+        'LR Number': x.LR_NO,
+        'LR date': x.LR_DATE ? this._datePipe.transform(x.LR_DATE, 'dd-MM-yyyy') : '',
+        'Vehicle No': x.VEHICLE_NO,
+        'Carrier': x.CARRIER,
+        'Vehicle Capacity': x.VEHICLE_CAPACITY,
+        'E-Way bill No': x.EWAYBILL_NO,
+        'E-Way bill date': x.EWAYBILL_DATE ? this._datePipe.transform(x.EWAYBILL_DATE, 'dd-MM-yyyy') : '',
+        'Freight order': x.FREIGHT_ORDER,
+        'Freight order date': x.FREIGHT_ORDER_DATE ? this._datePipe.transform(x.FREIGHT_ORDER_DATE, 'dd-MM-yyyy') : '',
+        'Proposed delivery date': x.PROPOSED_DELIVERY_DATE ? this._datePipe.transform(x.PROPOSED_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+        'Actual delivery date': x.ACTUAL_DELIVERY_DATE ? this._datePipe.transform(x.ACTUAL_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+        'Lead time': x.TRANSIT_LEAD_TIME,
+        'Material Code': x.MATERIAL_CODE,
+        'Material Description': x.MATERIAL_DESCRIPTION,
+        'Quantity': x.QUANTITY,
+        'Received Quantity': x.RECEIVED_QUANTITY,
+        'UOM': x.QUANTITY_UOM,
+        'Status': x.STATUS,
+      };
+      itemsShowedd.push(item);
+    });
+    this._excelService.exportAsExcelFile(itemsShowedd, 'report');
+  }
 }
 
