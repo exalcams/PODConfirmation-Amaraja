@@ -89,6 +89,9 @@ export class SavedInvoiceComponent implements OnInit {
   @ViewChild('allSelected1') private allSelected1: MatOption;
   Divisions: string[] = [];
   CurrentFilterClass: FilterClass = new FilterClass();
+  currentCustomPage: number;
+  records: number;
+  isLoadMoreVisible: boolean;
   constructor(
     private _router: Router,
     private _dashboardService: DashboardService,
@@ -107,6 +110,10 @@ export class SavedInvoiceComponent implements OnInit {
     this.SelectedInvoiceDetail = new InvoiceDetails();
     this.isDateError = false;
     this.CurrentFilterClass = this._shareParameterService.GetSavedInvoiceFilterClass();
+    this.currentCustomPage = 1;
+    this.allInvoiceDetails = [];
+    this.records = 500;
+    this.isLoadMoreVisible = false;
   }
 
   ngOnInit(): void {
@@ -166,6 +173,8 @@ export class SavedInvoiceComponent implements OnInit {
     this.SelectedInvoiceDetail = new InvoiceDetails();
     this.fileToUpload = null;
     this.fileToUploadList = [];
+    this.currentCustomPage = 1;
+    this.allInvoiceDetails = [];
     this.ResetInvoiceDetails();
   }
 
@@ -466,6 +475,12 @@ export class SavedInvoiceComponent implements OnInit {
   }
 
   SearchInvoices(): void {
+    this.currentCustomPage = 1;
+    this.allInvoiceDetails = [];
+    this.FilterSavedInvoices();
+  }
+  LoadMoreData(): void {
+    this.currentCustomPage = this.currentCustomPage + 1;
     this.FilterSavedInvoices();
   }
   FilterSavedInvoices(): void {
@@ -504,10 +519,21 @@ export class SavedInvoiceComponent implements OnInit {
         this.CurrentFilterClass.CustomerName = CustomerName;
         this._shareParameterService.SetSavedInvoiceFilterClass(this.CurrentFilterClass);
         this._invoiceService
-          .FilterSavedInvoicesByUserID(this.currentUserID, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
+          .FilterSavedInvoicesByUserID(this.currentUserID, this.currentCustomPage, this.records, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
           .subscribe(
             data => {
-              this.allInvoiceDetails = data as InvoiceDetails[];
+              // this.allInvoiceDetails = data as InvoiceDetails[];
+              const data1 = data as InvoiceDetails[];
+              if (data1) {
+                if (data.length < this.records) {
+                  this.isLoadMoreVisible = false;
+                } else {
+                  this.isLoadMoreVisible = true;
+                }
+                data1.forEach(x => {
+                  this.allInvoiceDetails.push(x);
+                });
+              }
               this.allInvoicesCount = this.allInvoiceDetails.length;
               // this.dataSource = new MatTableDataSource(
               //     this.allInvoiceDetails

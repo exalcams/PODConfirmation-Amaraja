@@ -79,6 +79,9 @@ export class InvoiceDetailsComponent implements OnInit {
     AllStatusTemplates: StatusTemplate[] = [];
     isDateError: boolean;
     CurrentFilterClass: FilterClass = new FilterClass();
+    currentCustomPage: number;
+    records: number;
+    isLoadMoreVisible: boolean;
     constructor(
         private _router: Router,
         private _dashboardService: DashboardService,
@@ -97,6 +100,10 @@ export class InvoiceDetailsComponent implements OnInit {
         this.minDate = new Date();
         this.maxDate = new Date();
         this.CurrentFilterClass = this._shareParameterService.GetInvoiceFilterClass();
+        this.allInvoiceDetails = [];
+        this.currentCustomPage = 1;
+        this.records = 500;
+        this.isLoadMoreVisible = false;
     }
 
     ngOnInit(): void {
@@ -482,6 +489,12 @@ export class InvoiceDetailsComponent implements OnInit {
             );
     }
     SearchInvoices(): void {
+        this.currentCustomPage = 1;
+        this.allInvoiceDetails = [];
+        this.getFilteredInvoiceDetails();
+    }
+    LoadMoreData(): void {
+        this.currentCustomPage = this.currentCustomPage + 1;
         this.getFilteredInvoiceDetails();
     }
     getFilteredInvoiceDetails(): void {
@@ -510,10 +523,21 @@ export class InvoiceDetailsComponent implements OnInit {
                 this.CurrentFilterClass.LRNumber = LRNumber;
                 this._shareParameterService.SetInvoiceFilterClass(this.CurrentFilterClass);
                 this._dashboardService
-                    .FilterInvoiceDetailByUser(this.currentUserCode, Status, StartDate, EndDate, InvoiceNumber, LRNumber)
+                    .FilterInvoiceDetailByUser(this.currentUserCode, this.currentCustomPage, this.records, Status, StartDate, EndDate, InvoiceNumber, LRNumber)
                     .subscribe(
                         data => {
-                            this.allInvoiceDetails = data as InvoiceDetails[];
+                            // this.allInvoiceDetails = data as InvoiceDetails[];
+                            const data1 = data as InvoiceDetails[];
+                            if (data1) {
+                                if (data.length < this.records) {
+                                    this.isLoadMoreVisible = false;
+                                } else {
+                                    this.isLoadMoreVisible = true;
+                                }
+                                data1.forEach(x => {
+                                    this.allInvoiceDetails.push(x);
+                                });
+                            }
                             this.allInvoicesCount = this.allInvoiceDetails.length;
                             // this.dataSource = new MatTableDataSource(
                             //     this.allInvoiceDetails

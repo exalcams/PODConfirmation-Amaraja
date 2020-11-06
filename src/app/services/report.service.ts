@@ -27,10 +27,10 @@ export class ReportService {
     )
       .pipe(catchError(this.errorHandler));
   }
-  GetFilteredInvoiceDetails(UserID: Guid, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string,
+  GetFilteredInvoiceDetails(UserID: Guid, CurrentPage: number, Records: number, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string,
     Organization: string, Division: string, Plant: string, CustomerName: string): Observable<ReportInvoice[] | string> {
     return this._httpClient.get<ReportInvoice[]>(
-      `${this.baseAddress}api/Report/GetFilteredInvoiceDetails?UserID=${UserID}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
+      `${this.baseAddress}api/Report/GetFilteredInvoiceDetails?UserID=${UserID}&CurrentPage=${CurrentPage}&Records=${Records}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
     )
       .pipe(catchError(this.errorHandler));
   }

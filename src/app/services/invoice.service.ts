@@ -146,10 +146,10 @@ export class InvoiceService {
     )
       .pipe(catchError(this.errorHandler));
   }
-  FilterSavedInvoicesByUserID(UserID: Guid, StartDate: string, EndDate: string, InvoiceNumber: string,
+  FilterSavedInvoicesByUserID(UserID: Guid, CurrentPage: number, Records: number, StartDate: string, EndDate: string, InvoiceNumber: string,
     Organization: string, Division: string, Plant: string, CustomerName: string): Observable<InvoiceDetails[] | string> {
     return this._httpClient.get<InvoiceDetails[]>(
-      `${this.baseAddress}api/PODConfirmation/FilterSavedInvoicesByUserID?UserID=${UserID}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
+      `${this.baseAddress}api/PODConfirmation/FilterSavedInvoicesByUserID?UserID=${UserID}&CurrentPage=${CurrentPage}&Records=${Records}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
     )
       .pipe(catchError(this.errorHandler));
   }
@@ -160,10 +160,10 @@ export class InvoiceService {
       )
       .pipe(catchError(this.errorHandler));
   }
-  FilterPartiallyConfirmedInvoices(StartDate: string, EndDate: string, InvoiceNumber: string,
+  FilterPartiallyConfirmedInvoices(CurrentPage: number, Records: number, StartDate: string, EndDate: string, InvoiceNumber: string,
     Organization: string, Division: string, Plant: string, CustomerName: string): Observable<InvoiceDetails[] | string> {
     return this._httpClient.get<InvoiceDetails[]>(
-      `${this.baseAddress}api/PODConfirmation/FilterPartiallyConfirmedInvoices?StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
+      `${this.baseAddress}api/PODConfirmation/FilterPartiallyConfirmedInvoices?CurrentPage=${CurrentPage}&Records=${Records}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
     )
       .pipe(catchError(this.errorHandler));
   }
