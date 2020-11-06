@@ -79,7 +79,11 @@
         <div flex class="mt-10 mr-16">
           <form autocomplete="off" class="abnormal" fxLayout="column" fxLayoutAlign="start" name="form" novalidate
             [formGroup]="InvoiceDetailsFormGroup">
-            <div fxLayout fxLayoutAlign="end center">
+            <div fxLayout fxLayoutAlign="start center">
+              <div fxFlex>
+                <button *ngIf="isLoadMoreVisible" mat-flat-button class="strokedBtnBg" (click)="LoadMoreData()">Load
+                  more..</button>
+              </div>
               <div fxFlex align="end">
                 <button (click)="exportAsXLSX()" class="excelBtn mb-8" mat-stroked-button>
                   <img class="excelImg" src="assets/images/excel.png">

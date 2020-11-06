@@ -83,6 +83,9 @@ export class DashboardComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     currentLabel: string;
+    currentCustomPage: number;
+    records: number;
+    isLoadMoreVisible: boolean;
     // Doughnut Chart
     public doughnutChartOptions = {
         responsive: true,
@@ -181,6 +184,10 @@ export class DashboardComponent implements OnInit {
         this.condition = "InLineDelivery";
         this.isDateError = false;
         this.currentLabel = 'PENDING INVOICES';
+        this.currentCustomPage = 1;
+        this.allInvoiceDetails = [];
+        this.records = 500;
+        this.isLoadMoreVisible = false;
         this.CurrentFilterClass = this._shareParameterService.GetDashboardFilterClass();
     }
 
@@ -235,7 +242,7 @@ export class DashboardComponent implements OnInit {
         // this.GetInvoiceStatusCount();
         this.getFilteredInvoiceDetails();
         // this.GetInvoiceHeaderDetails();
-        this.LoadInitialData();
+        // this.LoadInitialData();
         // this.GetDeliveryCount();
         // this.GetDeliveredInvoices();
     }
@@ -499,11 +506,15 @@ export class DashboardComponent implements OnInit {
         }
     }
     SearchInvoices(): void {
+        this.currentLabel = 'PENDING INVOICES';
+        this.currentCustomPage = 1;
+        this.allInvoiceDetails = [];
         this.getFilteredInvoiceDetails();
     }
     getFilteredInvoiceDetails(): void {
         if (this.InvoiceFilterFormGroup.valid) {
             if (!this.isDateError) {
+                this.currentCustomPage = 1;
                 this.FilterInvoiceStatusCount();
                 this.FilterDeliveryCount();
             }
@@ -722,6 +733,8 @@ export class DashboardComponent implements OnInit {
                 if (label) {
                     if (label.toLowerCase() === "pending invoices") {
                         this.currentLabel = 'PENDING INVOICES';
+                        this.currentCustomPage = 1;
+                        this.allInvoiceDetails = [];
                         if (this.currentUserRole === "Amararaja User") {
                             this.FilterPendingInvoices();
                         } else if (this.currentUserRole === "Customer") {
@@ -730,6 +743,8 @@ export class DashboardComponent implements OnInit {
                     }
                     else if (label.toLowerCase() === "confirmed invoices") {
                         this.currentLabel = 'CONFIRMED INVOICES';
+                        this.currentCustomPage = 1;
+                        this.allInvoiceDetails = [];
                         if (this.currentUserRole === "Amararaja User") {
                             this.FilterConfirmedInvoices();
                         } else if (this.currentUserRole === "Customer") {
@@ -738,6 +753,8 @@ export class DashboardComponent implements OnInit {
                     }
                     else if (label.toLowerCase() === "partially confirmed invoices") {
                         this.currentLabel = 'PARTIALLY CONFIRMED INVOICES';
+                        this.currentCustomPage = 1;
+                        this.allInvoiceDetails = [];
                         if (this.currentUserRole === "Amararaja User") {
                             this.FilterPartiallyConfirmedInvoices();
                         } else if (this.currentUserRole === "Customer") {
@@ -762,6 +779,8 @@ export class DashboardComponent implements OnInit {
                 // console.log(clickedElementIndex, label, value);
                 if (label.toLowerCase() === "on time delivery") {
                     this.currentLabel = 'ON TIME DELIVERY';
+                    this.currentCustomPage = 1;
+                    this.allInvoiceDetails = [];
                     if (this.currentUserRole === "Amararaja User") {
                         this.FilterOnTimeDeliveryInvoices();
                     } else if (this.currentUserRole === "Customer") {
@@ -770,6 +789,8 @@ export class DashboardComponent implements OnInit {
                 }
                 else if (label.toLowerCase() === "late delivery") {
                     this.currentLabel = 'LATE DELIVERY';
+                    this.currentCustomPage = 1;
+                    this.allInvoiceDetails = [];
                     if (this.currentUserRole === "Amararaja User") {
                         this.FilterLateDeliveryInvoices();
                     } else if (this.currentUserRole === "Customer") {
@@ -779,7 +800,48 @@ export class DashboardComponent implements OnInit {
             }
         }
     }
-
+    LoadMoreData(): void {
+        if (this.currentLabel.toLowerCase() === "pending invoices") {
+            this.currentCustomPage = this.currentCustomPage + 1;
+            if (this.currentUserRole === "Amararaja User") {
+                this.FilterPendingInvoices();
+            } else if (this.currentUserRole === "Customer") {
+                this.FilterPendingInvoicesByUser();
+            }
+        }
+        else if (this.currentLabel.toLowerCase() === "confirmed invoices") {
+            this.currentCustomPage = this.currentCustomPage + 1;
+            if (this.currentUserRole === "Amararaja User") {
+                this.FilterConfirmedInvoices();
+            } else if (this.currentUserRole === "Customer") {
+                this.FilterConfirmedInvoicesByUser();
+            }
+        }
+        else if (this.currentLabel.toLowerCase() === "partially confirmed invoices") {
+            this.currentCustomPage = this.currentCustomPage + 1;
+            if (this.currentUserRole === "Amararaja User") {
+                this.FilterPartiallyConfirmedInvoices();
+            } else if (this.currentUserRole === "Customer") {
+                this.FilterPartiallyConfirmedInvoicesByUser();
+            }
+        }
+        else if (this.currentLabel.toLowerCase() === "on time delivery") {
+            this.currentCustomPage = this.currentCustomPage + 1;
+            if (this.currentUserRole === "Amararaja User") {
+                this.FilterOnTimeDeliveryInvoices();
+            } else if (this.currentUserRole === "Customer") {
+                this.FilterOnTimeDeliveryInvoicesByUser();
+            }
+        }
+        else if (this.currentLabel.toLowerCase() === "late delivery") {
+            this.currentCustomPage = this.currentCustomPage + 1;
+            if (this.currentUserRole === "Amararaja User") {
+                this.FilterLateDeliveryInvoices();
+            } else if (this.currentUserRole === "Customer") {
+                this.FilterLateDeliveryInvoicesByUser();
+            }
+        }
+    }
     FilterConfirmedInvoices(): void {
         let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
         if (Organization1 && Organization1.toLowerCase() === "all") {
@@ -801,9 +863,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterConfirmedInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterConfirmedInvoices(this.currentUserID, this.currentCustomPage, this.records, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -837,9 +909,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterPartiallyConfirmedInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterPartiallyConfirmedInvoices(this.currentUserID, this.currentCustomPage, this.records, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -873,9 +955,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterPendingInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterPendingInvoices(this.currentUserID, this.currentCustomPage, this.records, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -909,9 +1001,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterOnTimeDeliveryInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterOnTimeDeliveryInvoices(this.currentUserID, this.currentCustomPage, this.records, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -945,9 +1047,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterLateDeliveryInvoices(this.currentUserID, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterLateDeliveryInvoices(this.currentUserID, this.currentCustomPage, this.records, Organization1, Division, Plant1, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -972,9 +1084,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterConfirmedInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterConfirmedInvoicesByUser(this.currentUserCode, this.currentCustomPage, this.records, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -998,9 +1120,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterPartiallyConfirmedInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterPartiallyConfirmedInvoicesByUser(this.currentUserCode, this.currentCustomPage, this.records, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -1024,9 +1156,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterPendingInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterPendingInvoicesByUser(this.currentUserCode, this.currentCustomPage, this.records, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -1051,9 +1193,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterOnTimeDeliveryInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterOnTimeDeliveryInvoicesByUser(this.currentUserCode, this.currentCustomPage, this.records, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;
@@ -1078,9 +1230,19 @@ export class DashboardComponent implements OnInit {
             EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
         }
         this.isProgressBarVisibile = true;
-        this._dashboardService.FilterLateDeliveryInvoicesByUser(this.currentUserCode, StartDate, EndDate).subscribe(
+        this._dashboardService.FilterLateDeliveryInvoicesByUser(this.currentUserCode, this.currentCustomPage, this.records, StartDate, EndDate).subscribe(
             (data) => {
-                this.allInvoiceDetails = data as InvoiceHeaderDetail[];
+                const data1 = data as InvoiceHeaderDetail[];
+                if (data1) {
+                    if (data.length < this.records) {
+                        this.isLoadMoreVisible = false;
+                    } else {
+                        this.isLoadMoreVisible = true;
+                    }
+                    data1.forEach(x => {
+                        this.allInvoiceDetails.push(x);
+                    });
+                }
                 this.dataSource = new MatTableDataSource(this.allInvoiceDetails);
                 this.dataSource.paginator = this.paginator;
                 this.isProgressBarVisibile = false;

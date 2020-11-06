@@ -82,19 +82,23 @@
           </div>
         </form>
         <div flex class="mt-10 mr-16">
-          <div fxLayout fxLayoutAlign="end center">
+          <div fxLayout fxLayoutAlign="start center">
+            <div fxFlex>
+              <button *ngIf="isLoadMoreVisible" mat-flat-button class="strokedBtnBg" (click)="LoadMoreData()">Load
+                more..</button>
+            </div>
             <div fxFlex align="end">
               <button (click)="exportAsXLSX()" class="excelBtn mb-8" mat-stroked-button>
                 <img class="excelImg" src="assets/images/excel.png">
                 Export to excel
               </button>
-               <button (click)="exportAllAsXLSX()" class="excelBtn mb-8 ml-8" mat-stroked-button>
+              <button (click)="exportAllAsXLSX()" class="excelBtn mb-8 ml-8" mat-stroked-button>
                 <img class="excelImg" src="assets/images/excel.png">
                 Export All to excel
               </button>
             </div>
           </div>
-          
+
           <div class="example-container">
             <table class="tableBodyScroll" mat-table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}">
 

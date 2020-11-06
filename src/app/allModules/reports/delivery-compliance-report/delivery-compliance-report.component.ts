@@ -82,6 +82,9 @@ export class DeliveryComplianceReportComponent implements OnInit {
   AllStatusTemplates: StatusTemplate[] = [];
   isDateError: boolean;
   CurrentFilterClass: FilterClass = new FilterClass();
+  currentCustomPage: number;
+  records: number;
+  isLoadMoreVisible: boolean;
   constructor(
     private _router: Router,
     private _reportService: ReportService,
@@ -103,6 +106,10 @@ export class DeliveryComplianceReportComponent implements OnInit {
       { key: 'Confirmed (customer)', value: 'Confirmed' },
     ];
     this.CurrentFilterClass = this._shareParameterService.GetReportFilterClass();
+    this.FilteredInvoiceDetails = [];
+    this.currentCustomPage = 1;
+    this.records = 250;
+    this.isLoadMoreVisible = false;
   }
 
   ngOnInit(): void {
@@ -150,8 +157,8 @@ export class DeliveryComplianceReportComponent implements OnInit {
     this.GetAllPlantOrganizationMaps();
     this.GetDivisions();
     if (this.currentUserRole.toLowerCase() === 'amararaja user') {
-      // this.getFilteredInvoiceDetails();
-      this.GetPendingInvoiceDetails();
+      this.getFilteredInvoiceDetails();
+      // this.GetPendingInvoiceDetails();
     } else {
       this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
       );
@@ -205,6 +212,12 @@ export class DeliveryComplianceReportComponent implements OnInit {
     );
   }
   SearchInvoices(): void {
+    this.currentCustomPage = 1;
+    this.FilteredInvoiceDetails = [];
+    this.getFilteredInvoiceDetails();
+  }
+  LoadMoreData(): void {
+    this.currentCustomPage = this.currentCustomPage + 1;
     this.getFilteredInvoiceDetails();
   }
   GetPendingInvoiceDetails(): void {
@@ -213,8 +226,19 @@ export class DeliveryComplianceReportComponent implements OnInit {
       .GetPendingInvoiceDetails(this.authenticationDetails.userID)
       .subscribe(
         data => {
-          this.FilteredInvoiceDetails = data as ReportInvoice[];
+          // this.FilteredInvoiceDetails = data as ReportInvoice[];
           // this.allInvoicesCount = this.FilteredInvoiceDetails.length;
+          const data1 = data as ReportInvoice[];
+          if (data1) {
+            if (data.length < this.records) {
+              this.isLoadMoreVisible = false;
+            } else {
+              this.isLoadMoreVisible = true;
+            }
+            data1.forEach(x => {
+              this.FilteredInvoiceDetails.push(x);
+            });
+          }
           this.dataSource = new MatTableDataSource(
             this.FilteredInvoiceDetails
           );
@@ -269,11 +293,22 @@ export class DeliveryComplianceReportComponent implements OnInit {
         this.CurrentFilterClass.CustomerName = CustomerName;
         this._shareParameterService.SetReportFilterClass(this.CurrentFilterClass);
         this._reportService
-          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
+          .GetFilteredInvoiceDetails(this.authenticationDetails.userID,this.currentCustomPage, this.records,  Status, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
           .subscribe(
             data => {
-              this.FilteredInvoiceDetails = data as ReportInvoice[];
+              // this.FilteredInvoiceDetails = data as ReportInvoice[];
               // this.allInvoicesCount = this.FilteredInvoiceDetails.length;
+              const data1 = data as ReportInvoice[];
+              if (data1) {
+                if (data.length < this.records) {
+                  this.isLoadMoreVisible = false;
+                } else {
+                  this.isLoadMoreVisible = true;
+                }
+                data1.forEach(x => {
+                  this.FilteredInvoiceDetails.push(x);
+                });
+              }
               this.dataSource = new MatTableDataSource(
                 this.FilteredInvoiceDetails
               );
@@ -494,7 +529,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
     });
     this._excelService.exportAsExcelFile(itemsShowedd, 'report');
   }
-  exportAllAsXLSX():void{
+  exportAllAsXLSX(): void {
     const itemsShowed = this.FilteredInvoiceDetails;
     const itemsShowedd = [];
     itemsShowed.forEach(x => {

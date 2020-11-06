@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AuthenticationDetails, Organization, Plant, PlantOrganizationMap, PlantWithOrganization } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { MatOption, MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
@@ -15,11 +15,14 @@ import { ShareParameterService } from 'app/services/share-parameters.service';
 import { DatePipe } from '@angular/common';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
   selector: 'app-partially-confirmed-invoice',
   templateUrl: './partially-confirmed-invoice.component.html',
-  styleUrls: ['./partially-confirmed-invoice.component.scss']
+  styleUrls: ['./partially-confirmed-invoice.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations
 })
 export class PartiallyConfirmedInvoiceComponent implements OnInit {
 
@@ -74,6 +77,9 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
   AllStatusTemplates: StatusTemplate[] = [];
   isDateError: boolean;
   CurrentFilterClass: FilterClass = new FilterClass();
+  currentCustomPage: number;
+  records: number;
+  isLoadMoreVisible: boolean;
   constructor(
     private _router: Router,
     private _reportService: ReportService,
@@ -89,6 +95,10 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
     this.isProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.CurrentFilterClass = this._shareParameterService.GetPartialInvoiceFilterClass();
+    this.FilteredInvoiceDetails = [];
+    this.currentCustomPage = 1;
+    this.records = 500;
+    this.isLoadMoreVisible = false;
   }
 
   ngOnInit(): void {
@@ -188,9 +198,14 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
     );
   }
   SearchInvoices(): void {
+    this.currentCustomPage = 1;
+    this.FilteredInvoiceDetails = [];
     this.FilterPartiallyConfirmedInvoices();
   }
-
+  LoadMoreData(): void {
+    this.currentCustomPage = this.currentCustomPage + 1;
+    this.FilterPartiallyConfirmedInvoices();
+  }
   FilterPartiallyConfirmedInvoices(): void {
     if (this.InvoiceFilterFormGroup.valid) {
       if (!this.isDateError) {
@@ -227,11 +242,22 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
         this.CurrentFilterClass.CustomerName = CustomerName;
         this._shareParameterService.SetPartialInvoiceFilterClass(this.CurrentFilterClass);
         this._invoiceService
-          .FilterPartiallyConfirmedInvoices(StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
+          .FilterPartiallyConfirmedInvoices(this.currentCustomPage, this.records, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
           .subscribe(
             data => {
-              this.FilteredInvoiceDetails = data as InvoiceDetails[];
+              // this.FilteredInvoiceDetails = data as InvoiceDetails[];
               // this.allInvoicesCount = this.FilteredInvoiceDetails.length;
+              const data1 = data as InvoiceDetails[];
+              if (data1) {
+                if (data.length < this.records) {
+                  this.isLoadMoreVisible = false;
+                } else {
+                  this.isLoadMoreVisible = true;
+                }
+                data1.forEach(x => {
+                  this.FilteredInvoiceDetails.push(x);
+                });
+              }
               this.dataSource = new MatTableDataSource(
                 this.FilteredInvoiceDetails
               );

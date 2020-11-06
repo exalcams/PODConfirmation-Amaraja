@@ -113,8 +113,11 @@
     <div style="border-bottom: 2px solid #F3F6EE;" class="my-12 mx-24"></div>
 
     <div fxFlex class="mx-20">
-      <div fxLayoutAlign="start center" class="pt-8 pb-8">
+      <div fxLayout fxLayoutAlign="start center" class="pt-8 pb-8">
         <span class="orangeBorderBottom h2"> {{currentLabel}}</span>
+        <div fxFlex align="end">
+          <button *ngIf="isLoadMoreVisible" mat-flat-button class="strokedBtnBg" (click)="LoadMoreData()">Load more..</button>
+        </div>
       </div>
       <div>
 
@@ -273,7 +276,8 @@
     </div>
   </div>
 
-  <mat-progress-spinner *ngIf="isProgressBarVisibile || isProgressBarVisibile1 || isProgressBarVisibile2" class="progressBarPostion" color="accent" mode="indeterminate">
+  <mat-progress-spinner *ngIf="isProgressBarVisibile || isProgressBarVisibile1 || isProgressBarVisibile2"
+    class="progressBarPostion" color="accent" mode="indeterminate">
   </mat-progress-spinner>
   <div id="overlay" *ngIf="isProgressBarVisibile || isProgressBarVisibile1 || isProgressBarVisibile2"></div>
 </div>
