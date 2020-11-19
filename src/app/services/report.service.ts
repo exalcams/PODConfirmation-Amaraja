@@ -49,4 +49,14 @@ export class ReportService {
     })
       .pipe(catchError(this.errorHandler));
   }
+  DownloadInvoiceDetails(UserID: Guid, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string,
+    Organization: string, Division: string, Plant: string, CustomerName: string): Observable<Blob | string> {
+    return this._httpClient.get(
+      `${this.baseAddress}api/Report/DownloadInvoiceDetails?UserID=${UserID}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`,
+      {
+        responseType: 'blob',
+        headers: new HttpHeaders().append('Content-Type', 'application/json')
+      })
+      .pipe(catchError(this.errorHandler));
+  }
 }

@@ -179,6 +179,15 @@ export class DeliveryComplianceReportComponent implements OnInit {
       }
     );
   }
+  GetOrganizationDescription(Code: string): string {
+    if (this.AllOrganizations && this.AllOrganizations.length) {
+      const org = this.AllOrganizations.filter(x => x.OrganizationCode === Code)[0];
+      if (org && org.Description) {
+        return org.Description;
+      }
+    }
+    return Code;
+  }
   GetAllPlants(): void {
     this._masterService.GetAllPlantsByUserID(this.currentUserID).subscribe(
       (data) => {
@@ -189,6 +198,15 @@ export class DeliveryComplianceReportComponent implements OnInit {
         console.error(err);
       }
     );
+  }
+  GetPlantDescription(Code: string): string {
+    if (this.AllPlants && this.AllPlants.length) {
+      const pl = this.AllPlants.filter(x => x.PlantCode === Code)[0];
+      if (pl && pl.Description) {
+        return pl.Description;
+      }
+    }
+    return Code;
   }
   GetAllPlantOrganizationMaps(): void {
     this._masterService.GetAllPlantOrganizationMaps().subscribe(
@@ -293,7 +311,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
         this.CurrentFilterClass.CustomerName = CustomerName;
         this._shareParameterService.SetReportFilterClass(this.CurrentFilterClass);
         this._reportService
-          .GetFilteredInvoiceDetails(this.authenticationDetails.userID,this.currentCustomPage, this.records,  Status, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
+          .GetFilteredInvoiceDetails(this.authenticationDetails.userID, this.currentCustomPage, this.records, Status, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
           .subscribe(
             data => {
               // this.FilteredInvoiceDetails = data as ReportInvoice[];
@@ -497,20 +515,22 @@ export class DeliveryComplianceReportComponent implements OnInit {
     const itemsShowedd = [];
     itemsShowed.forEach(x => {
       const item = {
-        'Organization': x.ORGANIZATION,
+        'Organization': this.GetOrganizationDescription(x.ORGANIZATION),
         'Division': x.DIVISION,
-        'Plant': x.PLANT,
+        'Plant': this.GetPlantDescription(x.PLANT),
         'Invoice No': x.ODIN,
         'Reference No': x.INV_NO,
         'Invoice Date': x.INV_DATE ? this._datePipe.transform(x.INV_DATE, 'dd-MM-yyyy') : '',
         'Invoice Type': x.INV_TYPE,
         'Outbound delivery': x.OUTBOUND_DELIVERY,
         'Outbound delivery date': x.OUTBOUND_DELIVERY_DATE ? this._datePipe.transform(x.OUTBOUND_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+        'Customer': x.CUSTOMER,
+        'Customer Name': x.CUSTOMER_NAME,
         'LR Number': x.LR_NO,
         'LR date': x.LR_DATE ? this._datePipe.transform(x.LR_DATE, 'dd-MM-yyyy') : '',
         'Vehicle No': x.VEHICLE_NO,
         'Carrier': x.CARRIER,
-        'Vehicle Capacity': x.VEHICLE_CAPACITY,
+        // 'Vehicle Capacity': x.VEHICLE_CAPACITY,
         'E-Way bill No': x.EWAYBILL_NO,
         'E-Way bill date': x.EWAYBILL_DATE ? this._datePipe.transform(x.EWAYBILL_DATE, 'dd-MM-yyyy') : '',
         'Freight order': x.FREIGHT_ORDER,
@@ -530,41 +550,106 @@ export class DeliveryComplianceReportComponent implements OnInit {
     this._excelService.exportAsExcelFile(itemsShowedd, 'report');
   }
   exportAllAsXLSX(): void {
-    const itemsShowed = this.FilteredInvoiceDetails;
-    const itemsShowedd = [];
-    itemsShowed.forEach(x => {
-      const item = {
-        'Organization': x.ORGANIZATION,
-        'Division': x.DIVISION,
-        'Plant': x.PLANT,
-        'Invoice No': x.ODIN,
-        'Reference No': x.INV_NO,
-        'Invoice Date': x.INV_DATE ? this._datePipe.transform(x.INV_DATE, 'dd-MM-yyyy') : '',
-        'Invoice Type': x.INV_TYPE,
-        'Outbound delivery': x.OUTBOUND_DELIVERY,
-        'Outbound delivery date': x.OUTBOUND_DELIVERY_DATE ? this._datePipe.transform(x.OUTBOUND_DELIVERY_DATE, 'dd-MM-yyyy') : '',
-        'LR Number': x.LR_NO,
-        'LR date': x.LR_DATE ? this._datePipe.transform(x.LR_DATE, 'dd-MM-yyyy') : '',
-        'Vehicle No': x.VEHICLE_NO,
-        'Carrier': x.CARRIER,
-        'Vehicle Capacity': x.VEHICLE_CAPACITY,
-        'E-Way bill No': x.EWAYBILL_NO,
-        'E-Way bill date': x.EWAYBILL_DATE ? this._datePipe.transform(x.EWAYBILL_DATE, 'dd-MM-yyyy') : '',
-        'Freight order': x.FREIGHT_ORDER,
-        'Freight order date': x.FREIGHT_ORDER_DATE ? this._datePipe.transform(x.FREIGHT_ORDER_DATE, 'dd-MM-yyyy') : '',
-        'Proposed delivery date': x.PROPOSED_DELIVERY_DATE ? this._datePipe.transform(x.PROPOSED_DELIVERY_DATE, 'dd-MM-yyyy') : '',
-        'Actual delivery date': x.ACTUAL_DELIVERY_DATE ? this._datePipe.transform(x.ACTUAL_DELIVERY_DATE, 'dd-MM-yyyy') : '',
-        'Lead time': x.TRANSIT_LEAD_TIME,
-        'Material Code': x.MATERIAL_CODE,
-        'Material Description': x.MATERIAL_DESCRIPTION,
-        'Quantity': x.QUANTITY,
-        'Received Quantity': x.RECEIVED_QUANTITY,
-        'UOM': x.QUANTITY_UOM,
-        'Status': x.STATUS,
-      };
-      itemsShowedd.push(item);
-    });
-    this._excelService.exportAsExcelFile(itemsShowedd, 'report');
+    if (this.InvoiceFilterFormGroup.valid) {
+      if (!this.isDateError) {
+        this.isProgressBarVisibile = true;
+        const Status = this.InvoiceFilterFormGroup.get('Status').value;
+        const InvoiceNumber = this.InvoiceFilterFormGroup.get('InvoiceNumber').value;
+        let Organization1 = this.InvoiceFilterFormGroup.get('Organization').value as string;
+        if (Organization1 && Organization1.toLowerCase() === "all") {
+          Organization1 = '';
+        }
+        const Division = this.InvoiceFilterFormGroup.get('Division').value;
+        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        if (Plant1 && Plant1.toLowerCase() === "all") {
+          Plant1 = '';
+        }
+        const CustomerName = this.InvoiceFilterFormGroup.get('CustomerName').value;
+        let StartDate = null;
+        const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
+        if (staDate) {
+          StartDate = this._datePipe.transform(staDate, 'yyyy-MM-dd');
+        }
+        let EndDate = null;
+        const enDate = this.InvoiceFilterFormGroup.get('EndDate').value;
+        if (enDate) {
+          EndDate = this._datePipe.transform(enDate, 'yyyy-MM-dd');
+        }
+        if (!this.CurrentFilterClass) {
+          this.CurrentFilterClass = new FilterClass();
+        }
+        this.CurrentFilterClass.Status = Status;
+        this.CurrentFilterClass.StartDate = StartDate;
+        this.CurrentFilterClass.EndDate = EndDate;
+        this.CurrentFilterClass.Organization = Organization1;
+        this.CurrentFilterClass.Division = Division;
+        this.CurrentFilterClass.Plant = Plant1;
+        this.CurrentFilterClass.CustomerName = CustomerName;
+        this._shareParameterService.SetReportFilterClass(this.CurrentFilterClass);
+        this._reportService
+          .DownloadInvoiceDetails(this.authenticationDetails.userID, Status, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
+          .subscribe(
+            data => {
+              this.isProgressBarVisibile = false;
+              const BlobFile = data as Blob;
+              const currentDateTime = this._datePipe.transform(new Date(), 'ddMMyyyyHHmmss');
+              const fileName = 'Invoice details';
+              const EXCEL_EXTENSION = '.xls';
+              saveAs(BlobFile, fileName + '_' + currentDateTime + EXCEL_EXTENSION);
+            },
+            err => {
+              this.isProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar(
+                err instanceof Object ? 'Something went wrong' : err,
+                SnackBarStatus.danger
+              );
+            }
+          );
+      }
+    } else {
+      Object.keys(this.InvoiceFilterFormGroup.controls).forEach(key => {
+        this.InvoiceFilterFormGroup.get(key).markAsTouched();
+        this.InvoiceFilterFormGroup.get(key).markAsDirty();
+      });
+    }
+
+    // const itemsShowed = this.FilteredInvoiceDetails;
+    // const itemsShowedd = [];
+    // itemsShowed.forEach(x => {
+    //   const item = {
+    //     'Organization': this.GetOrganizationDescription(x.ORGANIZATION),
+    //     'Division': x.DIVISION,
+    //     'Plant': this.GetPlantDescription(x.PLANT),
+    //     'Invoice No': x.ODIN,
+    //     'Reference No': x.INV_NO,
+    //     'Invoice Date': x.INV_DATE ? this._datePipe.transform(x.INV_DATE, 'dd-MM-yyyy') : '',
+    //     'Invoice Type': x.INV_TYPE,
+    //     'Outbound delivery': x.OUTBOUND_DELIVERY,
+    //     'Outbound delivery date': x.OUTBOUND_DELIVERY_DATE ? this._datePipe.transform(x.OUTBOUND_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+    //     'Customer': x.CUSTOMER,
+    //     'Customer Name': x.CUSTOMER_NAME,
+    //     'LR Number': x.LR_NO,
+    //     'LR date': x.LR_DATE ? this._datePipe.transform(x.LR_DATE, 'dd-MM-yyyy') : '',
+    //     'Vehicle No': x.VEHICLE_NO,
+    //     'Carrier': x.CARRIER,
+    //     // 'Vehicle Capacity': x.VEHICLE_CAPACITY,
+    //     'E-Way bill No': x.EWAYBILL_NO,
+    //     'E-Way bill date': x.EWAYBILL_DATE ? this._datePipe.transform(x.EWAYBILL_DATE, 'dd-MM-yyyy') : '',
+    //     'Freight order': x.FREIGHT_ORDER,
+    //     'Freight order date': x.FREIGHT_ORDER_DATE ? this._datePipe.transform(x.FREIGHT_ORDER_DATE, 'dd-MM-yyyy') : '',
+    //     'Proposed delivery date': x.PROPOSED_DELIVERY_DATE ? this._datePipe.transform(x.PROPOSED_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+    //     'Actual delivery date': x.ACTUAL_DELIVERY_DATE ? this._datePipe.transform(x.ACTUAL_DELIVERY_DATE, 'dd-MM-yyyy') : '',
+    //     'Lead time': x.TRANSIT_LEAD_TIME,
+    //     'Material Code': x.MATERIAL_CODE,
+    //     'Material Description': x.MATERIAL_DESCRIPTION,
+    //     'Quantity': x.QUANTITY,
+    //     'Received Quantity': x.RECEIVED_QUANTITY,
+    //     'UOM': x.QUANTITY_UOM,
+    //     'Status': x.STATUS,
+    //   };
+    //   itemsShowedd.push(item);
+    // });
+    // this._excelService.exportAsExcelFile(itemsShowedd, 'report');
   }
 }
 
