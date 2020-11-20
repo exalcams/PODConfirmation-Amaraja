@@ -182,12 +182,16 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle No </th>
                 <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.VEHICLE_NO}} </td>
               </ng-container>
+              
+              <ng-container matColumnDef="FWD_AGENT">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Forward agent </th>
+                <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.FWD_AGENT}} </td>
+              </ng-container>
 
               <ng-container matColumnDef="CARRIER">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrier </th>
                 <td mat-cell *matCellDef="let element" (click)="invoiceRowClick(element)"> {{element.CARRIER}} </td>
               </ng-container>
-
 
               <ng-container matColumnDef="VEHICLE_CAPACITY">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehicle Capacity </th>

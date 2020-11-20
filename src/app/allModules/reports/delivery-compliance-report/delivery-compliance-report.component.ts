@@ -57,6 +57,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
     'LR_NO',
     'LR_DATE',
     'VEHICLE_NO',
+    'FWD_AGENT',
     'CARRIER',
     'VEHICLE_CAPACITY',
     'EWAYBILL_NO',
@@ -308,6 +309,7 @@ export class DeliveryComplianceReportComponent implements OnInit {
         this.CurrentFilterClass.Organization = Organization1;
         this.CurrentFilterClass.Division = Division;
         this.CurrentFilterClass.Plant = Plant1;
+        this.CurrentFilterClass.InvoiceNumber = InvoiceNumber;
         this.CurrentFilterClass.CustomerName = CustomerName;
         this._shareParameterService.SetReportFilterClass(this.CurrentFilterClass);
         this._reportService

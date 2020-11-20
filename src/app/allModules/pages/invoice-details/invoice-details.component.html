@@ -207,6 +207,13 @@
                   </td>
                 </ng-container>
 
+                <ng-container matColumnDef="FWD_AGENT">
+                  <th mat-header-cell *matHeaderCellDef> Forward Agent </th>
+                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
+                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('FWD_AGENT')?.value}}
+                  </td>
+                </ng-container>
+
                 <ng-container matColumnDef="CARRIER">
                   <th mat-header-cell *matHeaderCellDef> Carrier </th>
                   <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
@@ -218,13 +225,6 @@
                   <th mat-header-cell *matHeaderCellDef> Vehicle Capacity </th>
                   <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
                     {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('VEHICLE_CAPACITY')?.value}}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="FWD_AGENT">
-                  <th mat-header-cell *matHeaderCellDef> Forward Agent </th>
-                  <td mat-cell *matCellDef="let element;let index=index;" (click)="invoiceRowClick(index)">
-                    {{InvoiceDetailsFormGroup.get('InvoiceDetails')?.controls[index]?.get('FWD_AGENT')?.value}}
                   </td>
                 </ng-container>
 
