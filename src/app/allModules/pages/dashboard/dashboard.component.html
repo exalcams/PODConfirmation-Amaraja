@@ -32,9 +32,9 @@
         <mat-form-field class="mx-8" fxFlex
           [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
           <!-- <input matInput placeholder="Plant" formControlName="Plant"> -->
-          <mat-select placeholder="Plant" formControlName="Plant">
-            <mat-option value="all">All</mat-option>
-            <mat-option *ngFor="let mp of FilteredPlants" [value]="mp.PlantCode">
+          <mat-select placeholder="Plant" formControlName="PlantList" multiple>
+            <mat-option value="all" #allSelected (click)="toggleAllSelection()">All</mat-option>
+            <mat-option *ngFor="let mp of FilteredPlants" [value]="mp.PlantCode" (click)="togglePerOne()">
               {{mp.PlantCode}}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -116,7 +116,8 @@
       <div fxLayout fxLayoutAlign="start center" class="pt-8 pb-8">
         <span class="orangeBorderBottom h2"> {{currentLabel}}</span>
         <div fxFlex align="end">
-          <button *ngIf="isLoadMoreVisible" mat-flat-button class="strokedBtnBg" (click)="LoadMoreData()">Load more..</button>
+          <button *ngIf="isLoadMoreVisible" mat-flat-button class="strokedBtnBg" (click)="LoadMoreData()">Load
+            more..</button>
         </div>
       </div>
       <div>

@@ -15,6 +15,7 @@ import {
     DeliveryCount,
     InvoiceStatusCount,
     InvoiceHeaderDetail,
+    FilterClass,
 } from "app/models/invoice-details";
 
 @Injectable({
@@ -90,7 +91,7 @@ export class DashboardService {
 
     FilterInvoiceDetailByUser(
         UserCode: string,
-        CurrentPage: number, 
+        CurrentPage: number,
         Records: number,
         Status: string,
         StartDate: string,
@@ -202,7 +203,13 @@ export class DashboardService {
             )
             .pipe(catchError(this.errorHandler));
     }
-
+    FilterDeliverysCount(filterClass: FilterClass): Observable<DeliveryCount | string> {
+        return this._httpClient
+            .post<DeliveryCount>(
+                `${this.baseAddress}api/Dashboard/FilterDeliverysCount`, filterClass
+            )
+            .pipe(catchError(this.errorHandler));
+    }
     FilterDeliveryCountByUser(
         UserCode: string, StartDate: string, EndDate: string
     ): Observable<DeliveryCount | string> {
@@ -219,6 +226,14 @@ export class DashboardService {
         return this._httpClient
             .get<InvoiceStatusCount>(
                 `${this.baseAddress}api/Dashboard/FilterInvoiceStatusCount?UserID=${userID}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&StartDate=${StartDate}&EndDate=${EndDate}`
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterInvoicesStatusCount(filterClass: FilterClass): Observable<InvoiceStatusCount | string> {
+        return this._httpClient
+            .post<InvoiceStatusCount>(
+                `${this.baseAddress}api/Dashboard/FilterInvoicesStatusCount`, filterClass
             )
             .pipe(catchError(this.errorHandler));
     }
@@ -265,7 +280,7 @@ export class DashboardService {
     }
 
 
-    FilterConfirmedInvoices(
+    FilterConfirmedInvoice(
         UserID: Guid, CurrentPage: number, Records: number, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceHeaderDetail[] | string> {
         return this._httpClient
@@ -274,8 +289,14 @@ export class DashboardService {
             )
             .pipe(catchError(this.errorHandler));
     }
-
-    FilterPartiallyConfirmedInvoices(
+    FilterConfirmedInvoices(filterClass: FilterClass): Observable<InvoiceHeaderDetail[] | string> {
+        return this._httpClient
+            .post<InvoiceHeaderDetail[]>(
+                `${this.baseAddress}api/Dashboard/FilterConfirmedInvoices`, filterClass
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+    FilterPartiallyConfirmedInvoice(
         UserID: Guid, CurrentPage: number, Records: number, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceHeaderDetail[] | string> {
         return this._httpClient
@@ -284,8 +305,14 @@ export class DashboardService {
             )
             .pipe(catchError(this.errorHandler));
     }
-
-    FilterPendingInvoices(
+    FilterPartiallyConfirmedInvoices(filterClass: FilterClass): Observable<InvoiceHeaderDetail[] | string> {
+        return this._httpClient
+            .post<InvoiceHeaderDetail[]>(
+                `${this.baseAddress}api/Dashboard/FilterPartiallyConfirmedInvoices`, filterClass
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+    FilterPendingInvoice(
         UserID: Guid, CurrentPage: number, Records: number, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceHeaderDetail[] | string> {
         return this._httpClient
@@ -294,8 +321,14 @@ export class DashboardService {
             )
             .pipe(catchError(this.errorHandler));
     }
-
-    FilterOnTimeDeliveryInvoices(
+    FilterPendingInvoices(filterClass: FilterClass): Observable<InvoiceHeaderDetail[] | string> {
+        return this._httpClient
+            .post<InvoiceHeaderDetail[]>(
+                `${this.baseAddress}api/Dashboard/FilterPendingInvoices`, filterClass
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+    FilterOnTimeDeliveryInvoice(
         UserID: Guid, CurrentPage: number, Records: number, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceHeaderDetail[] | string> {
         return this._httpClient
@@ -305,8 +338,16 @@ export class DashboardService {
             .pipe(catchError(this.errorHandler));
     }
 
+    FilterOnTimeDeliveryInvoices(filterClass: FilterClass): Observable<InvoiceHeaderDetail[] | string> {
+        return this._httpClient
+            .post<InvoiceHeaderDetail[]>(
+                `${this.baseAddress}api/Dashboard/FilterOnTimeDeliveryInvoices`, filterClass
+            )
+            .pipe(catchError(this.errorHandler));
+    }
 
-    FilterLateDeliveryInvoices(
+
+    FilterLateDeliveryInvoice(
         UserID: Guid, CurrentPage: number, Records: number, Organization: string, Division: string, Plant: string, StartDate: string, EndDate: string
     ): Observable<InvoiceHeaderDetail[] | string> {
         return this._httpClient
@@ -315,7 +356,13 @@ export class DashboardService {
             )
             .pipe(catchError(this.errorHandler));
     }
-
+    FilterLateDeliveryInvoices(filterClass: FilterClass): Observable<InvoiceHeaderDetail[] | string> {
+        return this._httpClient
+            .post<InvoiceHeaderDetail[]>(
+                `${this.baseAddress}api/Dashboard/FilterLateDeliveryInvoices`, filterClass
+            )
+            .pipe(catchError(this.errorHandler));
+    }
     FilterConfirmedInvoicesByUser(
         UserCode: string, CurrentPage: number, Records: number, StartDate: string, EndDate: string
     ): Observable<InvoiceHeaderDetail[] | string> {

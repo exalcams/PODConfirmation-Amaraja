@@ -124,7 +124,7 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
         InvoiceNumber: [this.CurrentFilterClass.InvoiceNumber ? this.CurrentFilterClass.InvoiceNumber : ''],
         Organization: [this.CurrentFilterClass.Organization ? this.CurrentFilterClass.Organization : ''],
         Division: [this.CurrentFilterClass.Division ? this.CurrentFilterClass.Division : ''],
-        Plant: [this.CurrentFilterClass.Plant ? this.CurrentFilterClass.Plant : ''],
+        PlantList: [this.CurrentFilterClass.PlantList ? this.CurrentFilterClass.PlantList : []],
         CustomerName: [this.CurrentFilterClass.CustomerName ? this.CurrentFilterClass.CustomerName : '']
       });
     } else {
@@ -134,14 +134,12 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
         InvoiceNumber: [''],
         Organization: [''],
         Division: [''],
-        Plant: [''],
+        PlantList: [''],
         CustomerName: ['']
       });
     }
     this.isDateError = false;
     this.GetAllOrganizations();
-    this.GetAllPlants();
-    this.GetAllPlantOrganizationMaps();
     this.GetDivisions();
     if (this.currentUserRole.toLowerCase() === 'administrator') {
       this.FilterPartiallyConfirmedInvoices();
@@ -159,6 +157,7 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
     this._masterService.GetAllOrganizations().subscribe(
       (data) => {
         this.AllOrganizations = data as Organization[];
+        this.GetAllPlants();
       },
       (err) => {
         console.error(err);
@@ -170,6 +169,7 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
       (data) => {
         this.AllPlants = data as Plant[];
         this.FilteredPlants = data as Plant[];
+        this.GetAllPlantOrganizationMaps();
       },
       (err) => {
         console.error(err);
@@ -180,6 +180,9 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
     this._masterService.GetAllPlantOrganizationMaps().subscribe(
       (data) => {
         this.AllPlantOrganizationMaps = data as PlantWithOrganization[];
+        if (this.CurrentFilterClass.Organization) {
+          this.getFilteredPlants();
+        }
       },
       (err) => {
         console.error(err);
@@ -216,9 +219,16 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
           Organization1 = '';
         }
         const Division = this.InvoiceFilterFormGroup.get('Division').value;
-        let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
-        if (Plant1 && Plant1.toLowerCase() === "all") {
-          Plant1 = '';
+        // let Plant1 = this.InvoiceFilterFormGroup.get('Plant').value as string;
+        // if (Plant1 && Plant1.toLowerCase() === "all") {
+        //   Plant1 = '';
+        // }
+        let plList = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
+        if (plList && plList.length) {
+          const index = plList.findIndex(x => x === "all");
+          if (index > -1) {
+            plList.splice(index, 1);
+          }
         }
         const CustomerName = this.InvoiceFilterFormGroup.get('CustomerName').value;
         let StartDate = null;
@@ -238,11 +248,14 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
         this.CurrentFilterClass.EndDate = EndDate;
         this.CurrentFilterClass.Organization = Organization1;
         this.CurrentFilterClass.Division = Division;
-        this.CurrentFilterClass.Plant = Plant1;
+        this.CurrentFilterClass.PlantList = plList;
         this.CurrentFilterClass.CustomerName = CustomerName;
+        this.CurrentFilterClass.UserID = this.authenticationDetails.userID;
+        this.CurrentFilterClass.CurrentPage = this.currentCustomPage;
+        this.CurrentFilterClass.Records = this.records;
         this._shareParameterService.SetPartialInvoiceFilterClass(this.CurrentFilterClass);
         this._invoiceService
-          .FilterPartiallyConfirmedInvoices(this.currentCustomPage, this.records, StartDate, EndDate, InvoiceNumber, Organization1, Division, Plant1, CustomerName)
+          .FilterPartiallyConfirmedInvoices(this.CurrentFilterClass)
           .subscribe(
             data => {
               // this.FilteredInvoiceDetails = data as InvoiceDetails[];
@@ -310,35 +323,40 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
     if (org) {
       const plantOrgMap = this.AllPlantOrganizationMaps.filter(o => o.OrganizationCode === org);
       this.FilteredPlants = this.AllPlants.filter(o => plantOrgMap.some(y => o.PlantCode === y.PlantCode));
-      const pl = this.InvoiceFilterFormGroup.get('Plant').value as string;
-      if (pl) {
-        const index = this.FilteredPlants.findIndex(x => x.PlantCode === pl);
-        if (index < 0) {
-          this.InvoiceFilterFormGroup.get('Plant').patchValue('');
-        }
+      const pl = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
+      if (pl && pl.length) {
+        this.InvoiceFilterFormGroup.get('PlantList').patchValue([]);
+        let pla: string[] = [];
+        pl.forEach(x => {
+          const index = this.FilteredPlants.findIndex(y => y.PlantCode === x);
+          if (index >= 0) {
+            pla.push(x);
+          }
+        });
+        this.InvoiceFilterFormGroup.get('PlantList').patchValue(pla);
       }
     }
   }
 
   togglePerOne(): boolean | void {
-    // if (this.allSelected.selected) {
-    //   this.allSelected.deselect();
-    //   return false;
-    // }
-    // if (this.InvoiceFilterFormGroup.get('PlantList').value.length) {
-    //   if (this.InvoiceFilterFormGroup.get('PlantList').value.length === this.FilteredPlants.length) {
-    //     this.allSelected.select();
-    //   }
-    // }
+    if (this.allSelected.selected) {
+      this.allSelected.deselect();
+      return false;
+    }
+    if (this.InvoiceFilterFormGroup.get('PlantList').value.length) {
+      if (this.InvoiceFilterFormGroup.get('PlantList').value.length === this.FilteredPlants.length) {
+        this.allSelected.select();
+      }
+    }
   }
   toggleAllSelection(): void {
-    // if (this.allSelected.selected) {
-    //   const pls = this.FilteredPlants.map(x => x.PlantCode);
-    //   pls.push("all");
-    //   this.InvoiceFilterFormGroup.get('PlantList').patchValue(pls);
-    // } else {
-    //   this.InvoiceFilterFormGroup.get('PlantList').patchValue([]);
-    // }
+    if (this.allSelected.selected) {
+      const pls = this.FilteredPlants.map(x => x.PlantCode);
+      pls.push("all");
+      this.InvoiceFilterFormGroup.get('PlantList').patchValue(pls);
+    } else {
+      this.InvoiceFilterFormGroup.get('PlantList').patchValue([]);
+    }
   }
   DateSelected(): void {
     const FROMDATEVAL = this.InvoiceFilterFormGroup.get('StartDate').value as Date;
