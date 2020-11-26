@@ -29,9 +29,9 @@
             </mat-form-field>
             <mat-form-field class="mx-8" fxFlex="18">
               <!-- <input matInput placeholder="Plant" formControlName="Plant"> -->
-              <mat-select placeholder="Plant" formControlName="Plant">
-                <mat-option value="all">All</mat-option>
-                <mat-option *ngFor="let mp of FilteredPlants" [value]="mp.PlantCode">
+              <mat-select placeholder="Plant" formControlName="PlantList" multiple>
+                <mat-option #allSelected (click)="toggleAllSelection()" value="all">All</mat-option>
+                <mat-option *ngFor="let mp of FilteredPlants" [value]="mp.PlantCode" (click)="togglePerOne()">
                   {{mp.PlantCode}}</mat-option>
               </mat-select>
             </mat-form-field>

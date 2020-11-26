@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
-import { ReportInvoice } from 'app/models/invoice-details';
+import { FilterClass, ReportInvoice } from 'app/models/invoice-details';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -27,14 +27,19 @@ export class ReportService {
     )
       .pipe(catchError(this.errorHandler));
   }
-  GetFilteredInvoiceDetails(UserID: Guid, CurrentPage: number, Records: number, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string,
+  GetFilteredInvoiceDetail(UserID: Guid, CurrentPage: number, Records: number, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string,
     Organization: string, Division: string, Plant: string, CustomerName: string): Observable<ReportInvoice[] | string> {
     return this._httpClient.get<ReportInvoice[]>(
       `${this.baseAddress}api/Report/GetFilteredInvoiceDetails?UserID=${UserID}&CurrentPage=${CurrentPage}&Records=${Records}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
     )
       .pipe(catchError(this.errorHandler));
   }
-
+  GetFilteredInvoiceDetails(filterClass: FilterClass): Observable<ReportInvoice[] | string> {
+    return this._httpClient.post<ReportInvoice[]>(
+      `${this.baseAddress}api/Report/GetFilteredInvoiceDetails`, filterClass
+    )
+      .pipe(catchError(this.errorHandler));
+  }
   GetDivisions(): Observable<string[] | string> {
     return this._httpClient.get<string[]>(
       `${this.baseAddress}api/Report/GetDivisions`
@@ -49,10 +54,19 @@ export class ReportService {
     })
       .pipe(catchError(this.errorHandler));
   }
-  DownloadInvoiceDetails(UserID: Guid, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string,
+  DownloadInvoiceDetail(UserID: Guid, Status: string, StartDate: string, EndDate: string, InvoiceNumber: string,
     Organization: string, Division: string, Plant: string, CustomerName: string): Observable<Blob | string> {
     return this._httpClient.get(
       `${this.baseAddress}api/Report/DownloadInvoiceDetails?UserID=${UserID}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`,
+      {
+        responseType: 'blob',
+        headers: new HttpHeaders().append('Content-Type', 'application/json')
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  DownloadInvoiceDetails(filterClass: FilterClass): Observable<Blob | string> {
+    return this._httpClient.post(
+      `${this.baseAddress}api/Report/DownloadInvoiceDetails`, filterClass,
       {
         responseType: 'blob',
         headers: new HttpHeaders().append('Content-Type', 'application/json')

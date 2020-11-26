@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { InvoiceDetails, InvoiceItemDetails, InvoiceUpdation, InvoiceUpdation1 } from 'app/models/invoice-details';
+import { FilterClass, InvoiceDetails, InvoiceItemDetails, InvoiceUpdation, InvoiceUpdation1 } from 'app/models/invoice-details';
 
 @Injectable({
   providedIn: 'root'
@@ -146,10 +146,16 @@ export class InvoiceService {
     )
       .pipe(catchError(this.errorHandler));
   }
-  FilterSavedInvoicesByUserID(UserID: Guid, CurrentPage: number, Records: number, StartDate: string, EndDate: string, InvoiceNumber: string,
+  FilterSavedInvoiceByUserID(UserID: Guid, CurrentPage: number, Records: number, StartDate: string, EndDate: string, InvoiceNumber: string,
     Organization: string, Division: string, Plant: string, CustomerName: string): Observable<InvoiceDetails[] | string> {
     return this._httpClient.get<InvoiceDetails[]>(
       `${this.baseAddress}api/PODConfirmation/FilterSavedInvoicesByUserID?UserID=${UserID}&CurrentPage=${CurrentPage}&Records=${Records}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
+  FilterSavedInvoicesByUserID(filterClass: FilterClass): Observable<InvoiceDetails[] | string> {
+    return this._httpClient.post<InvoiceDetails[]>(
+      `${this.baseAddress}api/PODConfirmation/FilterSavedInvoicesByUserID`, filterClass
     )
       .pipe(catchError(this.errorHandler));
   }
@@ -160,10 +166,16 @@ export class InvoiceService {
       )
       .pipe(catchError(this.errorHandler));
   }
-  FilterPartiallyConfirmedInvoices(CurrentPage: number, Records: number, StartDate: string, EndDate: string, InvoiceNumber: string,
+  FilterPartiallyConfirmedInvoice(CurrentPage: number, Records: number, StartDate: string, EndDate: string, InvoiceNumber: string,
     Organization: string, Division: string, Plant: string, CustomerName: string): Observable<InvoiceDetails[] | string> {
     return this._httpClient.get<InvoiceDetails[]>(
       `${this.baseAddress}api/PODConfirmation/FilterPartiallyConfirmedInvoices?CurrentPage=${CurrentPage}&Records=${Records}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&Organization=${Organization}&Division=${Division}&Plant=${Plant}&CustomerName=${CustomerName}`
+    )
+      .pipe(catchError(this.errorHandler));
+  }
+  FilterPartiallyConfirmedInvoices(filterClass: FilterClass): Observable<InvoiceDetails[] | string> {
+    return this._httpClient.post<InvoiceDetails[]>(
+      `${this.baseAddress}api/PODConfirmation/FilterPartiallyConfirmedInvoices`, filterClass
     )
       .pipe(catchError(this.errorHandler));
   }

@@ -1,3 +1,5 @@
+import { Guid } from 'guid-typescript';
+
 export class InvoiceDetails {
     HEADER_ID: number;
     PLANT: string;
@@ -160,6 +162,9 @@ export class AttachmentDetails {
 }
 
 export class FilterClass {
+    UserID: Guid;
+    CurrentPage: number;
+    Records: number;
     Status: string;
     StartDate: string;
     EndDate: string;
@@ -167,6 +172,8 @@ export class FilterClass {
     Organization: string;
     Division: string;
     Plant: string;
+    PlantList: string[];
     CustomerName: string;
     LRNumber: string;
 }
+
