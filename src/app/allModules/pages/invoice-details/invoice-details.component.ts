@@ -521,6 +521,7 @@ export class InvoiceDetailsComponent implements OnInit {
                 this.CurrentFilterClass.StartDate = StartDate;
                 this.CurrentFilterClass.EndDate = EndDate;
                 this.CurrentFilterClass.LRNumber = LRNumber;
+                this.CurrentFilterClass.InvoiceNumber = InvoiceNumber;
                 this._shareParameterService.SetInvoiceFilterClass(this.CurrentFilterClass);
                 this._dashboardService
                     .FilterInvoiceDetailByUser(this.currentUserCode, this.currentCustomPage, this.records, Status, StartDate, EndDate, InvoiceNumber, LRNumber)

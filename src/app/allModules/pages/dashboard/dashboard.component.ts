@@ -545,10 +545,10 @@ export class DashboardComponent implements OnInit {
         // }
         let plList = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
         if (plList && plList.length) {
-          const index = plList.findIndex(x => x === "all");
-          if (index > -1) {
-            plList.splice(index, 1);
-          }
+            const index = plList.findIndex(x => x === "all");
+            if (index > -1) {
+                plList.splice(index, 1);
+            }
         }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
@@ -689,19 +689,25 @@ export class DashboardComponent implements OnInit {
     getFilteredPlants(): void {
         const org = this.InvoiceFilterFormGroup.get('Organization').value as string;
         if (org) {
-            const plantOrgMap = this.AllPlantOrganizationMaps.filter(o => o.OrganizationCode === org);
-            this.FilteredPlants = this.AllPlants.filter(o => plantOrgMap.some(y => o.PlantCode === y.PlantCode));
-            const pl = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
-            if (pl && pl.length) {
-                this.InvoiceFilterFormGroup.get('PlantList').patchValue([]);
-                let pla: string[] = [];
-                pl.forEach(x => {
-                    const index = this.FilteredPlants.findIndex(y => y.PlantCode === x);
-                    if (index >= 0) {
-                        pla.push(x);
-                    }
-                });
-                this.InvoiceFilterFormGroup.get('PlantList').patchValue(pla);
+            if (org !== 'all') {
+                const plantOrgMap = this.AllPlantOrganizationMaps.filter(o => o.OrganizationCode === org);
+                this.FilteredPlants = this.AllPlants.filter(o => plantOrgMap.some(y => o.PlantCode === y.PlantCode));
+                const pl = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
+                if (pl && pl.length) {
+                    this.InvoiceFilterFormGroup.get('PlantList').patchValue([]);
+                    let pla: string[] = [];
+                    pl.forEach(x => {
+                        const index = this.FilteredPlants.findIndex(y => y.PlantCode === x);
+                        if (index >= 0) {
+                            pla.push(x);
+                        }
+                    });
+                    this.InvoiceFilterFormGroup.get('PlantList').patchValue(pla);
+                    this.togglePerOne();
+                }
+            } else {
+                this.FilteredPlants = this.AllPlants.filter(y => y.PlantCode);
+                this.togglePerOne();
             }
         }
     }
@@ -910,7 +916,7 @@ export class DashboardComponent implements OnInit {
         }
     }
     FilterConfirmedInvoices(): void {
-       
+
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
         if (staDate) {
@@ -960,10 +966,10 @@ export class DashboardComponent implements OnInit {
         // }
         let plList = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
         if (plList && plList.length) {
-          const index = plList.findIndex(x => x === "all");
-          if (index > -1) {
-            plList.splice(index, 1);
-          }
+            const index = plList.findIndex(x => x === "all");
+            if (index > -1) {
+                plList.splice(index, 1);
+            }
         }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
@@ -1014,10 +1020,10 @@ export class DashboardComponent implements OnInit {
         // }
         let plList = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
         if (plList && plList.length) {
-          const index = plList.findIndex(x => x === "all");
-          if (index > -1) {
-            plList.splice(index, 1);
-          }
+            const index = plList.findIndex(x => x === "all");
+            if (index > -1) {
+                plList.splice(index, 1);
+            }
         }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
@@ -1068,10 +1074,10 @@ export class DashboardComponent implements OnInit {
         // }
         let plList = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
         if (plList && plList.length) {
-          const index = plList.findIndex(x => x === "all");
-          if (index > -1) {
-            plList.splice(index, 1);
-          }
+            const index = plList.findIndex(x => x === "all");
+            if (index > -1) {
+                plList.splice(index, 1);
+            }
         }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;
@@ -1122,10 +1128,10 @@ export class DashboardComponent implements OnInit {
         // }
         let plList = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
         if (plList && plList.length) {
-          const index = plList.findIndex(x => x === "all");
-          if (index > -1) {
-            plList.splice(index, 1);
-          }
+            const index = plList.findIndex(x => x === "all");
+            if (index > -1) {
+                plList.splice(index, 1);
+            }
         }
         let StartDate = null;
         const staDate = this.InvoiceFilterFormGroup.get('StartDate').value;

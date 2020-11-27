@@ -249,6 +249,7 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
         this.CurrentFilterClass.Organization = Organization1;
         this.CurrentFilterClass.Division = Division;
         this.CurrentFilterClass.PlantList = plList;
+        this.CurrentFilterClass.InvoiceNumber = InvoiceNumber;
         this.CurrentFilterClass.CustomerName = CustomerName;
         this.CurrentFilterClass.UserID = this.authenticationDetails.userID;
         this.CurrentFilterClass.CurrentPage = this.currentCustomPage;
@@ -321,19 +322,25 @@ export class PartiallyConfirmedInvoiceComponent implements OnInit {
   getFilteredPlants(): void {
     const org = this.InvoiceFilterFormGroup.get('Organization').value as string;
     if (org) {
-      const plantOrgMap = this.AllPlantOrganizationMaps.filter(o => o.OrganizationCode === org);
-      this.FilteredPlants = this.AllPlants.filter(o => plantOrgMap.some(y => o.PlantCode === y.PlantCode));
-      const pl = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
-      if (pl && pl.length) {
-        this.InvoiceFilterFormGroup.get('PlantList').patchValue([]);
-        let pla: string[] = [];
-        pl.forEach(x => {
-          const index = this.FilteredPlants.findIndex(y => y.PlantCode === x);
-          if (index >= 0) {
-            pla.push(x);
-          }
-        });
-        this.InvoiceFilterFormGroup.get('PlantList').patchValue(pla);
+      if (org !== 'all') {
+        const plantOrgMap = this.AllPlantOrganizationMaps.filter(o => o.OrganizationCode === org);
+        this.FilteredPlants = this.AllPlants.filter(o => plantOrgMap.some(y => o.PlantCode === y.PlantCode));
+        const pl = this.InvoiceFilterFormGroup.get('PlantList').value as string[];
+        if (pl && pl.length) {
+          this.InvoiceFilterFormGroup.get('PlantList').patchValue([]);
+          let pla: string[] = [];
+          pl.forEach(x => {
+            const index = this.FilteredPlants.findIndex(y => y.PlantCode === x);
+            if (index >= 0) {
+              pla.push(x);
+            }
+          });
+          this.InvoiceFilterFormGroup.get('PlantList').patchValue(pla);
+          this.togglePerOne();
+        }
+      } else {
+        this.FilteredPlants = this.AllPlants.filter(y => y.PlantCode);
+        this.togglePerOne();
       }
     }
   }
