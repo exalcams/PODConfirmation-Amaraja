@@ -15,7 +15,7 @@
             <mat-form-field class="mx-8" fxFlex="18">
               <!-- <input matInput placeholder="Organization" formControlName="Organization"> -->
               <mat-select placeholder="Organization" formControlName="Organization">
-                <mat-option value="all">All
+                <mat-option value="all" (click)="togglePerOne1()">All
                 </mat-option>
                 <mat-option *ngFor="let mp of AllOrganizations" [value]="mp.OrganizationCode" (click)="togglePerOne1()">
                   {{mp.OrganizationCode}}</mat-option>
