@@ -28,7 +28,7 @@
             <mat-option [value]="divi" *ngFor="let divi of Divisions">{{divi}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field class="mx-8" fxFlex
+        <mat-form-field class="mx-8" fxFlex="17"
           [style.display]="(currentUserRole | lowercase)==='amararaja user'?'inherit':'none'">
           <!-- <input matInput placeholder="Plant" formControlName="Plant"> -->
           <mat-select placeholder="Plant" formControlName="PlantList" multiple>
