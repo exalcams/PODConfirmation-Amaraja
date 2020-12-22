@@ -159,6 +159,16 @@ export class InvoiceService {
     )
       .pipe(catchError(this.errorHandler));
   }
+  DownloadSavedInvoicesByUserID(filterClass: FilterClass): Observable<Blob | string> {
+    return this._httpClient.post(
+      `${this.baseAddress}api/PODConfirmation/DownloadSavedInvoicesByUserID`, filterClass,
+      {
+        responseType: 'blob',
+        headers: new HttpHeaders().append('Content-Type', 'application/json')
+      }
+    )
+      .pipe(catchError(this.errorHandler));
+  }
   GetAllPartiallyConfirmedInvoices(): Observable<InvoiceDetails[] | string> {
     return this._httpClient
       .get<InvoiceDetails[]>(
@@ -176,6 +186,16 @@ export class InvoiceService {
   FilterPartiallyConfirmedInvoices(filterClass: FilterClass): Observable<InvoiceDetails[] | string> {
     return this._httpClient.post<InvoiceDetails[]>(
       `${this.baseAddress}api/PODConfirmation/FilterPartiallyConfirmedInvoices`, filterClass
+    )
+      .pipe(catchError(this.errorHandler));
+  }
+  DownloadPartiallyConfirmedInvoices(filterClass: FilterClass): Observable<Blob | string> {
+    return this._httpClient.post(
+      `${this.baseAddress}api/PODConfirmation/DownloadPartiallyConfirmedInvoices`, filterClass,
+      {
+        responseType: 'blob',
+        headers: new HttpHeaders().append('Content-Type', 'application/json')
+      }
     )
       .pipe(catchError(this.errorHandler));
   }

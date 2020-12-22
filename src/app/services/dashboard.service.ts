@@ -106,6 +106,25 @@ export class DashboardService {
             .pipe(catchError(this.errorHandler));
     }
 
+    DownloadInvoiceDetailByUser(
+        UserCode: string,
+        Status: string,
+        StartDate: string,
+        EndDate: string,
+        InvoiceNumber: string,
+        LRNumber: string
+    ): Observable<Blob | string> {
+        return this._httpClient
+            .get(
+                `${this.baseAddress}api/PODConfirmation/DownloadInvoiceDetailByUser?UserCode=${UserCode}&Status=${Status}&StartDate=${StartDate}&EndDate=${EndDate}&InvoiceNumber=${InvoiceNumber}&LRNumber=${LRNumber}`,
+                {
+                    responseType: 'blob',
+                    headers: new HttpHeaders().append('Content-Type', 'application/json')
+                }
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
     GetConfirmedInvoiceDetails(
         userID: Guid
     ): Observable<InvoiceDetails[] | string> {
